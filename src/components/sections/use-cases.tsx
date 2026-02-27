@@ -6,27 +6,28 @@ import { useRef } from "react"
 import { motion, useInView } from "framer-motion"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import Image from "next/image"
 
 const cases = [
     {
         title: "For Parents",
         quote: "It's like having a grandchild who always has time to listen.",
         features: ["Memory recall", "Medication reminders", "Family updates"],
-        image: "bg-amber-100", // Placeholder for image
+        image: "/images/parents.png",
         color: "border-l-4 border-amber-500",
     },
     {
         title: "For Kids",
         quote: "Haven helps me with homework and talks when I'm sad.",
         features: ["Learning support", "Emotional check-ins", "Bedtime stories"],
-        image: "bg-blue-100",
+        image: "/images/kids.png",
         color: "border-l-4 border-blue-500",
     },
     {
         title: "For Therapy Support",
         quote: "Between sessions, Haven helps me process and stay accountable.",
         features: ["CBT exercises", "Mood tracking", "Coping strategies"],
-        image: "bg-emerald-100",
+        image: "/images/therapy.png",
         color: "border-l-4 border-emerald-500",
     },
 ]
@@ -81,9 +82,13 @@ export function UseCases() {
                         className="min-w-[300px] snap-center"
                     >
                         <Card className={`h-full overflow-hidden hover:shadow-xl transition-shadow duration-300 ${useCase.color}`}>
-                            <div className={`h-48 ${useCase.image} w-full flex items-center justify-center text-stone-400`}>
-                                {/* Placeholder for actual image */}
-                                <span>[Image: {useCase.title}]</span>
+                            <div className="h-48 w-full relative bg-stone-100">
+                                <Image
+                                    src={useCase.image}
+                                    alt={useCase.title}
+                                    fill
+                                    className="object-cover"
+                                />
                             </div>
                             <CardHeader>
                                 <CardTitle>{useCase.title}</CardTitle>
