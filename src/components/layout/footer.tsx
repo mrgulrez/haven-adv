@@ -33,20 +33,20 @@ export function Footer() {
                     <div>
                         <h4 className="font-semibold text-white mb-4">Product</h4>
                         <ul className="space-y-2 text-sm">
-                            <li><Link href="#" className="hover:text-white transition-colors">Features</Link></li>
-                            <li><Link href="#" className="hover:text-white transition-colors">Pricing</Link></li>
-                            <li><Link href="#" className="hover:text-white transition-colors">Security</Link></li>
-                            <li><Link href="#" className="hover:text-white transition-colors">Roadmap</Link></li>
+                            <li><Link href="/features" className="hover:text-white transition-colors">Features</Link></li>
+                            <li><Link href="/pricing" className="hover:text-white transition-colors">Pricing</Link></li>
+                            <li><Link href="/security" className="hover:text-white transition-colors">Security</Link></li>
+                            <li><Link href="/roadmap" className="hover:text-white transition-colors">Roadmap</Link></li>
                         </ul>
                     </div>
 
                     <div>
                         <h4 className="font-semibold text-white mb-4">Company</h4>
                         <ul className="space-y-2 text-sm">
-                            <li><Link href="#" className="hover:text-white transition-colors">About Us</Link></li>
-                            <li><Link href="#" className="hover:text-white transition-colors">Blog</Link></li>
-                            <li><Link href="#" className="hover:text-white transition-colors">Careers</Link></li>
-                            <li><Link href="#" className="hover:text-white transition-colors">Contact</Link></li>
+                            <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
+                            <li><Link href="/blog" className="hover:text-white transition-colors">Blog</Link></li>
+                            <li><Link href="/careers" className="hover:text-white transition-colors">Careers</Link></li>
+                            <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
                         </ul>
                     </div>
 
@@ -96,8 +96,8 @@ export function Footer() {
                 <div className="pt-8 border-t border-stone-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-stone-500">
                     <p>© 2026 Haven AI Inc. All rights reserved.</p>
                     <div className="flex gap-6">
-                        <Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link>
-                        <Link href="#" className="hover:text-white transition-colors">Terms of Service</Link>
+                        <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+                        <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
                     </div>
                 </div>
             </div>

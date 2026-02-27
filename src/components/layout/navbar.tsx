@@ -32,17 +32,17 @@ export function Navbar() {
 
                 {/* Desktop Nav */}
                 <nav className="hidden md:flex items-center gap-8">
-                    <Link href="#problem" className="text-sm font-medium text-stone-600 hover:text-stone-900 transition-colors">
+                    <Link href="/about" className="text-sm font-medium text-stone-600 hover:text-stone-900 transition-colors">
                         Mission
                     </Link>
-                    <Link href="#features" className="text-sm font-medium text-stone-600 hover:text-stone-900 transition-colors">
+                    <Link href="/features" className="text-sm font-medium text-stone-600 hover:text-stone-900 transition-colors">
                         Features
                     </Link>
-                    <Link href="#testimonials" className="text-sm font-medium text-stone-600 hover:text-stone-900 transition-colors">
-                        Stories
+                    <Link href="/blog" className="text-sm font-medium text-stone-600 hover:text-stone-900 transition-colors">
+                        Blog
                     </Link>
-                    <Link href="#faq" className="text-sm font-medium text-stone-600 hover:text-stone-900 transition-colors">
-                        FAQ
+                    <Link href="/pricing" className="text-sm font-medium text-stone-600 hover:text-stone-900 transition-colors">
+                        Pricing
                     </Link>
                 </nav>
 
@@ -65,25 +65,32 @@ export function Navbar() {
             {mobileMenuOpen && (
                 <div className="md:hidden absolute top-full left-0 right-0 bg-background border-b border-border p-4 flex flex-col gap-4 shadow-lg animate-in slide-in-from-top-5">
                     <Link
-                        href="#problem"
+                        href="/about"
                         className="text-base font-medium p-2 hover:bg-muted rounded-md"
                         onClick={() => setMobileMenuOpen(false)}
                     >
                         Mission
                     </Link>
                     <Link
-                        href="#features"
+                        href="/features"
                         className="text-base font-medium p-2 hover:bg-muted rounded-md"
                         onClick={() => setMobileMenuOpen(false)}
                     >
                         Features
                     </Link>
                     <Link
-                        href="#testimonials"
+                        href="/blog"
                         className="text-base font-medium p-2 hover:bg-muted rounded-md"
                         onClick={() => setMobileMenuOpen(false)}
                     >
-                        Stories
+                        Blog
+                    </Link>
+                    <Link
+                        href="/pricing"
+                        className="text-base font-medium p-2 hover:bg-muted rounded-md"
+                        onClick={() => setMobileMenuOpen(false)}
+                    >
+                        Pricing
                     </Link>
                     <div className="flex flex-col gap-2 mt-2">
                         <Link href="#waitlist" onClick={() => setMobileMenuOpen(false)}>
