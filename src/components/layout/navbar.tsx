@@ -41,13 +41,16 @@ export function Navbar() {
                     <Link href="/blog" className="text-sm font-medium text-stone-600 hover:text-stone-900 transition-colors">
                         Blog
                     </Link>
+                    <Link href="/science" className="text-sm font-medium text-stone-600 hover:text-stone-900 transition-colors">
+                        Science
+                    </Link>
                     <Link href="/pricing" className="text-sm font-medium text-stone-600 hover:text-stone-900 transition-colors">
                         Pricing
                     </Link>
                 </nav>
 
                 <div className="hidden md:flex items-center gap-4">
-                    <Link href="#waitlist">
+                    <Link href="/#waitlist">
                         <Button size="sm" className="rounded-full">Join Waitlist</Button>
                     </Link>
                 </div>
@@ -86,6 +89,13 @@ export function Navbar() {
                         Blog
                     </Link>
                     <Link
+                        href="/science"
+                        className="text-base font-medium p-2 hover:bg-muted rounded-md"
+                        onClick={() => setMobileMenuOpen(false)}
+                    >
+                        Science
+                    </Link>
+                    <Link
                         href="/pricing"
                         className="text-base font-medium p-2 hover:bg-muted rounded-md"
                         onClick={() => setMobileMenuOpen(false)}
@@ -93,7 +103,7 @@ export function Navbar() {
                         Pricing
                     </Link>
                     <div className="flex flex-col gap-2 mt-2">
-                        <Link href="#waitlist" onClick={() => setMobileMenuOpen(false)}>
+                        <Link href="/#waitlist" onClick={() => setMobileMenuOpen(false)}>
                             <Button className="w-full">Join Waitlist</Button>
                         </Link>
                     </div>

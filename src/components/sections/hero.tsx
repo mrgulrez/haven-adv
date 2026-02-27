@@ -51,7 +51,7 @@ export function Hero() {
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
                     </span>
-                    <span className="text-xs font-semibold text-stone-600 uppercase tracking-wide">Launching Q2 2026</span>
+                    <span className="text-xs font-semibold text-stone-600 uppercase tracking-wide">Join 15,000+ on the waitlist</span>
                 </motion.div>
 
                 {/* Headline */}
@@ -78,19 +78,26 @@ export function Hero() {
                     Voice conversations that feel like talking to an old friend.
                 </motion.p>
 
-                {/* CTA */}
+                {/* CTAs */}
                 <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5, delay: 0.8 }}
-                    whileHover={{ scale: 1.05 }}
-                    className="relative group"
+                    className="flex flex-col sm:flex-row items-center gap-4"
                 >
-                    <div className="absolute -inset-1 bg-gradient-to-r from-amber-400 to-orange-400 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-200"></div>
-                    <Link href="#waitlist">
-                        <Button size="lg" className="relative text-lg h-14 px-8 shadow-xl bg-gradient-to-r from-amber-500 to-orange-500 border-0">
-                            Join the Waitlist
-                            <ArrowRight className="ml-2 h-5 w-5" />
+                    <div className="relative group">
+                        <div className="absolute -inset-1 bg-gradient-to-r from-amber-400 to-orange-400 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-200"></div>
+                        <Link href="#waitlist">
+                            <Button size="lg" className="relative text-lg h-14 px-8 shadow-xl bg-gradient-to-r from-amber-500 to-orange-500 border-0 hover:scale-105 transition-transform">
+                                Join the Waitlist
+                                <ArrowRight className="ml-2 h-5 w-5" />
+                            </Button>
+                        </Link>
+                    </div>
+
+                    <Link href="/contact">
+                        <Button variant="outline" size="lg" className="text-lg h-14 px-8 border-stone-300 text-stone-700 bg-white/50 backdrop-blur-sm hover:bg-white hover:text-stone-900 transition-all">
+                            Partner with Us
                         </Button>
                     </Link>
                 </motion.div>

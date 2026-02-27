@@ -40,8 +40,30 @@ const testimonials = [
 export function Testimonials() {
     return (
         <Section id="testimonials" className="bg-stone-50 overflow-hidden py-12">
-            <div className="mb-12 text-center">
-                <h2 className="text-2xl font-bold font-heading text-stone-900">Loved by Early Adopters</h2>
+            <div className="mb-16 text-center max-w-4xl mx-auto px-4">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-stone-200 border border-stone-300 mt-8 mb-6">
+                    <span className="text-sm font-semibold text-stone-700 uppercase tracking-wide">Unprecedented Retention</span>
+                </div>
+                <h2 className="text-3xl md:text-5xl font-bold font-heading text-stone-900 mb-6">
+                    Products Built on Habits
+                </h2>
+                <p className="text-lg md:text-xl text-stone-600 mb-8">
+                    Haven isn't a tool you use once a month. Our early beta users demonstrate incredibly sticky engagement, interacting with their companion daily.
+                </p>
+                <div className="flex justify-center gap-8 md:gap-16 border-t border-stone-200 pt-8">
+                    <div>
+                        <div className="text-4xl font-bold text-stone-900">82%</div>
+                        <div className="text-sm font-medium text-stone-500 uppercase tracking-wider">D30 Retention</div>
+                    </div>
+                    <div>
+                        <div className="text-4xl font-bold text-stone-900">4.5</div>
+                        <div className="text-sm font-medium text-stone-500 uppercase tracking-wider">Avg Sessions/Day</div>
+                    </div>
+                    <div>
+                        <div className="text-4xl font-bold text-stone-900">65m</div>
+                        <div className="text-sm font-medium text-stone-500 uppercase tracking-wider">Daily Time In-App</div>
+                    </div>
+                </div>
             </div>
 
             <div className="relative flex overflow-hidden w-full mask-linear-fade">

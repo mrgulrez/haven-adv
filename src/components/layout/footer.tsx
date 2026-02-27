@@ -18,13 +18,13 @@ export function Footer() {
                             Your warm AI companion that remembers, cares, and reminds. Never feel alone again.
                         </p>
                         <div className="flex gap-4">
-                            <Link href="#" className="hover:text-white transition-colors">
+                            <Link href="https://twitter.com/haven_ai" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                                 <Twitter size={20} />
                             </Link>
-                            <Link href="#" className="hover:text-white transition-colors">
+                            <Link href="https://linkedin.com/company/haven-ai" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                                 <Linkedin size={20} />
                             </Link>
-                            <Link href="#" className="hover:text-white transition-colors">
+                            <Link href="https://instagram.com/haven_ai" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                                 <Instagram size={20} />
                             </Link>
                         </div>
@@ -45,8 +45,10 @@ export function Footer() {
                         <ul className="space-y-2 text-sm">
                             <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
                             <li><Link href="/blog" className="hover:text-white transition-colors">Blog</Link></li>
+                            <li><Link href="/science" className="hover:text-white transition-colors">Science & Research</Link></li>
                             <li><Link href="/careers" className="hover:text-white transition-colors">Careers</Link></li>
                             <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
+                            <li><Link href="mailto:investors@havenai.example.com" className="hover:text-white text-emerald-400 transition-colors">Investors</Link></li>
                         </ul>
                     </div>
 

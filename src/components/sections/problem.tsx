@@ -8,31 +8,31 @@ import { useRef } from "react"
 
 const stats = [
     {
-        target: 80,
-        suffix: "M+",
-        label: "Elderly Live Alone",
-        description: "Facing isolation and lack of daily interaction.",
+        target: 1,
+        suffix: "B+",
+        label: "People Globally Affected",
+        description: "The WHO declared loneliness a global public health concern.",
         icon: Users,
         color: "text-amber-600",
         bg: "bg-amber-100",
     },
     {
-        target: 45,
-        suffix: "%",
-        label: "Kids Need Support",
-        description: "Missing emotional guidance between school and home.",
-        icon: HeartCrack,
-        color: "text-rose-600",
-        bg: "bg-rose-100",
-    },
-    {
         target: 200,
-        suffix: "$+",
-        label: "Cost Per Session",
-        description: "Therapy is inaccessible for daily emotional needs.",
+        suffix: "B+",
+        label: "Mental Health TAM",
+        description: "Annual global spend on mental wellness and companionship.",
         icon: Banknote,
         color: "text-emerald-600",
         bg: "bg-emerald-100",
+    },
+    {
+        target: 61,
+        suffix: "%",
+        label: "Of Young Adults Feel Lonely",
+        description: "Gen Z and Millennials report unprecedented isolation rates.",
+        icon: HeartCrack,
+        color: "text-rose-600",
+        bg: "bg-rose-100",
     },
 ]
 
@@ -80,12 +80,15 @@ import * as React from "react"
 export function Problem() {
     return (
         <Section id="problem" className="bg-white">
-            <div className="text-center max-w-3xl mx-auto mb-16">
-                <h2 className="text-3xl md:text-4xl font-bold font-heading text-stone-900 mb-4">
+            <div className="text-center max-w-4xl mx-auto mb-16">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-stone-100 border border-stone-200 mt-8 mb-6">
+                    <span className="text-sm font-semibold text-stone-600 uppercase tracking-wide">The Market Opportunity</span>
+                </div>
+                <h2 className="text-3xl md:text-5xl font-bold font-heading text-stone-900 mb-6">
                     The Silent Epidemic of Loneliness
                 </h2>
-                <p className="text-lg text-stone-600">
-                    In a connected world, we are more isolated than ever. Existing solutions are either too expensive or lack true empathy.
+                <p className="text-lg md:text-xl text-stone-600">
+                    In a hyper-connected world, we are more isolated than ever. Haven is tapping into a massive, underserved market where existing solutions are either unscalable or lack true empathy.
                 </p>
             </div>
 

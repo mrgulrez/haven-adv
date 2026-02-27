@@ -23,47 +23,55 @@ export function Pricing() {
                     <div className="relative z-10">
                         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-100 text-amber-700 text-sm font-semibold mb-6">
                             <Sparkles size={16} />
-                            Early Bird Special
+                            Simple, Transparent Pricing
                         </div>
 
                         <h2 className="text-4xl md:text-5xl font-bold font-heading text-stone-900 mb-6">
-                            Reserve Your Spot Today
+                            A Plan for Every Journey
                         </h2>
 
-                        <div className="flex items-center justify-center gap-4 mb-8">
-                            <span className="text-2xl text-stone-400 line-through decoration-amber-500 decoration-2">
-                                $29/mo
-                            </span>
-                            <span className="text-5xl md:text-6xl font-bold text-amber-600">
-                                $19<span className="text-xl text-stone-500 font-normal">/mo</span>
-                            </span>
-                        </div>
-
                         <p className="text-stone-600 mb-10 max-w-lg mx-auto">
-                            Secure the lowest price forever by joining the waitlist.
-                            Only available for the first 500 members.
+                            Whether you're exploring emotional AI for the first time or seeking deep continuity, Haven grows with you.
                         </p>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left max-w-lg mx-auto mb-10">
-                            {["Unlimited Voice Conversations", "Advanced Memory Recall", "Priority Support", "Multi-platform Access"].map((feature, i) => (
-                                <div key={i} className="flex items-center gap-3">
-                                    <div className="h-6 w-6 rounded-full bg-green-100 text-green-600 flex items-center justify-center shrink-0">
-                                        <Check size={14} strokeWidth={3} />
-                                    </div>
-                                    <span className="text-sm font-medium text-stone-700">{feature}</span>
-                                </div>
-                            ))}
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10 text-left">
+                            {/* Tier 1 */}
+                            <div className="bg-stone-50 p-6 rounded-2xl border border-stone-100">
+                                <h3 className="font-bold text-lg text-stone-900 mb-1">Free</h3>
+                                <div className="text-2xl font-bold text-amber-600 mb-4">$0<span className="text-sm text-stone-500 font-normal">/mo</span></div>
+                                <ul className="space-y-2 mb-6">
+                                    <li className="flex gap-2 text-sm text-stone-600"><Check size={16} className="text-green-500 shrink-0 mt-0.5" /> Unlimited text</li>
+                                    <li className="flex gap-2 text-sm text-stone-600"><Check size={16} className="text-green-500 shrink-0 mt-0.5" /> 30-day memory</li>
+                                </ul>
+                            </div>
+
+                            {/* Tier 2 */}
+                            <div className="bg-white p-6 rounded-2xl border-2 border-amber-400 shadow-md relative">
+                                <div className="absolute top-0 right-1/2 translate-x-1/2 -translate-y-1/2 bg-amber-500 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">Most Popular</div>
+                                <h3 className="font-bold text-lg text-stone-900 mb-1">Haven Core</h3>
+                                <div className="text-2xl font-bold text-amber-600 mb-4">$24<span className="text-sm text-stone-500 font-normal">/mo</span></div>
+                                <ul className="space-y-2 mb-6">
+                                    <li className="flex gap-2 text-sm text-stone-600"><Check size={16} className="text-green-500 shrink-0 mt-0.5" /> Voice minutes</li>
+                                    <li className="flex gap-2 text-sm text-stone-600"><Check size={16} className="text-green-500 shrink-0 mt-0.5" /> Infinite memory</li>
+                                </ul>
+                            </div>
+
+                            {/* Tier 3 */}
+                            <div className="bg-stone-50 p-6 rounded-2xl border border-stone-100">
+                                <h3 className="font-bold text-lg text-stone-900 mb-1">Haven Pro</h3>
+                                <div className="text-2xl font-bold text-amber-600 mb-4">$49<span className="text-sm text-stone-500 font-normal">/mo</span></div>
+                                <ul className="space-y-2 mb-6">
+                                    <li className="flex gap-2 text-sm text-stone-600"><Check size={16} className="text-green-500 shrink-0 mt-0.5" /> Unlimited voice</li>
+                                    <li className="flex gap-2 text-sm text-stone-600"><Check size={16} className="text-green-500 shrink-0 mt-0.5" /> Therapist portal directly</li>
+                                </ul>
+                            </div>
                         </div>
 
-                        <Link href="#waitlist" className="w-full sm:w-auto">
-                            <Button size="lg" className="w-full sm:w-auto h-14 px-10 text-lg shadow-xl shadow-amber-200">
-                                Reserve My Spot
+                        <Link href="/pricing" className="inline-block">
+                            <Button size="lg" className="h-14 px-10 text-lg shadow-xl shadow-amber-200">
+                                Compare All Features
                             </Button>
                         </Link>
-
-                        <p className="mt-4 text-xs text-stone-400">
-                            No credit card required to join waitlist.
-                        </p>
                     </div>
                 </motion.div>
             </div>

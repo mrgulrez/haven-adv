@@ -145,6 +145,57 @@ export default function AboutUs() {
                 </div>
             </section>
 
+            {/* Team Pedigree Section */}
+            <section className="py-20 px-4 md:px-6 bg-stone-50 z-10 relative">
+                <div className="container mx-auto max-w-5xl">
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl md:text-5xl font-bold font-heading text-stone-900 mb-6">Our Founding Team</h2>
+                        <p className="text-lg text-stone-600 max-w-2xl mx-auto">
+                            We bring together world-class expertise in artificial intelligence, clinical psychology, and scalable consumer software.
+                        </p>
+                    </div>
+
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {/* Member 1 */}
+                        <div className="bg-white p-8 rounded-3xl border border-stone-200 text-center">
+                            <div className="w-24 h-24 mx-auto bg-stone-200 rounded-full mb-6 overflow-hidden">
+                                {/* Placeholder gradient for avatar */}
+                                <div className="w-full h-full bg-gradient-to-tr from-stone-300 to-stone-400"></div>
+                            </div>
+                            <h3 className="text-xl font-bold text-stone-900 mb-1">Alex Chen</h3>
+                            <p className="text-amber-600 font-medium text-sm mb-4">CEO & Co-founder</p>
+                            <p className="text-stone-600 text-sm leading-relaxed">
+                                Former Engineering Lead at DeepMind. Built conversational AI systems used by millions. Stanford CS.
+                            </p>
+                        </div>
+
+                        {/* Member 2 */}
+                        <div className="bg-white p-8 rounded-3xl border border-stone-200 text-center">
+                            <div className="w-24 h-24 mx-auto bg-stone-200 rounded-full mb-6 overflow-hidden">
+                                <div className="w-full h-full bg-gradient-to-tr from-stone-300 to-stone-400"></div>
+                            </div>
+                            <h3 className="text-xl font-bold text-stone-900 mb-1">Dr. Sarah Jenkins</h3>
+                            <p className="text-amber-600 font-medium text-sm mb-4">Chief Psychology Officer</p>
+                            <p className="text-stone-600 text-sm leading-relaxed">
+                                Ph.D. in Clinical Psychology. 15 years researching human-computer interaction and emotional attachment.
+                            </p>
+                        </div>
+
+                        {/* Member 3 */}
+                        <div className="bg-white p-8 rounded-3xl border border-stone-200 text-center">
+                            <div className="w-24 h-24 mx-auto bg-stone-200 rounded-full mb-6 overflow-hidden">
+                                <div className="w-full h-full bg-gradient-to-tr from-stone-300 to-stone-400"></div>
+                            </div>
+                            <h3 className="text-xl font-bold text-stone-900 mb-1">Marcus Thorne</h3>
+                            <p className="text-amber-600 font-medium text-sm mb-4">CTO & Co-founder</p>
+                            <p className="text-stone-600 text-sm leading-relaxed">
+                                Scaled cloud infrastructure at Stripe and AWS. Expert in low-latency voice architecture and vector databases.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* Team/Joining Section */}
             <section className="py-20 px-4 md:px-6 bg-stone-900 text-stone-300 z-10 relative">
                 <div className="container mx-auto max-w-4xl text-center">

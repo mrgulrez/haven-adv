@@ -11,9 +11,11 @@ export default function CareersPage() {
                     <div className="text-center mb-16">
                         <h1 className="text-5xl md:text-7xl font-bold font-heading text-stone-900 mb-6">Build the future <br />of companionship.</h1>
                         <p className="text-xl text-stone-600 max-w-2xl mx-auto mb-8">We are looking for deeply empathetic engineers, researchers, and designers to help us end the loneliness epidemic.</p>
-                        <Button size="lg" className="bg-amber-500 hover:bg-amber-600 text-white rounded-full px-8">
-                            View Open Roles
-                        </Button>
+                        <a href="#open-roles">
+                            <Button size="lg" className="bg-amber-500 hover:bg-amber-600 text-white rounded-full px-8">
+                                View Open Roles
+                            </Button>
+                        </a>
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-12 mb-20">
@@ -26,7 +28,7 @@ export default function CareersPage() {
                                 If you want your life's work to directly impact the mental well-being of millions, this is the place to be. We offer competitive salaries, significant equity, and a culture that prioritizes actual work-life balance (ironic to build a wellness app while burning out).
                             </p>
                         </div>
-                        <div className="bg-white p-8 rounded-3xl border border-stone-200">
+                        <div className="bg-white p-8 rounded-3xl border border-stone-200" id="open-roles">
                             <h3 className="text-2xl font-bold font-heading text-stone-900 mb-6">Open Positions</h3>
 
                             <div className="space-y-4">
@@ -36,7 +38,7 @@ export default function CareersPage() {
                                     { title: "Full-Stack Typescript Developer", dept: "Engineering", loc: "Remote" },
                                     { title: "Head of Privacy & Security", dept: "Security", loc: "Remote" }
                                 ].map((role, i) => (
-                                    <div key={i} className="group flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl hover:bg-stone-50 transition-colors border border-transparent hover:border-stone-100 cursor-pointer">
+                                    <a key={i} href={`mailto:careers@havenai.example.com?subject=Application for ${role.title}`} className="group flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl hover:bg-stone-50 transition-colors border border-transparent hover:border-stone-100 cursor-pointer block">
                                         <div>
                                             <h4 className="font-bold text-stone-900 group-hover:text-amber-600 transition-colors">{role.title}</h4>
                                             <div className="text-sm text-stone-500 mt-1">{role.dept} • {role.loc}</div>
@@ -44,7 +46,7 @@ export default function CareersPage() {
                                         <div className="mt-3 sm:mt-0 text-amber-500 font-medium text-sm group-hover:translate-x-1 transition-transform">
                                             Apply →
                                         </div>
-                                    </div>
+                                    </a>
                                 ))}
                             </div>
                         </div>
