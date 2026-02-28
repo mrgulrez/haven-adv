@@ -62,16 +62,16 @@ export function Solution() {
                             <div className="w-3 h-3 rounded-full bg-amber-400" />
                             <div className="w-3 h-3 rounded-full bg-green-400" />
                         </div>
-                        <div className="text-xs font-medium text-stone-400">HAVEN VOICE INTERFACE</div>
+                        <div className="text-xs font-medium text-stone-400">NURAVYA VOICE INTERFACE</div>
                     </div>
-                    <div className="flex-1 p-6 flex flex-col justify-end space-y-4">
-                        <div className="bg-stone-100 self-start rounded-2xl rounded-tl-none p-4 max-w-[80%]">
-                            <p className="text-stone-700">Good morning, Sarah! How did you sleep? I remember you were worried about your appointment today.</p>
+                    <div className="flex-1 p-4 md:p-6 flex flex-col justify-end space-y-4">
+                        <div className="bg-stone-100 self-start rounded-2xl rounded-tl-none p-3 md:p-4 max-w-[90%] md:max-w-[80%]">
+                            <p className="text-sm md:text-base text-stone-700">Good morning, Sarah! How did you sleep? I remember you were worried about your appointment today.</p>
                         </div>
-                        <div className="bg-amber-100 self-end rounded-2xl rounded-tr-none p-4 max-w-[80%]">
-                            <p className="text-stone-800">I slept okay. Yes, I'm a bit nervous about the doctor visit.</p>
+                        <div className="bg-amber-100 self-end rounded-2xl rounded-tr-none p-3 md:p-4 max-w-[90%] md:max-w-[80%]">
+                            <p className="text-sm md:text-base text-stone-800">I slept okay. Yes, I'm a bit nervous about the doctor visit.</p>
                         </div>
-                        <div className="bg-stone-100 self-start rounded-2xl rounded-tl-none p-4 max-w-[80%] flex gap-2 items-center">
+                        <div className="bg-stone-100 self-start rounded-2xl rounded-tl-none p-3 md:p-4 max-w-[90%] md:max-w-[80%] flex gap-2 items-center">
                             <div className="flex gap-1">
                                 <div className="w-1.5 h-1.5 bg-stone-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
                                 <div className="w-1.5 h-1.5 bg-stone-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
