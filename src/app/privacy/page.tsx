@@ -3,8 +3,8 @@ import { Footer } from "@/components/layout/footer";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Privacy Policy | Haven AI",
-    description: "Privacy Policy for Haven AI. Learn how we collect, use, and protect your data.",
+    title: "Privacy Policy | Nuravya AI",
+    description: "Privacy Policy for Nuravya AI. Learn how we collect, use, and protect your data.",
 };
 
 export default function PrivacyPolicy() {
@@ -20,7 +20,7 @@ export default function PrivacyPolicy() {
                         <section>
                             <h2 className="text-2xl font-semibold text-stone-900 mb-4">1. Introduction</h2>
                             <p>
-                                Welcome to Haven AI ("we," "our," or "us"). We are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about this privacy notice, or our practices with regards to your personal information, please contact us.
+                                Welcome to Nuravya AI ("we," "our," or "us"). We are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about this privacy notice, or our practices with regards to your personal information, please contact us.
                             </p>
                             <p className="mt-4">
                                 This Privacy Policy applies to all information collected through our website, mobile application, and any related services, sales, marketing or events (we refer to them collectively in this Privacy Policy as the "Services").
@@ -84,7 +84,7 @@ export default function PrivacyPolicy() {
                                 <li>If applicable, to data portability.</li>
                             </ul>
                             <p className="mt-4">
-                                To exercise any of these rights, please use the settings available within your Haven AI account dashboard, or contact us. You can easily opt-out of promotional communications or request account deletion at any time.
+                                To exercise any of these rights, please use the settings available within your Nuravya AI account dashboard, or contact us. You can easily opt-out of promotional communications or request account deletion at any time.
                             </p>
                         </section>
 
@@ -108,7 +108,7 @@ export default function PrivacyPolicy() {
                                 If you have questions or comments about this notice, you may email us at:
                             </p>
                             <p className="mt-2 font-semibold">
-                                privacy@havenai.example.com
+                                privacy@nuravyaai.example.com
                             </p>
                             <p className="mt-4 text-sm text-stone-500 italic">
                                 (Note: Please replace the above email with your actual contact email address prior to launch.)

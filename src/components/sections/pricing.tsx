@@ -31,7 +31,7 @@ export function Pricing() {
                         </h2>
 
                         <p className="text-stone-600 mb-10 max-w-lg mx-auto">
-                            Whether you're exploring emotional AI for the first time or seeking deep continuity, Haven grows with you.
+                            Whether you're exploring emotional AI for the first time or seeking deep continuity, Nuravya grows with you.
                         </p>
 
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10 text-left">
@@ -48,7 +48,7 @@ export function Pricing() {
                             {/* Tier 2 */}
                             <div className="bg-white p-6 rounded-2xl border-2 border-amber-400 shadow-md relative">
                                 <div className="absolute top-0 right-1/2 translate-x-1/2 -translate-y-1/2 bg-amber-500 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">Most Popular</div>
-                                <h3 className="font-bold text-lg text-stone-900 mb-1">Haven Core</h3>
+                                <h3 className="font-bold text-lg text-stone-900 mb-1">Nuravya Core</h3>
                                 <div className="text-2xl font-bold text-amber-600 mb-4">$24<span className="text-sm text-stone-500 font-normal">/mo</span></div>
                                 <ul className="space-y-2 mb-6">
                                     <li className="flex gap-2 text-sm text-stone-600"><Check size={16} className="text-green-500 shrink-0 mt-0.5" /> Voice minutes</li>
@@ -58,7 +58,7 @@ export function Pricing() {
 
                             {/* Tier 3 */}
                             <div className="bg-stone-50 p-6 rounded-2xl border border-stone-100">
-                                <h3 className="font-bold text-lg text-stone-900 mb-1">Haven Pro</h3>
+                                <h3 className="font-bold text-lg text-stone-900 mb-1">Nuravya Pro</h3>
                                 <div className="text-2xl font-bold text-amber-600 mb-4">$49<span className="text-sm text-stone-500 font-normal">/mo</span></div>
                                 <ul className="space-y-2 mb-6">
                                     <li className="flex gap-2 text-sm text-stone-600"><Check size={16} className="text-green-500 shrink-0 mt-0.5" /> Unlimited voice</li>

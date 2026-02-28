@@ -20,7 +20,7 @@ export default function CareersPage() {
 
                     <div className="grid md:grid-cols-2 gap-12 mb-20">
                         <div className="bg-amber-100/50 p-8 rounded-3xl border border-amber-200">
-                            <h3 className="text-2xl font-bold font-heading text-stone-900 mb-4">Why Haven?</h3>
+                            <h3 className="text-2xl font-bold font-heading text-stone-900 mb-4">Why Nuravya?</h3>
                             <p className="text-stone-700 leading-relaxed mb-4">
                                 Most AI companies are building tools to make you work faster. We are building technology to make you feel better.
                             </p>
@@ -38,7 +38,7 @@ export default function CareersPage() {
                                     { title: "Full-Stack Typescript Developer", dept: "Engineering", loc: "Remote" },
                                     { title: "Head of Privacy & Security", dept: "Security", loc: "Remote" }
                                 ].map((role, i) => (
-                                    <a key={i} href={`mailto:careers@havenai.example.com?subject=Application for ${role.title}`} className="group flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl hover:bg-stone-50 transition-colors border border-transparent hover:border-stone-100 cursor-pointer block">
+                                    <a key={i} href={`mailto:careers@nuravyaai.example.com?subject=Application for ${role.title}`} className="group flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl hover:bg-stone-50 transition-colors border border-transparent hover:border-stone-100 cursor-pointer block">
                                         <div>
                                             <h4 className="font-bold text-stone-900 group-hover:text-amber-600 transition-colors">{role.title}</h4>
                                             <div className="text-sm text-stone-500 mt-1">{role.dept} • {role.loc}</div>

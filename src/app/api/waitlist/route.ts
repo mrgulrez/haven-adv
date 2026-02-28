@@ -25,7 +25,7 @@ export async function POST(request: Request) {
             to: process.env.EMAIL_USER, // Send to admin
             subject: `New Waitlist Sign-up: ${name || 'User'}`,
             text: `
-        New sign-up for Haven AI Waitlist!
+        New sign-up for Nuravya AI Waitlist!
         
         Name: ${name || 'N/A'}
         Email: ${email}
@@ -45,26 +45,26 @@ export async function POST(request: Request) {
         const userMailOptions = {
             from: process.env.EMAIL_USER,
             to: email,
-            subject: 'Welcome to the Haven AI Waitlist!',
+            subject: 'Welcome to the Nuravya AI Waitlist!',
             text: `
         Hi ${name ? name.split(' ')[0] : 'there'},
 
-        Thanks for joining the waitlist for Haven AI! You've secured your spot to be among the first to experience the future of compassionate AI companionship.
+        Thanks for joining the waitlist for Nuravya AI! You've secured your spot to be among the first to experience the future of compassionate AI companionship.
 
         We'll keep you updated on our launch progress and exclusive early-bird perks.
 
         Warmly,
-        The Haven AI Team
+        The Nuravya AI Team
       `,
             html: `
         <div style="font-family: sans-serif; color: #292524; max-width: 600px; margin: 0 auto;">
-          <h1 style="color: #F59E0B;">Welcome to Haven AI</h1>
+          <h1 style="color: #F59E0B;">Welcome to Nuravya AI</h1>
           <p>Hi ${name ? name.split(' ')[0] : 'there'},</p>
           <p>Thanks for joining the waitlist! You've secured your spot to be among the first to experience the future of compassionate AI companionship.</p>
           <p>We'll keep you updated on our launch progress and exclusive early-bird perks.</p>
           <br/>
           <p>Warmly,</p>
-          <p><strong>The Haven AI Team</strong></p>
+          <p><strong>The Nuravya AI Team</strong></p>
         </div>
       `
         };

@@ -12,7 +12,7 @@ export default function PricingPage() {
                 <div className="container mx-auto max-w-6xl">
                     <div className="text-center mb-20">
                         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-100 border border-amber-200 shadow-sm mb-6">
-                            <span className="text-sm font-semibold text-amber-800 uppercase tracking-wide">Haven is built on one belief</span>
+                            <span className="text-sm font-semibold text-amber-800 uppercase tracking-wide">Nuravya is built on one belief</span>
                         </div>
                         <h1 className="text-4xl md:text-6xl font-bold font-heading text-stone-900 mb-6">Everyone deserves to feel heard.</h1>
                         <p className="text-xl text-stone-600 max-w-2xl mx-auto">
@@ -25,7 +25,7 @@ export default function PricingPage() {
                         <div className="bg-white p-8 rounded-3xl border border-stone-200 shadow-sm flex flex-col hover:shadow-md transition-shadow">
                             <div className="mb-6">
                                 <h2 className="text-2xl font-bold text-stone-900 mb-2">Free</h2>
-                                <p className="text-stone-500 text-sm h-10">Start your journey with zero barriers. Perfect for experiencing Haven’s emotional intelligence at your own pace.</p>
+                                <p className="text-stone-500 text-sm h-10">Start your journey with zero barriers. Perfect for experiencing Nuravya’s emotional intelligence at your own pace.</p>
                             </div>
                             <div className="mb-8">
                                 <span className="text-5xl font-bold text-stone-900">$0</span>
@@ -77,8 +77,8 @@ export default function PricingPage() {
                                 Most Popular
                             </div>
                             <div className="mb-6">
-                                <h2 className="text-2xl font-bold text-stone-900 mb-2">Haven Core</h2>
-                                <p className="text-stone-700 font-medium text-sm h-10">Deeper connection. Real continuity. For users who want Haven to truly grow with them.</p>
+                                <h2 className="text-2xl font-bold text-stone-900 mb-2">Nuravya Core</h2>
+                                <p className="text-stone-700 font-medium text-sm h-10">Deeper connection. Real continuity. For users who want Nuravya to truly grow with them.</p>
                             </div>
                             <div className="mb-6">
                                 <span className="text-5xl font-bold text-stone-900">$24</span>
@@ -133,7 +133,7 @@ export default function PricingPage() {
                         <div className="bg-stone-900 p-8 rounded-3xl border border-stone-800 shadow-xl flex flex-col relative overflow-hidden">
                             <div className="absolute inset-0 bg-gradient-to-br from-stone-800/50 to-transparent pointer-events-none"></div>
                             <div className="mb-6 relative z-10">
-                                <h2 className="text-2xl font-bold text-white mb-2">Haven Pro</h2>
+                                <h2 className="text-2xl font-bold text-white mb-2">Nuravya Pro</h2>
                                 <p className="text-stone-300 text-sm h-10">The ultimate emotionally intelligent AI companion for a deeply personalized relationship.</p>
                             </div>
                             <div className="mb-6 relative z-10">

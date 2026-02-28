@@ -12,7 +12,7 @@ export default function BlogPage() {
                     <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
                         <div>
                             <h1 className="text-4xl md:text-6xl font-bold font-heading text-stone-900 mb-4">Engineering Empathy</h1>
-                            <p className="text-xl text-stone-600 max-w-2xl">Thoughts, updates, and research from the team building Haven.</p>
+                            <p className="text-xl text-stone-600 max-w-2xl">Thoughts, updates, and research from the team building Nuravya.</p>
                         </div>
                         <div className="bg-amber-100 text-amber-800 px-4 py-2 rounded-full text-sm font-semibold tracking-wide w-fit">
                             Subscribe for Updates
@@ -47,19 +47,19 @@ export default function BlogPage() {
                                 tag: "Culture",
                                 date: "Feb 10, 2026",
                                 title: "Designing for Vulnerability, Not Engagement",
-                                excerpt: "The dangerous incentives of the modern web, and why Haven's core metrics completely ignore time-in-app."
+                                excerpt: "The dangerous incentives of the modern web, and why Nuravya's core metrics completely ignore time-in-app."
                             },
                             {
                                 tag: "Update",
                                 date: "Jan 28, 2026",
-                                title: "Haven Early Access: What to Expect",
+                                title: "Nuravya Early Access: What to Expect",
                                 excerpt: "We are finally opening our doors to the first 5,000 waitlist users next month. Here is exactly what the V1 experience looks like."
                             },
                             {
                                 tag: "Engineering",
                                 date: "Jan 15, 2026",
                                 title: "Building an Infinite Memory Graph",
-                                excerpt: "How we utilize vector databases and LLM-driven graph extraction to ensure Haven never forgets your mother's birthday."
+                                excerpt: "How we utilize vector databases and LLM-driven graph extraction to ensure Nuravya never forgets your mother's birthday."
                             }
                         ].map((post, i) => (
                             <Link key={i} href="/blog" className="group bg-white p-8 rounded-3xl border border-stone-100 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col h-full">

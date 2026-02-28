@@ -74,7 +74,7 @@ export function Hero() {
                     transition={{ duration: 0.8, delay: 0.6 }}
                     className="text-lg md:text-xl text-stone-600 mb-10 max-w-2xl leading-relaxed"
                 >
-                    Haven is your warm AI companion that remembers, cares, and reminds.
+                    Nuravya is your warm AI companion that remembers, cares, and reminds.
                     Voice conversations that feel like talking to an old friend.
                 </motion.p>
 

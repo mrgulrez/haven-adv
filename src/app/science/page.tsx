@@ -37,7 +37,7 @@ export default function SciencePage() {
                         transition={{ duration: 0.8, delay: 0.4 }}
                         className="text-xl text-stone-600 max-w-2xl mx-auto leading-relaxed"
                     >
-                        Haven isn't just a language model. It's a therapeutic system built on decades of peer-reviewed clinical psychology and cognitive behavioral principles.
+                        Nuravya isn't just a language model. It's a therapeutic system built on decades of peer-reviewed clinical psychology and cognitive behavioral principles.
                     </motion.p>
                 </div>
             </section>
@@ -52,7 +52,7 @@ export default function SciencePage() {
                                     <Brain className="text-emerald-500" /> Cognitive Architecture
                                 </h3>
                                 <p className="text-stone-600 leading-relaxed">
-                                    Our proprietary emotion engine layers advanced psychological frameworks (CBT, DBT) over generative AI, allowing Haven to guide conversations toward healthy processing rather than just endless rumination.
+                                    Our proprietary emotion engine layers advanced psychological frameworks (CBT, DBT) over generative AI, allowing Nuravya to guide conversations toward healthy processing rather than just endless rumination.
                                 </p>
                             </div>
                             <div>
@@ -68,7 +68,7 @@ export default function SciencePage() {
                                     <LineChart className="text-emerald-500" /> Longitudinal Processing
                                 </h3>
                                 <p className="text-stone-600 leading-relaxed">
-                                    Haven doesn't just remember facts; it tracks emotional valence over time. Our context window allows the system to identify behavioral patterns spanning months, offering insights impossible for standard AI models.
+                                    Nuravya doesn't just remember facts; it tracks emotional valence over time. Our context window allows the system to identify behavioral patterns spanning months, offering insights impossible for standard AI models.
                                 </p>
                             </div>
                         </div>
@@ -80,7 +80,7 @@ export default function SciencePage() {
                             <p className="text-stone-600 mb-6">
                                 We are actively partnering with top universities to conduct clinical trials on AI-mediated companionship protocols and their impact on geriatric depression.
                             </p>
-                            <a href="mailto:research@havenai.example.com" className="font-semibold text-emerald-600 hover:text-emerald-700 underline underline-offset-4 w-fit">
+                            <a href="mailto:research@nuravyaai.example.com" className="font-semibold text-emerald-600 hover:text-emerald-700 underline underline-offset-4 w-fit">
                                 Read our whitepaper (Coming Soon) →
                             </a>
                         </div>

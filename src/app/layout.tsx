@@ -7,28 +7,28 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
 export const metadata: Metadata = {
-  title: "Haven AI - Your Warm AI Companion",
-  description: "Never feel alone again with Haven AI. A voice companion that remembers, cares, and reminds. Built with radical empathy and unwavering privacy.",
+  title: "Nuravya AI - Your Warm AI Companion",
+  description: "Never feel alone again with Nuravya AI. A voice companion that remembers, cares, and reminds. Built with radical empathy and unwavering privacy.",
   keywords: ["AI companion", "mental health AI", "loneliness", "voice AI", "empathetic AI", "elderly care", "daily check-ins", "virtual companion"],
-  authors: [{ name: "Haven AI Team" }],
-  creator: "Haven AI",
-  publisher: "Haven AI",
+  authors: [{ name: "Nuravya AI Team" }],
+  creator: "Nuravya AI",
+  publisher: "Nuravya AI",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
   openGraph: {
-    title: "Haven AI - Your Warm AI Companion",
-    description: "Never feel alone again with Haven AI. A voice companion that remembers, cares, and reminds.",
-    url: "https://havenai.example.com",
-    siteName: "Haven AI",
+    title: "Nuravya AI - Your Warm AI Companion",
+    description: "Never feel alone again with Nuravya AI. A voice companion that remembers, cares, and reminds.",
+    url: "https://nuravyaai.example.com",
+    siteName: "Nuravya AI",
     images: [
       {
-        url: "https://havenai.example.com/og-image.png",
+        url: "https://nuravyaai.example.com/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Haven AI - Comfort and connection in every conversation",
+        alt: "Nuravya AI - Comfort and connection in every conversation",
       },
     ],
     locale: "en_US",
@@ -36,10 +36,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Haven AI - Your Warm AI Companion",
-    description: "Never feel alone again with Haven AI.",
-    creator: "@havenai",
-    images: ["https://havenai.example.com/og-image.png"],
+    title: "Nuravya AI - Your Warm AI Companion",
+    description: "Never feel alone again with Nuravya AI.",
+    creator: "@nuravyaai",
+    images: ["https://nuravyaai.example.com/og-image.png"],
   },
   robots: {
     index: true,

@@ -15,7 +15,7 @@ const features = [
     {
         icon: Brain,
         title: "Emotional Memory",
-        description: "Haven remembers your stories and important moments.",
+        description: "Nuravya remembers your stories and important moments.",
         color: "bg-rose-100 text-rose-600",
     },
     {
@@ -49,7 +49,7 @@ export function Solution() {
                     A Companion That Truly Understands
                 </h2>
                 <p className="text-lg text-stone-600">
-                    More than just a chatbot. Haven is designed to be present, attentive, and helpful in your daily life.
+                    More than just a chatbot. Nuravya is designed to be present, attentive, and helpful in your daily life.
                 </p>
             </div>
 

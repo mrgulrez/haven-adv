@@ -10,7 +10,7 @@ export default function FeaturesPage() {
                 <div className="container mx-auto max-w-6xl">
                     <div className="text-center mb-16">
                         <h1 className="text-4xl md:text-6xl font-bold font-heading text-stone-900 mb-6">Features</h1>
-                        <p className="text-xl text-stone-600 max-w-2xl mx-auto">Discover what makes Haven the most empathetic AI companion ever built.</p>
+                        <p className="text-xl text-stone-600 max-w-2xl mx-auto">Discover what makes Nuravya the most empathetic AI companion ever built.</p>
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
@@ -19,7 +19,7 @@ export default function FeaturesPage() {
                             <Mic className="h-12 w-12 text-amber-500 mb-6" />
                             <h2 className="text-2xl font-bold text-stone-900 mb-4">Real-Time Voice Intelligence</h2>
                             <p className="text-stone-600 leading-relaxed mb-6">
-                                Haven doesn't just process text. It listens to the tone, cadence, and emotion in your voice, allowing for incredibly natural, interrupting, and flowing conversations.
+                                Nuravya doesn't just process text. It listens to the tone, cadence, and emotion in your voice, allowing for incredibly natural, interrupting, and flowing conversations.
                             </p>
                             <ul className="space-y-3 text-stone-600">
                                 <li>✓ Sub-500ms response latency</li>
@@ -33,7 +33,7 @@ export default function FeaturesPage() {
                             <Brain className="h-12 w-12 text-rose-500 mb-6" />
                             <h2 className="text-2xl font-bold text-stone-900 mb-4">Infinite Memory Graph</h2>
                             <p className="text-stone-600 leading-relaxed mb-6">
-                                Conversations shouldn't start from scratch every day. Haven builds a secure associative memory graph of your preferences, relationships, and history over time.
+                                Conversations shouldn't start from scratch every day. Nuravya builds a secure associative memory graph of your preferences, relationships, and history over time.
                             </p>
                             <ul className="space-y-3 text-stone-600">
                                 <li>✓ Contextual recall across sessions</li>
@@ -61,7 +61,7 @@ export default function FeaturesPage() {
                             <Heart className="h-12 w-12 text-blue-500 mb-6" />
                             <h2 className="text-2xl font-bold text-stone-900 mb-4">Proactive Care</h2>
                             <p className="text-stone-600 leading-relaxed mb-6">
-                                Haven doesn't just wait for you to speak. If you mention an important interview tomorrow, Haven will proactively check in to see how it went.
+                                Nuravya doesn't just wait for you to speak. If you mention an important interview tomorrow, Nuravya will proactively check in to see how it went.
                             </p>
                             <ul className="space-y-3 text-stone-600">
                                 <li>✓ Smart gentle reminders</li>

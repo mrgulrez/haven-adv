@@ -53,7 +53,7 @@ export function Trust() {
                             </h2>
                             <p className="text-lg text-stone-400 leading-relaxed">
                                 We understand that privacy is paramount when it comes to personal companionship.
-                                Haven is built on a foundation of enterprise-grade security and ethical AI principles.
+                                Nuravya is built on a foundation of enterprise-grade security and ethical AI principles.
                             </p>
                         </motion.div>
 
@@ -97,7 +97,7 @@ export function Trust() {
                                     {">"} connecting_to_neural_core... [OK]
                                 </div>
                                 <div className="text-amber-400 typewriter" style={{ animationDelay: "3s" }}>
-                                    {">"} haven_ai_ready
+                                    {">"} nuravya_ai_ready
                                 </div>
                             </div>
 

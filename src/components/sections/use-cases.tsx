@@ -18,14 +18,14 @@ const cases = [
     },
     {
         title: "For Kids",
-        quote: "Haven helps me with homework and talks when I'm sad.",
+        quote: "Nuravya helps me with homework and talks when I'm sad.",
         features: ["Learning support", "Emotional check-ins", "Bedtime stories"],
         image: "/images/kids.png",
         color: "border-l-4 border-blue-500",
     },
     {
         title: "For Therapy Support",
-        quote: "Between sessions, Haven helps me process and stay accountable.",
+        quote: "Between sessions, Nuravya helps me process and stay accountable.",
         features: ["CBT exercises", "Mood tracking", "Coping strategies"],
         image: "/images/therapy.png",
         color: "border-l-4 border-emerald-500",
@@ -54,7 +54,7 @@ export function UseCases() {
                         Designed for Every Stage of Life
                     </h2>
                     <p className="text-stone-600">
-                        Whether you need a friend, a mentor, or a support system, Haven adapts to your emotional needs.
+                        Whether you need a friend, a mentor, or a support system, Nuravya adapts to your emotional needs.
                     </p>
                 </div>
                 <div className="flex gap-2 mt-4 md:mt-0 hidden md:flex">

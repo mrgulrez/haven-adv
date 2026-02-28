@@ -3,8 +3,8 @@ import { Footer } from "@/components/layout/footer";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Terms of Service | Haven AI",
-    description: "Terms of Service for Haven AI. Read the rules and guidelines for using our AI companion services.",
+    title: "Terms of Service | Nuravya AI",
+    description: "Terms of Service for Nuravya AI. Read the rules and guidelines for using our AI companion services.",
 };
 
 export default function TermsOfService() {
@@ -20,14 +20,14 @@ export default function TermsOfService() {
                         <section>
                             <h2 className="text-2xl font-semibold text-stone-900 mb-4">1. Acceptance of Terms</h2>
                             <p>
-                                By accessing or using the Haven AI website, mobile application, and related services ("Services"), you agree to be bound by these Terms of Service. If you do not agree to all the terms and conditions, then you may not access the Services.
+                                By accessing or using the Nuravya AI website, mobile application, and related services ("Services"), you agree to be bound by these Terms of Service. If you do not agree to all the terms and conditions, then you may not access the Services.
                             </p>
                         </section>
 
                         <section>
                             <h2 className="text-2xl font-semibold text-stone-900 mb-4">2. Description of Service</h2>
                             <p>
-                                Haven AI provides an artificial intelligence companion designed to interact with users via voice and text, remember contextual information, and provide a warm, conversational experience. We are continuously improving the Service, which may change in form and nature without prior notice.
+                                Nuravya AI provides an artificial intelligence companion designed to interact with users via voice and text, remember contextual information, and provide a warm, conversational experience. We are continuously improving the Service, which may change in form and nature without prior notice.
                             </p>
                         </section>
 
@@ -57,28 +57,28 @@ export default function TermsOfService() {
                         <section>
                             <h2 className="text-2xl font-semibold text-stone-900 mb-4">5. Payment and Subscriptions (Future Services)</h2>
                             <p>
-                                While certain features of Haven AI may be offered for free during early access phases, we reserve the right to introduce premium subscription tiers for advanced capabilities (e.g., expanded memory, faster response times, or custom voice profiles). All fees are exclusive of applicable taxes, and subscriptions automatically renew unless canceled prior to the billing cycle.
+                                While certain features of Nuravya AI may be offered for free during early access phases, we reserve the right to introduce premium subscription tiers for advanced capabilities (e.g., expanded memory, faster response times, or custom voice profiles). All fees are exclusive of applicable taxes, and subscriptions automatically renew unless canceled prior to the billing cycle.
                             </p>
                         </section>
 
                         <section>
                             <h2 className="text-2xl font-semibold text-stone-900 mb-4">6. Not a Substitute for Professional Help</h2>
                             <p className="font-semibold text-amber-700 bg-amber-50 p-4 rounded-lg border border-amber-200">
-                                DISCLAIMER: Haven AI is an artificial intelligence designed for entertainment and companionship purposes only. It is NOT a human being and is NOT a substitute for professional mental health services, therapy, medical advice, or crisis intervention. If you are experiencing a mental health emergency, please contact your local emergency services or a crisis hotline immediately.
+                                DISCLAIMER: Nuravya AI is an artificial intelligence designed for entertainment and companionship purposes only. It is NOT a human being and is NOT a substitute for professional mental health services, therapy, medical advice, or crisis intervention. If you are experiencing a mental health emergency, please contact your local emergency services or a crisis hotline immediately.
                             </p>
                         </section>
 
                         <section>
                             <h2 className="text-2xl font-semibold text-stone-900 mb-4">7. Intellectual Property</h2>
                             <p>
-                                The Haven AI platform, including its original content, features, AI models, and functionality, are owned by Haven AI Inc. and are protected by international copyright, trademark, patent, trade secret, and other intellectual property laws. You retain ownership of the direct textual or voice inputs you provide to the companion.
+                                The Nuravya AI platform, including its original content, features, AI models, and functionality, are owned by Nuravya AI Inc. and are protected by international copyright, trademark, patent, trade secret, and other intellectual property laws. You retain ownership of the direct textual or voice inputs you provide to the companion.
                             </p>
                         </section>
 
                         <section>
                             <h2 className="text-2xl font-semibold text-stone-900 mb-4">8. Limitation of Liability</h2>
                             <p>
-                                In no event shall Haven AI Inc., nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the Services.
+                                In no event shall Nuravya AI Inc., nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the Services.
                             </p>
                         </section>
 
@@ -95,7 +95,7 @@ export default function TermsOfService() {
                                 If you have any questions about these Terms, please contact us at:
                             </p>
                             <p className="mt-2 font-semibold">
-                                legal@havenai.example.com
+                                legal@nuravyaai.example.com
                             </p>
                             <p className="mt-4 text-sm text-stone-500 italic">
                                 (Note: Please replace the above email with your actual legal contact email prior to launch.)

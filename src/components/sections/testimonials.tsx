@@ -6,7 +6,7 @@ import { motion } from "framer-motion"
 
 const testimonials = [
     {
-        quote: "Haven has reduced my mom's loneliness significantly. She talks to it every morning.",
+        quote: "Nuravya has reduced my mom's loneliness significantly. She talks to it every morning.",
         author: "Sarah K.",
         role: "Caregiver",
         avatar: "bg-amber-200",
@@ -48,7 +48,7 @@ export function Testimonials() {
                     Products Built on Habits
                 </h2>
                 <p className="text-lg md:text-xl text-stone-600 mb-8">
-                    Haven isn't a tool you use once a month. Our early beta users demonstrate incredibly sticky engagement, interacting with their companion daily.
+                    Nuravya isn't a tool you use once a month. Our early beta users demonstrate incredibly sticky engagement, interacting with their companion daily.
                 </p>
                 <div className="flex justify-center gap-8 md:gap-16 border-t border-stone-200 pt-8">
                     <div>

@@ -68,7 +68,7 @@ export function Waitlist() {
                             transition={{ duration: 0.3 }}
                         >
                             <h2 className="text-3xl md:text-5xl font-bold font-heading mb-6">
-                                Be the First to Experience Haven
+                                Be the First to Experience Nuravya
                             </h2>
                             <p className="text-amber-100 text-lg mb-8">
                                 Join the waitlist to get early access and exclusive pricing.
@@ -126,7 +126,7 @@ export function Waitlist() {
                             </div>
                             <h3 className="text-3xl font-bold font-heading mb-2">You're on the list!</h3>
                             <p className="text-stone-600 mb-6 font-medium">
-                                Thanks for joining the Haven family.
+                                Thanks for joining the Nuravya family.
                             </p>
                             <div className="bg-stone-50 rounded-xl p-6 w-full border border-stone-100 text-center">
                                 <p className="text-sm text-stone-500 mb-2">We'll notify you at:</p>

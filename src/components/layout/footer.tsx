@@ -12,19 +12,19 @@ export function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
                     <div className="md:col-span-1">
                         <Link href="/" className="text-2xl font-bold font-heading text-white mb-4 block">
-                            Haven AI
+                            Nuravya AI
                         </Link>
                         <p className="text-sm text-stone-400 mb-6">
                             Your warm AI companion that remembers, cares, and reminds. Never feel alone again.
                         </p>
                         <div className="flex gap-4">
-                            <Link href="https://twitter.com/haven_ai" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                            <Link href="https://twitter.com/nuravya_ai" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                                 <Twitter size={20} />
                             </Link>
-                            <Link href="https://linkedin.com/company/haven-ai" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                            <Link href="https://linkedin.com/company/nuravya-ai" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                                 <Linkedin size={20} />
                             </Link>
-                            <Link href="https://instagram.com/haven_ai" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                            <Link href="https://instagram.com/nuravya_ai" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                                 <Instagram size={20} />
                             </Link>
                         </div>
@@ -48,14 +48,14 @@ export function Footer() {
                             <li><Link href="/science" className="hover:text-white transition-colors">Science & Research</Link></li>
                             <li><Link href="/careers" className="hover:text-white transition-colors">Careers</Link></li>
                             <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
-                            <li><Link href="mailto:investors@havenai.example.com" className="hover:text-white text-emerald-400 transition-colors">Investors</Link></li>
+                            <li><Link href="mailto:investors@nuravyaai.example.com" className="hover:text-white text-emerald-400 transition-colors">Investors</Link></li>
                         </ul>
                     </div>
 
                     <div>
                         <h4 className="font-semibold text-white mb-4">Stay Included</h4>
                         <p className="text-sm text-stone-400 mb-4">
-                            Join 5,000+ people excited for Haven's launch.
+                            Join 5,000+ people excited for Nuravya's launch.
                         </p>
                         <form
                             onSubmit={async (e) => {
@@ -96,7 +96,7 @@ export function Footer() {
                 </div>
 
                 <div className="pt-8 border-t border-stone-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-stone-500">
-                    <p>© 2026 Haven AI Inc. All rights reserved.</p>
+                    <p>© 2026 Nuravya AI Inc. All rights reserved.</p>
                     <div className="flex gap-6">
                         <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
                         <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>

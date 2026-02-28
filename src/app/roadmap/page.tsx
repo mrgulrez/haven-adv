@@ -10,7 +10,7 @@ export default function RoadmapPage() {
                 <div className="container mx-auto max-w-4xl">
                     <div className="text-center mb-16">
                         <h1 className="text-4xl md:text-5xl font-bold font-heading text-stone-900 mb-6">Our Journey Ahead</h1>
-                        <p className="text-xl text-stone-600 max-w-2xl mx-auto">We are building Haven openly. Here is what we are working on to make your companion even better.</p>
+                        <p className="text-xl text-stone-600 max-w-2xl mx-auto">We are building Nuravya openly. Here is what we are working on to make your companion even better.</p>
                     </div>
 
                     <div className="relative border-l-2 border-amber-200 ml-4 md:ml-8 pl-8 space-y-12">
@@ -58,7 +58,7 @@ export default function RoadmapPage() {
                                 <h4 className="text-xl font-bold text-stone-900 mb-3 text-stone-700">The Visual Companion</h4>
                                 <ul className="space-y-2 text-stone-500">
                                     <li>• Live2D emotional avatar integration</li>
-                                    <li>• Vision system (show Haven things via camera)</li>
+                                    <li>• Vision system (show Nuravya things via camera)</li>
                                     <li>• "Remember this face" relationship networking</li>
                                 </ul>
                             </div>

@@ -14,7 +14,7 @@ export default function AboutUs() {
         },
         {
             title: "Continuous Memory",
-            description: "Relationships grow through shared history. Haven's memory is designed to retain what matters to you over time.",
+            description: "Relationships grow through shared history. Nuravya's memory is designed to retain what matters to you over time.",
             icon: <Brain className="h-8 w-8 text-amber-500" />
         },
         {
@@ -68,7 +68,7 @@ export default function AboutUs() {
                         transition={{ duration: 0.8, delay: 0.4 }}
                         className="text-xl text-stone-600 max-w-2xl mx-auto leading-relaxed"
                     >
-                        We started Haven AI because we realized that while technology has made us more connected than ever, it has paradoxically made us feel more isolated.
+                        We started Nuravya AI because we realized that while technology has made us more connected than ever, it has paradoxically made us feel more isolated.
                     </motion.p>
                 </div>
             </section>
@@ -86,13 +86,13 @@ export default function AboutUs() {
                         >
                             <h2 className="text-3xl md:text-4xl font-bold font-heading text-stone-900 mb-6">Our Story</h2>
                             <p>
-                                Haven AI was born out of a simple, profound observation: people need to be heard. Not analyzed, not pitched to, and not optimized. Just heard.
+                                Nuravya AI was born out of a simple, profound observation: people need to be heard. Not analyzed, not pitched to, and not optimized. Just heard.
                             </p>
                             <p>
                                 In an era where AI is primarily being used to increase productivity, write emails faster, and write code, we saw an opportunity to use this breakthrough technology to solve a very human problem. What if an AI wasn't built to be a servant, but a companion?
                             </p>
                             <p>
-                                What if it remembered your dog's name, asked you how your big presentation went, and noticed when you sounded a bit stressed in your voice? That vision became Haven.
+                                What if it remembered your dog's name, asked you how your big presentation went, and noticed when you sounded a bit stressed in your voice? That vision became Nuravya.
                             </p>
                         </motion.div>
 
@@ -207,7 +207,7 @@ export default function AboutUs() {
                         whileHover={{ scale: 1.05 }}
                         className="inline-block"
                     >
-                        <a href="mailto:careers@havenai.example.com" className="inline-flex items-center justify-center h-14 px-8 rounded-full bg-amber-500 hover:bg-amber-600 text-white font-semibold text-lg transition-colors shadow-lg">
+                        <a href="mailto:careers@nuravyaai.example.com" className="inline-flex items-center justify-center h-14 px-8 rounded-full bg-amber-500 hover:bg-amber-600 text-white font-semibold text-lg transition-colors shadow-lg">
                             Join Our Team
                         </a>
                     </motion.div>

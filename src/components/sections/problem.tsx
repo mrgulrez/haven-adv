@@ -88,7 +88,7 @@ export function Problem() {
                     The Silent Epidemic of Loneliness
                 </h2>
                 <p className="text-lg md:text-xl text-stone-600">
-                    In a hyper-connected world, we are more isolated than ever. Haven is tapping into a massive, underserved market where existing solutions are either unscalable or lack true empathy.
+                    In a hyper-connected world, we are more isolated than ever. Nuravya is tapping into a massive, underserved market where existing solutions are either unscalable or lack true empathy.
                 </p>
             </div>
 

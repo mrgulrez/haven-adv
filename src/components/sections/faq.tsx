@@ -11,19 +11,19 @@ const faqs = [
         answer: "Absolutely. We use enterprise-grade encryption for all data storage and transmission. Your conversations are private and never used to train public AI models without your explicit consent.",
     },
     {
-        question: "How does Haven remember conversations?",
-        answer: "Haven uses a sophisticated memory architecture that stores key details, preferences, and stories from your conversations in a secure, private database unique to you.",
+        question: "How does Nuravya remember conversations?",
+        answer: "Nuravya uses a sophisticated memory architecture that stores key details, preferences, and stories from your conversations in a secure, private database unique to you.",
     },
     {
         question: "Can I use my own voice or a family member's voice?",
-        answer: "Currently, Haven offers a selection of warm, natural AI voices. We are exploring voice cloning technology for future updates with strict ethical guidelines.",
+        answer: "Currently, Nuravya offers a selection of warm, natural AI voices. We are exploring voice cloning technology for future updates with strict ethical guidelines.",
     },
     {
-        question: "What devices does Haven work on?",
-        answer: "Haven is accessible via any modern web browser on desktop, tablet, and mobile devices. A dedicated mobile app is coming in Q3 2026.",
+        question: "What devices does Nuravya work on?",
+        answer: "Nuravya is accessible via any modern web browser on desktop, tablet, and mobile devices. A dedicated mobile app is coming in Q3 2026.",
     },
     {
-        question: "When will Haven launch?",
+        question: "When will Nuravya launch?",
         answer: "We are targeting a full public launch in Q2 2026. Join the waitlist to get early access and help shape the product during our beta phase.",
     },
 ]

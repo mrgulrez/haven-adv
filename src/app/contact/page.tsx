@@ -61,7 +61,7 @@ export default function ContactPage() {
                                     <div>
                                         <h4 className="text-white font-medium mb-1">Email Support</h4>
                                         <p className="text-sm text-stone-400">Our support team aims to respond within 24 hours.</p>
-                                        <p className="text-amber-400 mt-1 hover:underline cursor-pointer font-medium">hello@havenai.example.com</p>
+                                        <p className="text-amber-400 mt-1 hover:underline cursor-pointer font-medium">hello@nuravyaai.example.com</p>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-4">
@@ -76,7 +76,7 @@ export default function ContactPage() {
                                     <div>
                                         <h4 className="text-white font-medium mb-1">Press & Media</h4>
                                         <p className="text-sm text-stone-400">For interview requests and media resources.</p>
-                                        <p className="text-amber-400 mt-1 hover:underline cursor-pointer font-medium">press@havenai.example.com</p>
+                                        <p className="text-amber-400 mt-1 hover:underline cursor-pointer font-medium">press@nuravyaai.example.com</p>
                                     </div>
                                 </div>
                             </div>
