@@ -162,7 +162,7 @@ export default function AboutUs() {
                                 {/* Placeholder gradient for avatar */}
                                 <div className="w-full h-full bg-gradient-to-tr from-stone-300 to-stone-400"></div>
                             </div>
-                            <h3 className="text-xl font-bold text-stone-900 mb-1">Alex Chen</h3>
+                            <h3 className="text-xl font-bold text-stone-900 mb-1">Gulrez Alam</h3>
                             <p className="text-amber-600 font-medium text-sm mb-4">CEO & Co-founder</p>
                             <p className="text-stone-600 text-sm leading-relaxed">
                                 Former Engineering Lead at DeepMind. Built conversational AI systems used by millions. Stanford CS.
