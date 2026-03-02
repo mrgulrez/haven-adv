@@ -4,8 +4,22 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Twitter, Linkedin, Instagram } from "lucide-react"
+import { StatusModal } from "@/components/ui/success-modal"
+import { useState } from "react"
 
 export function Footer() {
+    const [modalConfig, setModalConfig] = useState<{
+        isOpen: boolean;
+        title: string;
+        message: string;
+        variant: "success" | "error";
+    }>({
+        isOpen: false,
+        title: "",
+        message: "",
+        variant: "success",
+    })
+
     return (
         <footer className="bg-stone-900 text-stone-300 pt-12 pb-6 md:py-16">
             <div className="container mx-auto px-5 md:px-6">
@@ -154,11 +168,30 @@ export function Footer() {
                                         body: JSON.stringify({ email, source: 'Footer Newsletter' }),
                                     })
                                     if (res.ok) {
-                                        alert('Thanks for subscribing!')
+                                        setModalConfig({
+                                            isOpen: true,
+                                            title: "You're on the list!",
+                                            message: "Thanks for subscribing! We'll keep you updated on our launch progress.",
+                                            variant: "success",
+                                        })
                                         form.reset()
+                                    } else {
+                                        const error = await res.json()
+                                        setModalConfig({
+                                            isOpen: true,
+                                            title: "Subscription Error",
+                                            message: error.error || "Failed to subscribe. Please try again.",
+                                            variant: "error",
+                                        })
                                     }
                                 } catch (err) {
                                     console.error(err)
+                                    setModalConfig({
+                                        isOpen: true,
+                                        title: "Connection Error",
+                                        message: "Something went wrong. Please check your connection and try again.",
+                                        variant: "error",
+                                    })
                                 }
                             }}
                             className="flex gap-2"
@@ -193,8 +226,14 @@ export function Footer() {
                         </Link>
                     </div>
                 </div>
-
             </div>
+            <StatusModal
+                isOpen={modalConfig.isOpen}
+                onClose={() => setModalConfig(prev => ({ ...prev, isOpen: false }))}
+                title={modalConfig.title}
+                message={modalConfig.message}
+                variant={modalConfig.variant}
+            />
         </footer>
     )
 }

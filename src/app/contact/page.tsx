@@ -5,8 +5,22 @@ import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Mail, MapPin, MessageSquare } from "lucide-react";
+import { StatusModal } from "@/components/ui/success-modal";
+import { useState } from "react";
 
 export default function ContactPage() {
+    const [modalConfig, setModalConfig] = useState<{
+        isOpen: boolean;
+        title: string;
+        message: string;
+        variant: "success" | "error";
+    }>({
+        isOpen: false,
+        title: "",
+        message: "",
+        variant: "success",
+    });
+
     return (
         <main className="min-h-screen bg-[#FFFBEB] flex flex-col font-sans">
             <Navbar />
@@ -21,25 +35,81 @@ export default function ContactPage() {
                         {/* Contact Form */}
                         <div className="p-8 md:p-12">
                             <h2 className="text-2xl font-bold font-heading text-stone-900 mb-6">Send a message</h2>
-                            <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); alert("Thanks for reaching out! In a production app, this would connect to an API."); }}>
+                            <form
+                                className="space-y-6"
+                                onSubmit={async (e) => {
+                                    e.preventDefault();
+                                    const form = e.target as HTMLFormElement;
+                                    const formData = new FormData(form);
+                                    const data = {
+                                        firstName: formData.get('first-name'),
+                                        lastName: formData.get('last-name'),
+                                        email: formData.get('email'),
+                                        message: formData.get('message'),
+                                    };
+
+                                    const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+                                    const originalText = submitBtn.innerText;
+                                    submitBtn.disabled = true;
+                                    submitBtn.innerText = "Sending...";
+
+                                    try {
+                                        const res = await fetch('/api/contact', {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify(data),
+                                        });
+
+                                        if (res.ok) {
+                                            setModalConfig({
+                                                isOpen: true,
+                                                title: "Message Received",
+                                                message: "Thanks for reaching out! We've received your message and sent a confirmation to your email.",
+                                                variant: "success",
+                                            });
+                                            form.reset();
+                                        } else {
+                                            const error = await res.json();
+                                            setModalConfig({
+                                                isOpen: true,
+                                                title: "Submission Error",
+                                                message: error.error || "Failed to send message. Please try again.",
+                                                variant: "error",
+                                            });
+                                        }
+                                    } catch (err) {
+                                        console.error(err);
+                                        setModalConfig({
+                                            isOpen: true,
+                                            title: "System Error",
+                                            message: "An error occurred while sending your message. Please try again later.",
+                                            variant: "error",
+                                        });
+                                    } finally {
+                                        submitBtn.disabled = false;
+                                        submitBtn.innerText = originalText;
+                                    }
+                                }}
+                            >
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-2">
                                         <label htmlFor="first-name" className="text-sm font-medium text-stone-700">First name</label>
-                                        <Input id="first-name" placeholder="Jane" className="bg-stone-50 border-stone-200" required />
+                                        <Input id="first-name" name="first-name" placeholder="Jane" className="bg-stone-50 border-stone-200" required />
                                     </div>
                                     <div className="space-y-2">
                                         <label htmlFor="last-name" className="text-sm font-medium text-stone-700">Last name</label>
-                                        <Input id="last-name" placeholder="Doe" className="bg-stone-50 border-stone-200" required />
+                                        <Input id="last-name" name="last-name" placeholder="Doe" className="bg-stone-50 border-stone-200" required />
                                     </div>
                                 </div>
                                 <div className="space-y-2">
                                     <label htmlFor="email" className="text-sm font-medium text-stone-700">Email address</label>
-                                    <Input id="email" type="email" placeholder="jane@example.com" className="bg-stone-50 border-stone-200" required />
+                                    <Input id="email" name="email" type="email" placeholder="jane@example.com" className="bg-stone-50 border-stone-200" required />
                                 </div>
                                 <div className="space-y-2">
                                     <label htmlFor="message" className="text-sm font-medium text-stone-700">Message</label>
                                     <textarea
                                         id="message"
+                                        name="message"
                                         className="flex w-full rounded-md border border-stone-200 bg-stone-50 px-3 py-2 text-sm placeholder:text-stone-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-950 disabled:cursor-not-allowed disabled:opacity-50 min-h-[120px]"
                                         placeholder="How can we help?"
                                         required
@@ -85,6 +155,13 @@ export default function ContactPage() {
                 </div>
             </div>
             <Footer />
+            <StatusModal
+                isOpen={modalConfig.isOpen}
+                onClose={() => setModalConfig(prev => ({ ...prev, isOpen: false }))}
+                title={modalConfig.title}
+                message={modalConfig.message}
+                variant={modalConfig.variant}
+            />
         </main>
     );
 }

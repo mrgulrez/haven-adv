@@ -40,14 +40,14 @@ export function Trust() {
                             transition={{ duration: 0.6 }}
                             viewport={{ once: true }}
                         >
-                            <div className="flex items-center gap-4 mb-8">
+                            {/* <div className="flex items-center gap-4 mb-8">
                                 <span className="text-sm font-semibold tracking-wider text-stone-500 uppercase">Backed By</span>
                                 <div className="h-px bg-stone-700 flex-grow"></div>
                                 <div className="flex gap-6 text-stone-400">
                                     <div className="font-bold text-xl opacity-50 hover:opacity-100 transition-opacity cursor-default">Y Combinator</div>
                                     <div className="font-bold text-xl opacity-50 hover:opacity-100 transition-opacity cursor-default">Sequoia</div>
                                 </div>
-                            </div>
+                            </div> */}
                             <h2 className="text-3xl md:text-5xl font-bold font-heading text-white mb-6">
                                 Built for Trust & Scale
                             </h2>

@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2, CheckCircle2, PartyPopper } from "lucide-react"
+import { StatusModal } from "@/components/ui/success-modal"
 
 const schema = z.object({
     name: z.string().min(2, "Name must be at least 2 characters"),
@@ -21,6 +22,17 @@ export function Waitlist() {
     const [isSubmitted, setIsSubmitted] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [position, setPosition] = useState(234)
+    const [modalConfig, setModalConfig] = useState<{
+        isOpen: boolean;
+        title: string;
+        message: string;
+        variant: "success" | "error";
+    }>({
+        isOpen: false,
+        title: "",
+        message: "",
+        variant: "success",
+    })
 
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(schema),
@@ -43,7 +55,12 @@ export function Waitlist() {
             }
         } catch (error) {
             console.error(error)
-            alert("Something went wrong. Please try again.")
+            setModalConfig({
+                isOpen: true,
+                title: "Waitlist Error",
+                message: "Something went wrong while joining the waitlist. Please try again.",
+                variant: "error",
+            })
         } finally {
             setIsLoading(false)
         }
@@ -140,6 +157,13 @@ export function Waitlist() {
                     )}
                 </AnimatePresence>
             </div>
+            <StatusModal
+                isOpen={modalConfig.isOpen}
+                onClose={() => setModalConfig(prev => ({ ...prev, isOpen: false }))}
+                title={modalConfig.title}
+                message={modalConfig.message}
+                variant={modalConfig.variant}
+            />
         </Section>
     )
 }
