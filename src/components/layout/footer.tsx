@@ -7,54 +7,137 @@ import { Twitter, Linkedin, Instagram } from "lucide-react"
 
 export function Footer() {
     return (
-        <footer className="bg-stone-900 text-stone-300 py-12 md:py-16">
-            <div className="container mx-auto px-4 md:px-6">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-                    <div className="md:col-span-1">
-                        <Link href="/" className="text-2xl font-bold font-heading text-white mb-4 block">
-                            Nuravya AI
+        <footer className="bg-stone-900 text-stone-300 pt-12 pb-6 md:py-16">
+            <div className="container mx-auto px-5 md:px-6">
+
+                {/*
+                  Grid layout:
+                  Mobile  → 2 columns
+                    • Brand:      span 2 (full width)
+                    • Product:    span 1
+                    • Company:    span 1
+                    • Newsletter: span 2 (full width)
+                  Desktop → 4 columns, each span 1
+                */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-8 mb-10">
+
+                    {/* ── Brand ── */}
+                    <div className="col-span-2 md:col-span-1">
+                        <Link href="/" className="inline-block mb-3">
+                            <span className="text-xl font-bold font-heading text-white">
+                                Nuravya{" "}
+                                <span className="text-amber-400">AI</span>
+                            </span>
                         </Link>
-                        <p className="text-sm text-stone-400 mb-6">
-                            Your warm AI companion that remembers, cares, and reminds. Never feel alone again.
+                        <p className="text-sm text-stone-400 leading-relaxed mb-5 max-w-xs">
+                            Your warm AI companion that remembers, cares, and reminds.
+                            Never feel alone again.
                         </p>
                         <div className="flex gap-4">
-                            <Link href="https://twitter.com/nuravya_ai" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
-                                <Twitter size={20} />
+                            <Link
+                                href="https://twitter.com/nuravya_ai"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-9 h-9 rounded-full bg-stone-800 hover:bg-amber-500/20 hover:text-amber-400 flex items-center justify-center transition-colors"
+                            >
+                                <Twitter size={16} />
                             </Link>
-                            <Link href="https://linkedin.com/company/nuravya-ai" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
-                                <Linkedin size={20} />
+                            <Link
+                                href="https://linkedin.com/company/nuravya-ai"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-9 h-9 rounded-full bg-stone-800 hover:bg-amber-500/20 hover:text-amber-400 flex items-center justify-center transition-colors"
+                            >
+                                <Linkedin size={16} />
                             </Link>
-                            <Link href="https://instagram.com/nuravya_ai" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
-                                <Instagram size={20} />
+                            <Link
+                                href="https://instagram.com/nuravya_ai"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-9 h-9 rounded-full bg-stone-800 hover:bg-amber-500/20 hover:text-amber-400 flex items-center justify-center transition-colors"
+                            >
+                                <Instagram size={16} />
                             </Link>
                         </div>
                     </div>
 
-                    <div>
-                        <h4 className="font-semibold text-white mb-4">Product</h4>
-                        <ul className="space-y-2 text-sm">
-                            <li><Link href="/features" className="hover:text-white transition-colors">Features</Link></li>
-                            <li><Link href="/pricing" className="hover:text-white transition-colors">Pricing</Link></li>
-                            <li><Link href="/security" className="hover:text-white transition-colors">Security</Link></li>
-                            <li><Link href="/roadmap" className="hover:text-white transition-colors">Roadmap</Link></li>
+                    {/* ── Product ── */}
+                    <div className="col-span-1">
+                        <h4 className="text-xs font-semibold text-stone-400 uppercase tracking-widest mb-4">
+                            Product
+                        </h4>
+                        <ul className="space-y-3 text-sm">
+                            <li>
+                                <Link href="/features" className="text-stone-300 hover:text-amber-400 transition-colors">
+                                    Features
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/pricing" className="text-stone-300 hover:text-amber-400 transition-colors">
+                                    Pricing
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/security" className="text-stone-300 hover:text-amber-400 transition-colors">
+                                    Security
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/roadmap" className="text-stone-300 hover:text-amber-400 transition-colors">
+                                    Roadmap
+                                </Link>
+                            </li>
                         </ul>
                     </div>
 
-                    <div>
-                        <h4 className="font-semibold text-white mb-4">Company</h4>
-                        <ul className="space-y-2 text-sm">
-                            <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
-                            <li><Link href="/blog" className="hover:text-white transition-colors">Blog</Link></li>
-                            <li><Link href="/science" className="hover:text-white transition-colors">Science & Research</Link></li>
-                            <li><Link href="/careers" className="hover:text-white transition-colors">Careers</Link></li>
-                            <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
-                            <li><Link href="mailto:investors@nuravyaai.example.com" className="hover:text-white text-emerald-400 transition-colors">Investors</Link></li>
+                    {/* ── Company ── */}
+                    <div className="col-span-1">
+                        <h4 className="text-xs font-semibold text-stone-400 uppercase tracking-widest mb-4">
+                            Company
+                        </h4>
+                        <ul className="space-y-3 text-sm">
+                            <li>
+                                <Link href="/about" className="text-stone-300 hover:text-amber-400 transition-colors">
+                                    About Us
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/blog" className="text-stone-300 hover:text-amber-400 transition-colors">
+                                    Blog
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/science" className="text-stone-300 hover:text-amber-400 transition-colors">
+                                    Science
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/careers" className="text-stone-300 hover:text-amber-400 transition-colors">
+                                    Careers
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/contact" className="text-stone-300 hover:text-amber-400 transition-colors">
+                                    Contact
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    href="mailto:investors@nuravyaai.example.com"
+                                    className="text-amber-400 hover:text-amber-300 transition-colors"
+                                >
+                                    Investors
+                                </Link>
+                            </li>
                         </ul>
                     </div>
 
-                    <div>
-                        <h4 className="font-semibold text-white mb-4">Stay Included</h4>
-                        <p className="text-sm text-stone-400 mb-4">
+                    {/* ── Newsletter ── */}
+                    <div className="col-span-2 md:col-span-1">
+                        <h4 className="text-xs font-semibold text-stone-400 uppercase tracking-widest mb-4">
+                            Stay Updated
+                        </h4>
+                        <p className="text-sm text-stone-400 mb-4 leading-relaxed">
                             Join 5,000+ people excited for Nuravya's launch.
                         </p>
                         <form
@@ -64,7 +147,6 @@ export function Footer() {
                                 const emailInput = form.elements.namedItem('email') as HTMLInputElement
                                 const email = emailInput.value
                                 if (!email) return
-
                                 try {
                                     const res = await fetch('/api/waitlist', {
                                         method: 'POST',
@@ -84,24 +166,34 @@ export function Footer() {
                             <Input
                                 name="email"
                                 type="email"
-                                placeholder="Enter your email"
-                                className="bg-stone-800 border-stone-700 text-white placeholder:text-stone-500 focus-visible:ring-amber-500"
+                                placeholder="your@email.com"
+                                className="bg-stone-800 border-stone-700 text-white placeholder:text-stone-500 focus-visible:ring-amber-500 text-sm h-9"
                                 required
                             />
-                            <Button type="submit" size="icon" className="shrink-0 bg-amber-500 hover:bg-amber-600 text-white">
+                            <Button
+                                type="submit"
+                                size="icon"
+                                className="shrink-0 h-9 w-9 bg-amber-500 hover:bg-amber-600 text-white"
+                            >
                                 →
                             </Button>
                         </form>
                     </div>
                 </div>
 
-                <div className="pt-8 border-t border-stone-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-stone-500">
+                {/* ── Bottom bar ── */}
+                <div className="pt-6 border-t border-stone-800 flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-stone-500">
                     <p>© 2026 Nuravya AI Inc. All rights reserved.</p>
-                    <div className="flex gap-6">
-                        <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
-                        <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+                    <div className="flex gap-5">
+                        <Link href="/privacy" className="hover:text-amber-400 transition-colors">
+                            Privacy Policy
+                        </Link>
+                        <Link href="/terms" className="hover:text-amber-400 transition-colors">
+                            Terms of Service
+                        </Link>
                     </div>
                 </div>
+
             </div>
         </footer>
     )

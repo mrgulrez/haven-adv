@@ -158,21 +158,28 @@ export default function AboutUs() {
                     <div className="grid md:grid-cols-3 gap-8">
                         {/* Member 1 */}
                         <div className="bg-white p-8 rounded-3xl border border-stone-200 text-center">
-                            <div className="w-24 h-24 mx-auto bg-stone-200 rounded-full mb-6 overflow-hidden">
-                                {/* Placeholder gradient for avatar */}
-                                <div className="w-full h-full bg-gradient-to-tr from-stone-300 to-stone-400"></div>
+                            <div className="w-24 h-24 mx-auto bg-stone-200 rounded-full mb-6 overflow-hidden border-2 border-amber-100 shadow-inner">
+                                <img
+                                    src="/images/Teams/Gulrez.png"
+                                    alt="Gulrez Alam"
+                                    className="w-full h-full object-cover"
+                                />
                             </div>
                             <h3 className="text-xl font-bold text-stone-900 mb-1">Gulrez Alam</h3>
-                            <p className="text-amber-600 font-medium text-sm mb-4">CEO & Co-founder</p>
+                            <p className="text-amber-600 font-medium text-sm mb-4">CEO & Founder</p>
                             <p className="text-stone-600 text-sm leading-relaxed">
-                                Former Engineering Lead at DeepMind. Built conversational AI systems used by millions. Stanford CS.
+                                Building a human-centered digital companion platform focused on emotionally intelligent, privacy-first technology.
                             </p>
                         </div>
 
                         {/* Member 2 */}
                         <div className="bg-white p-8 rounded-3xl border border-stone-200 text-center">
-                            <div className="w-24 h-24 mx-auto bg-stone-200 rounded-full mb-6 overflow-hidden">
-                                <div className="w-full h-full bg-gradient-to-tr from-stone-300 to-stone-400"></div>
+                            <div className="w-24 h-24 mx-auto bg-stone-200 rounded-full mb-6 overflow-hidden border-2 border-amber-100 shadow-inner">
+                                <img
+                                    src="/images/Teams/Sarah.png"
+                                    alt="Dr. Sarah Jenkins"
+                                    className="w-full h-full object-cover"
+                                />
                             </div>
                             <h3 className="text-xl font-bold text-stone-900 mb-1">Dr. Sarah Jenkins</h3>
                             <p className="text-amber-600 font-medium text-sm mb-4">Chief Psychology Officer</p>
@@ -183,8 +190,12 @@ export default function AboutUs() {
 
                         {/* Member 3 */}
                         <div className="bg-white p-8 rounded-3xl border border-stone-200 text-center">
-                            <div className="w-24 h-24 mx-auto bg-stone-200 rounded-full mb-6 overflow-hidden">
-                                <div className="w-full h-full bg-gradient-to-tr from-stone-300 to-stone-400"></div>
+                            <div className="w-24 h-24 mx-auto bg-stone-200 rounded-full mb-6 overflow-hidden border-2 border-amber-100 shadow-inner">
+                                <img
+                                    src="/images/Teams/Marcus.png"
+                                    alt="Marcus Thorne"
+                                    className="w-full h-full object-cover"
+                                />
                             </div>
                             <h3 className="text-xl font-bold text-stone-900 mb-1">Marcus Thorne</h3>
                             <p className="text-amber-600 font-medium text-sm mb-4">CTO & Co-founder</p>

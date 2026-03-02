@@ -5,12 +5,10 @@ import Link from "next/link"
 import { useScroll, useMotionValueEvent } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { Menu, X } from "lucide-react"
 
 export function Navbar() {
     const { scrollY } = useScroll()
     const [isScrolled, setIsScrolled] = React.useState(false)
-    const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
 
     useMotionValueEvent(scrollY, "change", (latest) => {
         setIsScrolled(latest > 50)
@@ -30,7 +28,7 @@ export function Navbar() {
                     <span className="text-2xl font-bold font-heading text-stone-800">Nuravya AI</span>
                 </Link>
 
-                {/* Desktop Nav */}
+                {/* Desktop Nav only — mobile uses BottomNav */}
                 <nav className="hidden md:flex items-center gap-8">
                     <Link href="/about" className="text-sm font-medium text-stone-600 hover:text-stone-900 transition-colors">
                         Mission
@@ -55,60 +53,13 @@ export function Navbar() {
                     </Link>
                 </div>
 
-                {/* Mobile Toggle */}
-                <button
-                    className="md:hidden p-2 text-stone-600"
-                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                >
-                    {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-                </button>
-            </div>
-
-            {/* Mobile Menu */}
-            {mobileMenuOpen && (
-                <div className="md:hidden absolute top-full left-0 right-0 bg-background border-b border-border p-4 flex flex-col gap-4 shadow-lg animate-in slide-in-from-top-5">
-                    <Link
-                        href="/about"
-                        className="text-base font-medium p-2 hover:bg-muted rounded-md"
-                        onClick={() => setMobileMenuOpen(false)}
-                    >
-                        Mission
+                {/* Mobile: Waitlist CTA only — BottomNav handles navigation */}
+                <div className="md:hidden">
+                    <Link href="/#waitlist">
+                        <Button size="sm" className="rounded-full text-xs px-3 py-1.5">Join Waitlist</Button>
                     </Link>
-                    <Link
-                        href="/features"
-                        className="text-base font-medium p-2 hover:bg-muted rounded-md"
-                        onClick={() => setMobileMenuOpen(false)}
-                    >
-                        Features
-                    </Link>
-                    <Link
-                        href="/blog"
-                        className="text-base font-medium p-2 hover:bg-muted rounded-md"
-                        onClick={() => setMobileMenuOpen(false)}
-                    >
-                        Blog
-                    </Link>
-                    <Link
-                        href="/science"
-                        className="text-base font-medium p-2 hover:bg-muted rounded-md"
-                        onClick={() => setMobileMenuOpen(false)}
-                    >
-                        Science
-                    </Link>
-                    <Link
-                        href="/pricing"
-                        className="text-base font-medium p-2 hover:bg-muted rounded-md"
-                        onClick={() => setMobileMenuOpen(false)}
-                    >
-                        Pricing
-                    </Link>
-                    <div className="flex flex-col gap-2 mt-2">
-                        <Link href="/#waitlist" onClick={() => setMobileMenuOpen(false)}>
-                            <Button className="w-full">Join Waitlist</Button>
-                        </Link>
-                    </div>
                 </div>
-            )}
+            </div>
         </header>
     )
 }
