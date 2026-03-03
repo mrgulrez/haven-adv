@@ -1,4 +1,3 @@
-import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -6,8 +5,7 @@ import { ArrowRight } from "lucide-react";
 export default function BlogPage() {
     return (
         <main className="min-h-screen bg-[#FFFBEB] flex flex-col font-sans">
-            <Navbar />
-            <div className="flex-grow pt-32 pb-16 px-4 md:px-6">
+            <div className="flex-grow pt-safe pb-24 px-4 md:px-6">
                 <div className="container mx-auto max-w-6xl">
                     <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
                         <div>

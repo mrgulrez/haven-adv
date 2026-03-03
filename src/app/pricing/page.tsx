@@ -1,4 +1,3 @@
-import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,8 +6,7 @@ import Link from "next/link";
 export default function PricingPage() {
     return (
         <main className="min-h-screen bg-[#FFFBEB] flex flex-col font-sans">
-            <Navbar />
-            <div className="flex-grow pt-32 pb-24 px-4 md:px-6">
+            <div className="flex-grow pt-safe pb-24 px-4 md:px-6">
                 <div className="container mx-auto max-w-6xl">
                     <div className="text-center mb-20">
                         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-100 border border-amber-200 shadow-sm mb-6">
@@ -28,7 +26,7 @@ export default function PricingPage() {
                                 <p className="text-stone-500 text-sm h-10">Start your journey with zero barriers. Perfect for experiencing Nuravya’s emotional intelligence at your own pace.</p>
                             </div>
                             <div className="mb-8">
-                                <span className="text-5xl font-bold text-stone-900">$0</span>
+                                <span className="text-4xl md:text-5xl font-bold text-stone-900">$0</span>
                                 <span className="text-stone-500">/month</span>
                             </div>
                             <ul className="space-y-4 mb-8 flex-grow text-sm">
@@ -81,7 +79,7 @@ export default function PricingPage() {
                                 <p className="text-stone-700 font-medium text-sm h-10">Deeper connection. Real continuity. For users who want Nuravya to truly grow with them.</p>
                             </div>
                             <div className="mb-6">
-                                <span className="text-5xl font-bold text-stone-900">$24</span>
+                                <span className="text-4xl md:text-5xl font-bold text-stone-900">$24</span>
                                 <span className="text-stone-600">/month</span>
                             </div>
                             <div className="text-sm font-semibold text-stone-900 mb-4 pb-4 border-b border-amber-200/50">Everything in Free, plus:</div>
@@ -137,7 +135,7 @@ export default function PricingPage() {
                                 <p className="text-stone-300 text-sm h-10">The ultimate emotionally intelligent AI companion for a deeply personalized relationship.</p>
                             </div>
                             <div className="mb-6 relative z-10">
-                                <span className="text-5xl font-bold text-white">$59</span>
+                                <span className="text-4xl md:text-5xl font-bold text-white">$59</span>
                                 <span className="text-stone-400">/month</span>
                             </div>
                             <div className="text-sm font-semibold text-white mb-4 pb-4 border-b border-stone-800 relative z-10">Everything in Core, plus:</div>

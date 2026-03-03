@@ -39,7 +39,7 @@ export function Hero() {
                 />
             </div>
 
-            <div className="container relative z-10 px-4 md:px-6 flex flex-col items-center text-center">
+            <div className="container relative z-10 px-4 md:px-6 pt-safe md:pt-0 flex flex-col items-center text-center">
                 {/* Pre-header Badge */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}

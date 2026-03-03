@@ -19,10 +19,10 @@ export function BottomNav() {
 
     return (
         /* Outer wrapper handles safe area on phones with home indicator */
-        <div className="md:hidden fixed bottom-0 left-0 right-0 z-50" style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}>
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 pb-safe">
 
             {/* Floating card container */}
-            <div className="mx-3 mb-3 rounded-2xl overflow-hidden"
+            <div className="mx-0 mb-0 rounded-t-2xl overflow-hidden"
                 style={{
                     background: "rgba(255, 251, 235, 0.92)",
                     backdropFilter: "blur(24px)",

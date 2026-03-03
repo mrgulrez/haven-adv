@@ -11,13 +11,15 @@ Write-Host "Android dir: $androidDir" -ForegroundColor Gray
 Push-Location $androidDir
 try {
     # Invoke Gradle directly through Java, using the wrapper jar
-    & java `
-        -Xmx2048m `
-        -Dorg.gradle.appname=gradlew `
-        "-Dgradle.user.home=$HOME/.gradle" `
-        -classpath $wrapperJar `
-        org.gradle.wrapper.GradleWrapperMain `
-        assembleDebug
+    $javaArgs = @(
+        "-Xmx2048m",
+        "-Dorg.gradle.appname=gradlew",
+        "-Dgradle.user.home=$HOME/.gradle",
+        "-classpath", $wrapperJar,
+        "org.gradle.wrapper.GradleWrapperMain",
+        "assembleDebug"
+    )
+    & java $javaArgs
 
     if ($LASTEXITCODE -eq 0) {
         $apkPath = Join-Path $androidDir "app\build\outputs\apk\debug\app-debug.apk"

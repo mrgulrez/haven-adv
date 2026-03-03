@@ -1,4 +1,3 @@
-import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { Hero } from "@/components/sections/hero";
 import { Problem } from "@/components/sections/problem";
@@ -12,8 +11,7 @@ import { FAQ } from "@/components/sections/faq";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-background flex flex-col font-sans">
-      <Navbar />
+    <main className="min-h-screen bg-[#FFFBEB] flex flex-col font-sans">
       <Hero />
       <Problem />
       <Solution />

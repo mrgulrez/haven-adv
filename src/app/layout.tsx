@@ -8,6 +8,13 @@ import { BottomNav } from "@/components/layout/bottom-nav";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  viewportFit: "cover",
+};
+
 export const metadata: Metadata = {
   title: "Nuravya AI - Your Warm AI Companion",
   description: "Never feel alone again with Nuravya AI. A voice companion that remembers, cares, and reminds. Built with radical empathy and unwavering privacy.",
@@ -75,6 +82,9 @@ export default function RootLayout({
         )}
       >
         <Navbar />
+        {/* Status bar blur overlay for mobile notch/battery visibility */}
+        <div className="status-bar-overlay md:hidden"></div>
+
         {/* pb-24 on mobile so content clears the floating BottomNav card */}
         <div className="pb-24 md:pb-0">
           {children}

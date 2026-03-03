@@ -5,23 +5,29 @@
   --color-foreground: var(--foreground);
 
   /* Custom Colors */
-  --color-primary: #F59E0B; /* amber-500 */
+  --color-primary: #F59E0B;
+  /* amber-500 */
   --color-primary-foreground: #FFFFFF;
-  
-  --color-secondary: #292524; /* stone-800 */
+
+  --color-secondary: #292524;
+  /* stone-800 */
   --color-secondary-foreground: #FFFFFF;
 
-  --color-accent: #86EFAC; /* green-300 */
+  --color-accent: #86EFAC;
+  /* green-300 */
   --color-accent-foreground: #000000;
 
-  --color-muted: #F5F5F4; /* stone-100 */
-  --color-muted-foreground: #78716C; /* stone-500 */
+  --color-muted: #F5F5F4;
+  /* stone-100 */
+  --color-muted-foreground: #78716C;
+  /* stone-500 */
 
   --color-card: #FFFFFF;
   --color-card-foreground: #292524;
 
-  --color-border: #E7E5E4; /* stone-200 */
-  
+  --color-border: #E7E5E4;
+  /* stone-200 */
+
   /* Fonts */
   --font-sans: var(--font-inter);
   --font-heading: var(--font-outfit);
@@ -37,19 +43,35 @@
       background-position: 200% center;
     }
   }
+
   @keyframes background-shine {
-    from { background-position: 0 0; }
-    to { background-position: -200% 0; }
+    from {
+      background-position: 0 0;
+    }
+
+    to {
+      background-position: -200% 0;
+    }
   }
+
   @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-10px);
+    }
   }
 }
 
 :root {
-  --background: #FFFBEB; /* Cream */
-  --foreground: #292524; /* Stone 800 */
+  --background: #FFFBEB;
+  /* Cream */
+  --foreground: #292524;
+  /* Stone 800 */
 }
 
 body {
@@ -58,11 +80,37 @@ body {
   font-family: var(--font-sans);
 }
 
-/* Bottom nav safe area support (for phones with home indicator) */
 .bottom-nav-bar {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .pb-safe {
   padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.pt-safe {
+  /* Mobile padding: 24px + whatever the notch/status bar requires */
+  padding-top: calc(env(safe-area-inset-top, 0px) + 24px);
+}
+
+@media (min-width: 768px) {
+  .pt-safe {
+    /* Desktop padding: 8rem (~128px) to safely push content below the floating Desktop Navbar */
+    padding-top: 8rem;
+  }
+}
+
+/* Blurred overlay for the mobile status bar (battery, network, etc.) */
+.status-bar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: env(safe-area-inset-top, 0px);
+  background: rgba(255, 251, 235, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 100;
+  border-bottom: 1px solid rgba(245, 158, 11, 0.05);
+  /* very subtle edge */
 }

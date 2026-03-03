@@ -1,6 +1,5 @@
 "use client";
 
-import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { motion } from "framer-motion";
 import { Heart, Brain, Shield, Users } from "lucide-react";
@@ -31,10 +30,8 @@ export default function AboutUs() {
 
     return (
         <main className="min-h-screen bg-[#FFFBEB] flex flex-col font-sans overflow-hidden">
-            <Navbar />
-
             {/* Hero Section */}
-            <section className="relative pt-32 pb-20 px-4 md:px-6 flex flex-col items-center justify-center text-center">
+            <section className="relative pt-safe pb-24 px-4 md:px-6 flex flex-col items-center justify-center text-center">
                 <div className="absolute inset-0 w-full h-full -z-0">
                     <motion.div
                         animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.4, 0.3] }}
@@ -101,7 +98,7 @@ export default function AboutUs() {
                             whileInView={{ opacity: 1, scale: 1 }}
                             viewport={{ once: true, margin: "-100px" }}
                             transition={{ duration: 0.8 }}
-                            className="relative aspect-square md:aspect-auto md:h-full min-h-[400px] rounded-3xl overflow-hidden shadow-2xl bg-amber-100 flex items-center justify-center p-8"
+                            className="relative w-full min-h-[300px] md:min-h-[400px] rounded-3xl overflow-hidden shadow-2xl bg-amber-100 flex items-center justify-center p-8"
                         >
                             {/* Abstract representation of connection */}
                             <div className="absolute inset-0 bg-gradient-to-tr from-rose-200 via-orange-100 to-amber-200 opacity-80" />

@@ -17,9 +17,9 @@ export function Navbar() {
     return (
         <header
             className={cn(
-                "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+                "hidden md:block fixed top-0 left-0 right-0 z-50 transition-all duration-300",
                 isScrolled
-                    ? "bg-background/80 backdrop-blur-md border-b border-border/50 py-3"
+                    ? "bg-[#FFFBEB]/85 backdrop-blur-md border-b border-amber-500/10 py-3"
                     : "bg-transparent py-5"
             )}
         >
