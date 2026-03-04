@@ -24,6 +24,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        // Handle redirect result for mobile
+        const handleRedirect = async () => {
+            try {
+                const { getRedirectResult } = await import("firebase/auth");
+                const result = await getRedirectResult(auth);
+                if (result?.user) {
+                    setUser(result.user);
+                }
+            } catch (error) {
+                console.error("Redirect login failed:", error);
+            }
+        };
+
+        handleRedirect();
+
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             setUser(user);
             setLoading(false);
