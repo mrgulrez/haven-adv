@@ -1,3 +1,4 @@
+
 import { Footer } from "@/components/layout/footer";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -9,7 +10,7 @@ export default function BlogPage() {
                 <div className="container mx-auto max-w-6xl">
                     <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
                         <div>
-                            <h1 className="text-4xl md:text-6xl font-bold font-heading text-stone-900 mb-4">Engineering Empathy</h1>
+                            <h1 className="text-4xl md:text-6xl font-bold font-heading text-stone-900 mb-4">Engineering True Friendship</h1>
                             <p className="text-xl text-stone-600 max-w-2xl">Thoughts, updates, and research from the team building Nuravya.</p>
                         </div>
                         <div className="bg-amber-100 text-amber-800 px-4 py-2 rounded-full text-sm font-semibold tracking-wide w-fit">

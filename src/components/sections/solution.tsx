@@ -9,7 +9,7 @@ const features = [
     {
         icon: Mic,
         title: "Natural Voice",
-        description: "Talk naturally, AI responds with warmth and empathy.",
+        description: "Talk naturally, your companion responds with warmth and genuine interest.",
         color: "bg-amber-100 text-amber-600",
     },
     {
@@ -43,19 +43,21 @@ export function Solution() {
     const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0])
 
     return (
-        <Section id="features" className="bg-stone-50 overflow-hidden" ref={containerRef}>
-            <div className="text-center max-w-3xl mx-auto mb-20">
-                <h2 className="text-3xl md:text-5xl font-bold font-heading text-stone-900 mb-6">
-                    A Companion That Truly Understands
+        <Section id="features" className="bg-white relative overflow-hidden py-24" ref={containerRef}>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-stone-50 rounded-full blur-[100px] pointer-events-none" />
+            <div className="text-center max-w-3xl mx-auto mb-24 relative z-10">
+                <h2 className="text-4xl md:text-6xl font-bold font-heading mb-6 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-stone-900 via-stone-800 to-stone-500">
+                    The Intelligence of Empathy
                 </h2>
-                <p className="text-lg text-stone-600">
-                    More than just a chatbot. Nuravya is designed to be present, attentive, and helpful in your daily life.
+                <p className="text-xl text-stone-600 font-light">
+                    More than just an interface. Nuravya is engineered to be present, attentive, and seamlessly integrated into your daily life.
                 </p>
             </div>
 
             <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 {/* Interactive Demo Placeholder */}
-                <div className="relative h-[400px] md:h-[500px] bg-white rounded-3xl shadow-2xl border border-stone-100 overflow-hidden flex flex-col">
+                <div className="relative h-[400px] md:h-[500px] bg-white/40 backdrop-blur-2xl rounded-[2rem] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] border border-stone-200/60 overflow-hidden flex flex-col group backdrop-saturate-150 z-10">
+                    <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/5 via-transparent to-rose-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
                     <div className="bg-stone-50 border-b border-stone-100 p-4 flex items-center justify-between">
                         <div className="flex gap-2">
                             <div className="w-3 h-3 rounded-full bg-red-400" />
@@ -107,17 +109,20 @@ export function Solution() {
                             transition={{ duration: 0.5, delay: index * 0.1 }}
                             viewport={{ once: true }}
                             whileHover={{ y: -5 }}
-                            className="bg-white p-6 rounded-2xl shadow-md border border-stone-100"
+                            className="bg-white/60 backdrop-blur-xl p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-stone-200/50 hover:shadow-[0_8px_40px_rgba(245,158,11,0.12)] transition-all duration-500 group relative overflow-hidden"
                         >
-                            <div className={`p-3 rounded-xl w-fit ${feature.color} mb-4`}>
-                                <feature.icon size={24} />
+                            <div className="absolute inset-0 bg-gradient-to-br from-stone-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                            <div className="relative z-10">
+                                <div className={`p-4 rounded-2xl w-fit ${feature.color} mb-6 shadow-sm group-hover:scale-110 transition-transform duration-500`}>
+                                    <feature.icon size={26} strokeWidth={2.5} />
+                                </div>
+                                <h3 className="text-xl font-bold font-heading text-stone-900 mb-3 tracking-tight">
+                                    {feature.title}
+                                </h3>
+                                <p className="text-stone-600 leading-relaxed font-light">
+                                    {feature.description}
+                                </p>
                             </div>
-                            <h3 className="text-lg font-bold font-heading text-stone-900 mb-2">
-                                {feature.title}
-                            </h3>
-                            <p className="text-sm text-stone-600 leading-relaxed">
-                                {feature.description}
-                            </p>
                         </motion.div>
                     ))}
                 </div>

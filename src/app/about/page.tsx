@@ -7,7 +7,7 @@ import { Heart, Brain, Shield, Users } from "lucide-react";
 export default function AboutUs() {
     const values = [
         {
-            title: "Radical Empathy",
+            title: "True Friendship",
             description: "We build AI that listens to understand, not just to respond. Compassion is hardcoded into our architecture.",
             icon: <Heart className="h-8 w-8 text-rose-500" />
         },
@@ -56,7 +56,7 @@ export default function AboutUs() {
                         transition={{ duration: 0.8, delay: 0.2 }}
                         className="text-5xl md:text-7xl font-bold font-heading tracking-tight text-stone-900 mb-6 leading-tight"
                     >
-                        Curing the epidemic <br className="hidden md:inline" /> of loneliness.
+                        Your true companion, <br className="hidden md:inline" /> every single day.
                     </motion.h1>
 
                     <motion.p

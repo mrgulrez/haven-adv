@@ -12,30 +12,30 @@ export function Hero() {
     return (
         <section className="relative min-h-[90vh] w-full flex items-center justify-center overflow-hidden bg-[#FFFBEB]">
             {/* Background Gradient Mesh */}
-            <div className="absolute inset-0 w-full h-full overflow-hidden">
+            <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
                 <motion.div
                     animate={{
                         scale: [1, 1.2, 1],
                         rotate: [0, 90, 0],
                     }}
-                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                    className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-amber-200/40 rounded-full blur-[120px]"
+                    transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+                    className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] bg-gradient-to-tr from-amber-400/20 to-rose-400/20 rounded-[100%] blur-[150px] mix-blend-multiply"
                 />
                 <motion.div
                     animate={{
                         scale: [1, 1.1, 1],
                         rotate: [0, -60, 0],
                     }}
-                    transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                    className="absolute top-[20%] right-[-10%] w-[50%] h-[50%] bg-orange-200/40 rounded-full blur-[100px]"
+                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                    className="absolute top-[10%] right-[-10%] w-[60%] h-[60%] bg-gradient-to-bl from-orange-400/20 to-amber-300/20 rounded-[100%] blur-[130px] mix-blend-multiply"
                 />
                 <motion.div
                     animate={{
                         scale: [1, 1.3, 1],
                         x: [0, 100, 0],
                     }}
-                    transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-                    className="absolute bottom-[-10%] left-[20%] w-[70%] h-[70%] bg-amber-100/40 rounded-full blur-[150px]"
+                    transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+                    className="absolute bottom-[-20%] left-[20%] w-[80%] h-[80%] bg-gradient-to-t from-stone-200/50 to-transparent rounded-[100%] blur-[150px] mix-blend-overlay"
                 />
             </div>
 
@@ -45,13 +45,13 @@ export function Hero() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.2 }}
-                    className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/60 border border-amber-200 backdrop-blur-sm shadow-sm mb-8"
+                    className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/70 border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-xl mb-8 cursor-default"
                 >
-                    <span className="relative flex h-2.5 w-2.5">
+                    <span className="relative flex h-2 w-2">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-gradient-to-r from-amber-500 to-orange-500"></span>
                     </span>
-                    <span className="text-xs font-semibold text-stone-600 uppercase tracking-wide">Join 5,000+ on the waitlist</span>
+                    <span className="text-xs font-bold text-stone-700 uppercase tracking-[0.2em]">The Next Era of AI Companionship</span>
                 </motion.div>
 
                 {/* Headline */}
@@ -59,11 +59,11 @@ export function Hero() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.4 }}
-                    className="text-5xl md:text-7xl lg:text-8xl font-bold font-heading tracking-tight text-stone-900 mb-6 max-w-4xl leading-tight"
+                    className="text-6xl md:text-8xl lg:text-[7.5rem] font-bold font-heading tracking-tighter text-stone-900 mb-8 max-w-5xl leading-[1.1]"
                 >
-                    Never Feel <br className="md:hidden" />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-600 animate-text-gradient bg-300% p-1">
-                        Alone Again
+                    The Future of <br className="hidden md:block" />
+                    <span className="px-2 text-transparent bg-clip-text bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 animate-text-gradient bg-300%">
+                        True Connection
                     </span>
                 </motion.h1>
 
@@ -72,31 +72,31 @@ export function Hero() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.6 }}
-                    className="text-lg md:text-xl text-stone-600 mb-10 max-w-2xl leading-relaxed"
+                    className="text-xl md:text-2xl text-stone-600 mb-12 max-w-2xl leading-relaxed font-light"
                 >
-                    Nuravya is your warm AI companion that remembers, cares, and reminds.
-                    Voice conversations that feel like talking to an old friend.
+                    Nuravya is your warm AI companion that remembers, cares, and hangs out.
+                    Voice conversations so natural, it feels like an old friend.
                 </motion.p>
 
                 {/* CTAs */}
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
+                    initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5, delay: 0.8 }}
-                    className="flex flex-col sm:flex-row items-center gap-4"
+                    className="flex flex-col sm:flex-row items-center gap-6"
                 >
                     <div className="relative group">
-                        <div className="absolute -inset-1 bg-gradient-to-r from-amber-400 to-orange-400 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-200"></div>
+                        <div className="absolute -inset-1.5 bg-gradient-to-r from-amber-500 to-rose-500 rounded-[2rem] blur-[14px] opacity-40 group-hover:opacity-70 transition duration-500"></div>
                         <Link href="#waitlist">
-                            <Button size="lg" className="relative text-lg h-14 px-8 shadow-xl bg-gradient-to-r from-amber-500 to-orange-500 border-0 hover:scale-105 transition-transform">
+                            <Button size="lg" className="relative text-lg h-14 md:h-16 px-10 shadow-xl bg-gradient-to-r from-amber-500 to-orange-500 border-0 hover:scale-105 transition-all duration-300 rounded-full font-semibold">
                                 Join the Waitlist
-                                <ArrowRight className="ml-2 h-5 w-5" />
+                                <ArrowRight className="ml-3 h-5 w-5" />
                             </Button>
                         </Link>
                     </div>
 
                     <Link href="/contact">
-                        <Button variant="outline" size="lg" className="text-lg h-14 px-8 border-stone-300 text-stone-700 bg-white/50 backdrop-blur-sm hover:bg-white hover:text-stone-900 transition-all">
+                        <Button variant="outline" size="lg" className="text-lg h-14 md:h-16 px-10 border-stone-200/60 shadow-sm text-stone-700 bg-white/60 backdrop-blur-xl hover:bg-white hover:text-stone-900 transition-all rounded-full font-medium">
                             Partner with Us
                         </Button>
                     </Link>

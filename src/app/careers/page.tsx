@@ -8,7 +8,7 @@ export default function CareersPage() {
                 <div className="container mx-auto max-w-5xl">
                     <div className="text-center mb-16">
                         <h1 className="text-5xl md:text-7xl font-bold font-heading text-stone-900 mb-6">Build the future <br />of companionship.</h1>
-                        <p className="text-xl text-stone-600 max-w-2xl mx-auto mb-8">We are looking for deeply empathetic engineers, researchers, and designers to help us end the loneliness epidemic.</p>
+                        <p className="text-xl text-stone-600 max-w-2xl mx-auto mb-8">We are looking for passionate engineers, researchers, and designers to help us build the ultimate everyday companion.</p>
                         <a href="#open-roles">
                             <Button size="lg" className="bg-amber-500 hover:bg-amber-600 text-white rounded-full px-8">
                                 View Open Roles

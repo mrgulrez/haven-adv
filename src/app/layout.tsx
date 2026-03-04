@@ -17,8 +17,8 @@ export const viewport = {
 
 export const metadata: Metadata = {
   title: "Nuravya AI - Your Warm AI Companion",
-  description: "Never feel alone again with Nuravya AI. A voice companion that remembers, cares, and reminds. Built with radical empathy and unwavering privacy.",
-  keywords: ["AI companion", "mental health AI", "loneliness", "voice AI", "empathetic AI", "elderly care", "daily check-ins", "virtual companion"],
+  description: "Meet your true everyday companion. Nuravya AI is a voice friend that remembers, cares, and hangs out. Built for genuine connection and privacy.",
+  keywords: ["AI companion", "everyday friend", "voice AI", "true companion", "daily check-ins", "virtual companion", "AI friendship"],
   authors: [{ name: "Nuravya AI Team" }],
   creator: "Nuravya AI",
   publisher: "Nuravya AI",
