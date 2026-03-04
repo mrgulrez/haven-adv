@@ -6,7 +6,8 @@ import {
     signInWithPopup,
     signOut,
     User,
-    signInWithRedirect
+    signInWithRedirect,
+    getRedirectResult
 } from "firebase/auth";
 import { auth, googleProvider } from "@/lib/firebase";
 
@@ -24,24 +25,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Handle redirect result for mobile
-        const handleRedirect = async () => {
+        // Handle redirect result for mobile/redirect flows
+        const checkRedirect = async () => {
             try {
-                const { getRedirectResult } = await import("firebase/auth");
                 const result = await getRedirectResult(auth);
                 if (result?.user) {
                     setUser(result.user);
                 }
             } catch (error) {
-                console.error("Redirect login failed:", error);
+                console.error("Redirect login result error:", error);
+            } finally {
+                setLoading(false);
             }
         };
 
-        handleRedirect();
-
         const unsubscribe = onAuthStateChanged(auth, (user) => {
-            setUser(user);
-            setLoading(false);
+            if (user) {
+                setUser(user);
+                setLoading(false);
+            } else {
+                // If no user from onAuthStateChanged, check if we just came back from a redirect
+                checkRedirect();
+            }
         });
 
         return () => unsubscribe();
@@ -49,18 +54,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const loginWithGoogle = async () => {
         try {
-            // Check if we are in a mobile environment (e.g. Capacitor/WebView)
-            // or if we should use popup vs redirect
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-            if (isMobile) {
+            // Priority: Popup is better for UX and reliability on desktop/simulated mobile
+            // Redirect is a fallback for true mobile browsers that block popups aggressively
+            await signInWithPopup(auth, googleProvider);
+        } catch (error: any) {
+            console.warn("Popup blocked or failed, falling back to redirect:", error);
+            // If popup is blocked (common on real mobile devices) use redirect
+            if (error.code === "auth/popup-blocked" || error.code === "auth/cancelled-popup-request") {
                 await signInWithRedirect(auth, googleProvider);
             } else {
-                await signInWithPopup(auth, googleProvider);
+                throw error;
             }
-        } catch (error) {
-            console.error("Login failed:", error);
-            throw error;
         }
     };
 

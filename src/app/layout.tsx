@@ -80,7 +80,7 @@ export default function RootLayout({
         className={cn(
           inter.variable,
           outfit.variable,
-          "font-sans antialiased bg-[#FFFBEB] text-stone-800"
+          "font-sans antialiased bg-[#FFFBEB] text-stone-800 relative"
         )}
       >
         <AuthProvider>
