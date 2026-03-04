@@ -106,10 +106,7 @@ export default function PrivacyPolicy() {
                                 If you have questions or comments about this notice, you may email us at:
                             </p>
                             <p className="mt-2 font-semibold">
-                                privacy@nuravyaai.example.com
-                            </p>
-                            <p className="mt-4 text-sm text-stone-500 italic">
-                                (Note: Please replace the above email with your actual contact email address prior to launch.)
+                                privacy@nuravya.com
                             </p>
                         </section>
                     </div>

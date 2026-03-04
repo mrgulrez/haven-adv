@@ -3,16 +3,24 @@
 import * as React from "react"
 import Link from "next/link"
 import { useScroll, useMotionValueEvent } from "framer-motion"
+import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { useAuth } from "@/components/auth/auth-provider"
 
 export function Navbar() {
     const { scrollY } = useScroll()
     const [isScrolled, setIsScrolled] = React.useState(false)
+    const pathname = usePathname()
+    const { user, loginWithGoogle, logout } = useAuth()
 
     useMotionValueEvent(scrollY, "change", (latest) => {
         setIsScrolled(latest > 50)
     })
+
+    if (pathname?.startsWith('/chat')) {
+        return null;
+    }
 
     return (
         <header
@@ -48,6 +56,14 @@ export function Navbar() {
                 </nav>
 
                 <div className="hidden md:flex items-center gap-4">
+                    {user ? (
+                        <div className="flex items-center gap-4">
+                            <span className="text-sm font-medium text-stone-600">Hi, {user.displayName?.split(' ')[0]}</span>
+                            <Button size="sm" variant="outline" className="rounded-full" onClick={logout}>Logout</Button>
+                        </div>
+                    ) : (
+                        <Button size="sm" className="rounded-full" onClick={loginWithGoogle}>Login</Button>
+                    )}
                     <Link href="/#waitlist">
                         <Button size="sm" className="rounded-full">Join Waitlist</Button>
                     </Link>
@@ -55,6 +71,9 @@ export function Navbar() {
 
                 {/* Mobile: Waitlist CTA only — BottomNav handles navigation */}
                 <div className="md:hidden">
+                    {!user && (
+                        <Button size="sm" variant="ghost" className="rounded-full text-xs mr-2" onClick={loginWithGoogle}>Login</Button>
+                    )}
                     <Link href="/#waitlist">
                         <Button size="sm" className="rounded-full text-xs px-3 py-1.5">Join Waitlist</Button>
                     </Link>

@@ -83,8 +83,8 @@ export function Problem() {
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-amber-500/10 blur-[120px] rounded-full pointer-events-none" />
 
             <div className="text-center max-w-4xl mx-auto mb-16 relative z-10">
-                <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-amber-500/10 border border-amber-500/20 mt-8 mb-6 shadow-[0_0_20px_rgba(245,158,11,0.15)] backdrop-blur-md">
-                    <span className="text-xs font-bold text-amber-700 uppercase tracking-[0.2em]">The Market Opportunity</span>
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 md:px-5 md:py-2 rounded-full bg-amber-500/10 border border-amber-500/20 mt-8 mb-6 shadow-[0_0_20px_rgba(245,158,11,0.15)] backdrop-blur-md max-w-full">
+                    <span className="text-[10px] md:text-xs font-bold text-amber-700 uppercase tracking-widest md:tracking-[0.2em] whitespace-nowrap overflow-hidden text-ellipsis">The Market Opportunity</span>
                 </div>
                 <h2 className="text-4xl md:text-6xl font-bold font-heading mb-6 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-stone-900 via-stone-800 to-stone-500">
                     The Need for a True, Everyday Friend

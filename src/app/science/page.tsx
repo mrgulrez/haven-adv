@@ -77,7 +77,7 @@ export default function SciencePage() {
                             <p className="text-stone-600 mb-6">
                                 We are actively partnering with top universities to conduct clinical trials on AI-mediated companionship protocols and their impact on geriatric depression.
                             </p>
-                            <a href="mailto:research@nuravyaai.example.com" className="font-semibold text-emerald-600 hover:text-emerald-700 underline underline-offset-4 w-fit">
+                            <a href="mailto:research@nuravya.com" className="font-semibold text-emerald-600 hover:text-emerald-700 underline underline-offset-4 w-fit">
                                 Read our whitepaper (Coming Soon) →
                             </a>
                         </div>

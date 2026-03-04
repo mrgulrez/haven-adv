@@ -22,7 +22,7 @@ export default function ContactPage() {
 
     return (
         <main className="min-h-screen bg-[#FFFBEB] flex flex-col font-sans">
-            <div className="flex-grow pt-safe pb-24 px-4 md:px-6 flex flex-col items-center">
+            <div className="flex-grow pt-24 pb-24 px-4 md:px-6 flex flex-col items-center">
                 <div className="container mx-auto max-w-5xl">
                     <div className="text-center mb-16">
                         <h1 className="text-4xl md:text-6xl font-bold font-heading text-stone-900 mb-6">Get in touch</h1>
@@ -119,7 +119,7 @@ export default function ContactPage() {
                             </form>
                         </div>
 
-                        {/* Contact Guidelines / Info */}
+                        {/* Contact Info */}
                         <div className="bg-stone-900 text-stone-300 p-8 md:p-12 flex flex-col justify-center">
                             <h3 className="text-2xl font-bold font-heading text-white mb-8">Other ways to connect</h3>
 
@@ -129,7 +129,7 @@ export default function ContactPage() {
                                     <div>
                                         <h4 className="text-white font-medium mb-1">Email Support</h4>
                                         <p className="text-sm text-stone-400">Our support team aims to respond within 24 hours.</p>
-                                        <p className="text-amber-400 mt-1 hover:underline cursor-pointer font-medium">hello@nuravyaai.example.com</p>
+                                        <p className="text-amber-400 mt-1 hover:underline cursor-pointer font-medium">hello@nuravya.com</p>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-4">
@@ -144,7 +144,7 @@ export default function ContactPage() {
                                     <div>
                                         <h4 className="text-white font-medium mb-1">Press & Media</h4>
                                         <p className="text-sm text-stone-400">For interview requests and media resources.</p>
-                                        <p className="text-amber-400 mt-1 hover:underline cursor-pointer font-medium">press@nuravyaai.example.com</p>
+                                        <p className="text-amber-400 mt-1 hover:underline cursor-pointer font-medium">press@nuravya.com</p>
                                     </div>
                                 </div>
                             </div>

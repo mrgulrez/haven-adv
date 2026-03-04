@@ -93,10 +93,7 @@ export default function TermsOfService() {
                                 If you have any questions about these Terms, please contact us at:
                             </p>
                             <p className="mt-2 font-semibold">
-                                legal@nuravyaai.example.com
-                            </p>
-                            <p className="mt-4 text-sm text-stone-500 italic">
-                                (Note: Please replace the above email with your actual legal contact email prior to launch.)
+                                legal@nuravya.com
                             </p>
                         </section>
                     </div>

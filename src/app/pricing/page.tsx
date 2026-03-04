@@ -1,16 +1,38 @@
+"use client";
+
 import { Footer } from "@/components/layout/footer";
 import { Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useAuth } from "@/components/auth/auth-provider";
+import { useRouter } from "next/navigation";
 
 export default function PricingPage() {
+    const { user, loginWithGoogle } = useAuth();
+    const router = useRouter();
+
+    const handleAction = async (plan: string) => {
+        if (!user) {
+            try {
+                await loginWithGoogle();
+                // After successful login, we could redirect to a checkout or dashboard
+                // For now, we'll just stay or go to waitlist as before
+                router.push("/#waitlist");
+            } catch (error) {
+                console.error("Login failed during price selection:", error);
+            }
+        } else {
+            router.push("/#waitlist");
+        }
+    };
+
     return (
         <main className="min-h-screen bg-[#FFFBEB] flex flex-col font-sans">
             <div className="flex-grow pt-safe pb-24 px-4 md:px-6">
                 <div className="container mx-auto max-w-6xl">
                     <div className="text-center mb-20">
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-100 border border-amber-200 shadow-sm mb-6">
-                            <span className="text-sm font-semibold text-amber-800 uppercase tracking-wide">Nuravya is built on one belief</span>
+                        <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-amber-100 border border-amber-200 shadow-sm mb-6 max-w-full overflow-hidden">
+                            <span className="text-[10px] md:text-sm font-semibold text-amber-800 uppercase tracking-widest md:tracking-wide whitespace-nowrap overflow-hidden text-ellipsis">Nuravya is built on one belief</span>
                         </div>
                         <h1 className="text-4xl md:text-6xl font-bold font-heading text-stone-900 mb-6">Everyone deserves to feel heard.</h1>
                         <p className="text-xl text-stone-600 max-w-2xl mx-auto">
@@ -20,14 +42,14 @@ export default function PricingPage() {
 
                     <div className="grid md:grid-cols-3 gap-8">
                         {/* Free Tier */}
-                        <div className="bg-white p-8 rounded-3xl border border-stone-200 shadow-sm flex flex-col hover:shadow-md transition-shadow">
-                            <div className="mb-6">
+                        <div className="bg-white p-8 rounded-3xl border border-stone-200 shadow-sm flex flex-col hover:shadow-md transition-shadow relative">
+                            <div className="mb-10 pr-16 md:pr-20">
                                 <h2 className="text-2xl font-bold text-stone-900 mb-2">Free</h2>
-                                <p className="text-stone-500 text-sm h-10">Start your journey with zero barriers. Perfect for experiencing Nuravya’s emotional intelligence at your own pace.</p>
+                                <p className="text-stone-500 text-sm min-h-[3rem]">Start your journey with zero barriers. Perfect for experiencing Nuravya’s emotional intelligence at your own pace.</p>
                             </div>
-                            <div className="mb-8">
-                                <span className="text-4xl md:text-5xl font-bold text-stone-900">$0</span>
-                                <span className="text-stone-500">/month</span>
+                            <div className="absolute top-8 right-8 text-right">
+                                <span className="text-2xl md:text-3xl lg:text-4xl font-bold text-stone-900">$0</span>
+                                <div className="text-stone-500 text-[10px] md:text-xs">/month</div>
                             </div>
                             <ul className="space-y-4 mb-8 flex-grow text-sm">
                                 <li className="flex items-start gap-3 text-stone-700">
@@ -64,23 +86,27 @@ export default function PricingPage() {
                                 </li>
                             </ul>
                             <div className="text-xs text-stone-500 text-center mb-4">Built for accessibility. Always free.</div>
-                            <Link href="/#waitlist">
-                                <Button className="w-full bg-stone-100 hover:bg-stone-200 text-stone-900 h-12" size="lg">Get Started</Button>
-                            </Link>
+                            <Button
+                                className="w-full bg-stone-100 hover:bg-stone-200 text-stone-900 h-12"
+                                size="lg"
+                                onClick={() => handleAction('free')}
+                            >
+                                Get Started
+                            </Button>
                         </div>
 
                         {/* Core Tier */}
                         <div className="bg-gradient-to-b from-amber-50 to-orange-50 p-8 rounded-3xl border-2 border-amber-300 shadow-xl relative flex flex-col transform md:-translate-y-4">
-                            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-500 text-white px-4 py-1 rounded-full text-xs font-bold tracking-widest uppercase shadow-sm">
+                            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-500 text-white px-4 py-1 rounded-full text-xs font-bold tracking-widest uppercase shadow-sm whitespace-nowrap z-20">
                                 Most Popular
                             </div>
-                            <div className="mb-6">
+                            <div className="mb-10 pr-16 md:pr-20">
                                 <h2 className="text-2xl font-bold text-stone-900 mb-2">Nuravya Core</h2>
-                                <p className="text-stone-700 font-medium text-sm h-10">Deeper connection. Real continuity. For users who want Nuravya to truly grow with them.</p>
+                                <p className="text-stone-700 font-medium text-sm min-h-[3rem]">Deeper connection. Real continuity. For users who want Nuravya to truly grow with them.</p>
                             </div>
-                            <div className="mb-6">
-                                <span className="text-4xl md:text-5xl font-bold text-stone-900">$24</span>
-                                <span className="text-stone-600">/month</span>
+                            <div className="absolute top-8 right-8 text-right z-10">
+                                <span className="text-2xl md:text-3xl lg:text-4xl font-bold text-stone-900">$24</span>
+                                <div className="text-stone-600 text-[10px] md:text-xs">/month</div>
                             </div>
                             <div className="text-sm font-semibold text-stone-900 mb-4 pb-4 border-b border-amber-200/50">Everything in Free, plus:</div>
                             <ul className="space-y-4 mb-8 flex-grow text-sm">
@@ -122,21 +148,25 @@ export default function PricingPage() {
                                 </li>
                             </ul>
                             <div className="text-xs text-amber-700/80 text-center font-medium mb-4">Designed for meaningful, evolving companionship.</div>
-                            <Link href="/#waitlist">
-                                <Button className="w-full bg-amber-500 hover:bg-amber-600 text-white h-12 shadow-md" size="lg">Secure Early Access</Button>
-                            </Link>
+                            <Button
+                                className="w-full bg-amber-500 hover:bg-amber-600 text-white h-12 shadow-md"
+                                size="lg"
+                                onClick={() => handleAction('core')}
+                            >
+                                Secure Early Access
+                            </Button>
                         </div>
 
                         {/* Pro Tier */}
                         <div className="bg-stone-900 p-8 rounded-3xl border border-stone-800 shadow-xl flex flex-col relative overflow-hidden">
                             <div className="absolute inset-0 bg-gradient-to-br from-stone-800/50 to-transparent pointer-events-none"></div>
-                            <div className="mb-6 relative z-10">
+                            <div className="mb-10 relative z-10 pr-16 md:pr-20">
                                 <h2 className="text-2xl font-bold text-white mb-2">Nuravya Pro</h2>
-                                <p className="text-stone-300 text-sm h-10">The ultimate emotionally intelligent AI companion for a deeply personalized relationship.</p>
+                                <p className="text-stone-300 text-sm min-h-[3rem]">The ultimate emotionally intelligent AI companion for a deeply personalized relationship.</p>
                             </div>
-                            <div className="mb-6 relative z-10">
-                                <span className="text-4xl md:text-5xl font-bold text-white">$59</span>
-                                <span className="text-stone-400">/month</span>
+                            <div className="absolute top-8 right-8 text-right z-20">
+                                <span className="text-2xl md:text-3xl lg:text-4xl font-bold text-white">$59</span>
+                                <div className="text-stone-400 text-[10px] md:text-xs">/month</div>
                             </div>
                             <div className="text-sm font-semibold text-white mb-4 pb-4 border-b border-stone-800 relative z-10">Everything in Core, plus:</div>
                             <ul className="space-y-4 mb-8 flex-grow text-sm relative z-10">
@@ -186,9 +216,13 @@ export default function PricingPage() {
                                 </li>
                             </ul>
                             <div className="text-xs text-stone-400 text-center mb-4 relative z-10">Built for depth. Built for trust.</div>
-                            <Link href="/#waitlist" className="relative z-10">
-                                <Button className="w-full bg-white hover:bg-stone-200 text-stone-900 h-12 shadow-lg" size="lg">Join Waitlist</Button>
-                            </Link>
+                            <Button
+                                className="w-full bg-white hover:bg-stone-200 text-stone-900 h-12 shadow-lg z-10"
+                                size="lg"
+                                onClick={() => handleAction('pro')}
+                            >
+                                Join Waitlist
+                            </Button>
                         </div>
                     </div>
                 </div>

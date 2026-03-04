@@ -21,9 +21,9 @@ export function Pricing() {
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-lg h-1/2 bg-amber-500/10 blur-[100px] rounded-full pointing-events-none" />
 
                     <div className="relative z-10">
-                        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-100 text-amber-700 text-sm font-semibold mb-6">
-                            <Sparkles size={16} />
-                            Simple, Transparent Pricing
+                        <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-amber-100 text-amber-700 text-[10px] md:text-sm font-semibold mb-6 max-w-full">
+                            <Sparkles size={14} className="shrink-0" />
+                            <span className="whitespace-nowrap overflow-hidden text-ellipsis">Simple, Transparent Pricing</span>
                         </div>
 
                         <h2 className="text-4xl md:text-5xl font-bold font-heading text-stone-900 mb-6">

@@ -45,13 +45,13 @@ export function Hero() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.2 }}
-                    className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/70 border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-xl mb-8 cursor-default"
+                    className="inline-flex items-center gap-2 px-3 py-1.5 md:px-5 md:py-2 rounded-full bg-white/70 border border-white/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-xl mb-8 cursor-default max-w-full"
                 >
-                    <span className="relative flex h-2 w-2">
+                    <span className="relative flex h-1.5 w-1.5 md:h-2 md:w-2 shrink-0">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-gradient-to-r from-amber-500 to-orange-500"></span>
+                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 md:h-2 md:w-2 bg-gradient-to-r from-amber-500 to-orange-500"></span>
                     </span>
-                    <span className="text-xs font-bold text-stone-700 uppercase tracking-[0.2em]">The Next Era of AI Companionship</span>
+                    <span className="text-[10px] md:text-xs font-bold text-stone-700 uppercase tracking-widest md:tracking-[0.2em] whitespace-nowrap overflow-hidden text-ellipsis">The Next Era of AI Companionship</span>
                 </motion.div>
 
                 {/* Headline */}
