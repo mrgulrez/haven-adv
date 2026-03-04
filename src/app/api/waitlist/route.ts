@@ -64,7 +64,7 @@ export async function POST(request: Request) {
           <p>We'll keep you updated on our launch progress and exclusive early-bird perks.</p>
           <br/>
           <p>Warmly,</p>
-          <p><strong>The Nuravya AI Team</strong></p>
+          <p><strong>The Nuravya Team@Enord</strong></p>
         </div>
       `
         };

@@ -73,7 +73,7 @@ export async function POST(request: Request) {
           <p>We appreciate your interest in our mission to build a true, everyday companion through AI.</p>
           <br/>
           <p>Warmly,</p>
-          <p><strong>The Nuravya AI Team</strong></p>
+          <p><strong>The Nuravya Team@Enord</strong></p>
         </div>
       `
     };
