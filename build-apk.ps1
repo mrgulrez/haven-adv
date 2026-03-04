@@ -1,16 +1,40 @@
 #!/usr/bin/env pwsh
-# Build Nuravya Android APK using direct Java invocation of gradle-wrapper.jar
+# Build Nuravya Android APK: Web Build -> Sync -> Gradle
 
-$androidDir = "D:\NuravyaApp\android"
+$webDir = "D:\Haven-Adv\NuravyaWeb"
+$capDir = "D:\NuravyaApp"
+$androidDir = "$capDir\android"
 $wrapperJar = "$androidDir\gradle\wrapper\gradle-wrapper.jar"
-$wrapperProps = "$androidDir\gradle\wrapper\gradle-wrapper.properties"
 
-Write-Host "Building Nuravya AI debug APK..." -ForegroundColor Cyan
-Write-Host "Android dir: $androidDir" -ForegroundColor Gray
+Write-Host "[START] Starting Full Android Build Process..." -ForegroundColor Cyan
 
+# Step 1: Build the Web App (Static Export)
+Push-Location $webDir
+Write-Host "`n[STEP 1] Building Next.js Web App..." -ForegroundColor Cyan
+$env:CAPACITOR_BUILD = "true"
+npm run build
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "[ERROR] Web build failed. Aborting." -ForegroundColor Red
+    Pop-Location
+    exit $LASTEXITCODE
+}
+Pop-Location
+
+# Step 2: Sync to Capacitor
+Push-Location $capDir
+Write-Host "`n[STEP 2] Syncing web assets to Android... ($capDir)" -ForegroundColor Cyan
+npx cap sync android
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "[ERROR] Capacitor sync failed. Aborting." -ForegroundColor Red
+    Pop-Location
+    exit $LASTEXITCODE
+}
+Pop-Location
+
+# Step 3: Build the APK
+Write-Host "`n[STEP 3] Compiling APK with Gradle... ($androidDir)" -ForegroundColor Cyan
 Push-Location $androidDir
 try {
-    # Invoke Gradle directly through Java, using the wrapper jar
     $javaArgs = @(
         "-Xmx2048m",
         "-Dorg.gradle.appname=gradlew",
@@ -23,15 +47,20 @@ try {
 
     if ($LASTEXITCODE -eq 0) {
         $apkPath = Join-Path $androidDir "app\build\outputs\apk\debug\app-debug.apk"
-        Write-Host "`n✅ APK built successfully!" -ForegroundColor Green
-        Write-Host "APK Location: $apkPath" -ForegroundColor Yellow
-
-        # Copy APK to easy-access location
-        Copy-Item $apkPath "D:\NuravyaApp\NuravyaAI-debug.apk" -Force
-        Write-Host "Copied to: D:\NuravyaApp\NuravyaAI-debug.apk" -ForegroundColor Yellow
+        Write-Host "`n[SUCCESS] APK built successfully!" -ForegroundColor Green
+        
+        # Copy APK to specified locations
+        Copy-Item $apkPath "$capDir\NuravyaAI-debug.apk" -Force
+        Copy-Item $apkPath "C:\Users\gulre\OneDrive\my documents\App\NuravyaAI-debug.apk" -Force
+        
+        Write-Host "`n[INFO] APK saved to:" -ForegroundColor Yellow
+        Write-Host "1. $capDir\NuravyaAI-debug.apk"
+        Write-Host "2. C:\Users\gulre\OneDrive\my documents\App\NuravyaAI-debug.apk"
     } else {
-        Write-Host "`n❌ Build failed. Check the output above for errors." -ForegroundColor Red
+        Write-Host "`n[ERROR] Gradle build failed." -ForegroundColor Red
     }
 } finally {
     Pop-Location
+    # Clean up the environment variable
+    Remove-Item Env:\CAPACITOR_BUILD -ErrorAction SilentlyContinue
 }

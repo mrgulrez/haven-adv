@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // output: "export", // Commented out to allow API routes to work on Vercel
+  // Only use static export when building specifically for the Android APK
+  ...(process.env.CAPACITOR_BUILD === 'true' ? { output: "export" } : {}),
   images: {
     unoptimized: true,
   },
