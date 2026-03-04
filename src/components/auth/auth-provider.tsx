@@ -31,9 +31,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 const result = await getRedirectResult(auth);
                 if (result?.user) {
                     setUser(result.user);
+                } else {
+                    setUser(null);
                 }
             } catch (error) {
                 console.error("Redirect login result error:", error);
+                setUser(null);
             } finally {
                 setLoading(false);
             }
@@ -71,6 +74,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const logout = async () => {
         try {
             await signOut(auth);
+            setUser(null);
         } catch (error) {
             console.error("Logout failed:", error);
             throw error;
