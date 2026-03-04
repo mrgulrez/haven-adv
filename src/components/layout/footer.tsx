@@ -137,7 +137,7 @@ export function Footer() {
                             </li>
                             <li>
                                 <Link
-                                    href="mailto:investors@nuravya.com"
+                                    href="mailto:investors@enord.in"
                                     className="text-amber-400 hover:text-amber-300 transition-colors"
                                 >
                                     Investors

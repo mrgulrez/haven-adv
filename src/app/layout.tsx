@@ -30,11 +30,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Nuravya AI - Your Warm AI Companion",
     description: "Never feel alone again with Nuravya AI. A voice companion that remembers, cares, and reminds.",
-    url: "https://nuravya.com",
+    url: "https://enord.in",
     siteName: "Nuravya AI",
     images: [
       {
-        url: "https://nuravya.com/og-image.png",
+        url: "https://enord.in/og-image.png",
         width: 1200,
         height: 630,
         alt: "Nuravya AI - Comfort and connection in every conversation",
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     title: "Nuravya AI - Your Warm AI Companion",
     description: "Never feel alone again with Nuravya AI.",
     creator: "@nuravyaai",
-    images: ["https://nuravya.com/og-image.png"],
+    images: ["https://enord.in/og-image.png"],
   },
   robots: {
     index: true,

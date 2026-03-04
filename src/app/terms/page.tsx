@@ -93,7 +93,7 @@ export default function TermsOfService() {
                                 If you have any questions about these Terms, please contact us at:
                             </p>
                             <p className="mt-2 font-semibold">
-                                legal@nuravya.com
+                                legal@enord.in
                             </p>
                         </section>
                     </div>
