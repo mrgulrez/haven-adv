@@ -1,21 +1,21 @@
-"use client"
+"use client";
 
-import React, { useState, useRef, useEffect, useCallback, useMemo } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
-    Mic,
-    MicOff,
     Send,
     ChevronLeft,
     MoreVertical,
     PhoneCall,
     PhoneOff,
-    X,
-    Keyboard,
+    Mic,
+    MicOff,
     Volume2,
-    VolumeX
-} from "lucide-react"
-import Link from "next/link"
+    Loader2,
+    Crown,
+} from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
     LiveKitRoom,
     RoomAudioRenderer,
@@ -26,217 +26,198 @@ import {
     useConnectionState,
     useParticipants,
     useTracks,
-} from "@livekit/components-react"
-import { Track, ConnectionState, Participant, TrackPublication } from "livekit-client"
-import { apiFetch } from "@/lib/api"
-import { useAuth } from "@/components/auth/auth-provider"
+} from "@livekit/components-react";
+import { Track, ConnectionState } from "livekit-client";
+import { apiFetch, apiPost, getAuthHeaders } from "@/lib/api";
+import { useAuth } from "@/components/auth/auth-provider";
 
 // ─── Types ──────────────────────────────────────────────────────
 
 type Message = {
-    id: string
-    sender: "api" | "user"
-    text: string
-    time: string
-    isAudio?: boolean
-}
+    id: string;
+    sender: "api" | "user";
+    text: string;
+    time: string;
+};
 
 // ─── Config ─────────────────────────────────────────────────────
 
-const SESSION_ID = `session_${Date.now()}`
+const SESSION_ID = `session_${Date.now()}`;
 
 export default function ChatPage() {
-    const { user, nuravyaUser } = useAuth()
-    const USER_ID = useMemo(() => nuravyaUser?.id || user?.uid || "user_default", [nuravyaUser, user])
-    const [messages, setMessages] = useState<Message[]>([])
-    const [inputValue, setInputValue] = useState("")
-    const [isTyping, setIsTyping] = useState(false)
-    const [showKeyboard, setShowKeyboard] = useState(false)
+    const { user, nuravyaUser } = useAuth();
+    const router = useRouter();
+    const USER_ID = useMemo(() => nuravyaUser?.id || user?.uid || "user_default", [nuravyaUser, user]);
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [inputValue, setInputValue] = useState("");
+    const [isTyping, setIsTyping] = useState(false);
 
-    // Call Overlay State
-    const [isCallActive, setIsCallActive] = useState(false)
-    const [liveKitToken, setLiveKitToken] = useState("")
-    const [liveKitUrl, setLiveKitUrl] = useState("")
-    const [shouldConnect, setShouldConnect] = useState(false)
-    const [isConnectingCall, setIsConnectingCall] = useState(false)
+    // Call Component State
+    const [isCallActive, setIsCallActive] = useState(false);
+    const [liveKitToken, setLiveKitToken] = useState("");
+    const [liveKitUrl, setLiveKitUrl] = useState("");
+    const [shouldConnect, setShouldConnect] = useState(false);
 
-    // Push-to-Talk State
-    const [isRecording, setIsRecording] = useState(false)
-    const mediaRecorderRef = useRef<MediaRecorder | null>(null)
-    const audioChunksRef = useRef<Blob[]>([])
+    // TTS playback state
+    const [playingMsgId, setPlayingMsgId] = useState<string | null>(null);
+    const audioRef = useRef<HTMLAudioElement | null>(null);
 
-    const messagesEndRef = useRef<HTMLDivElement>(null)
+    const messagesEndRef = useRef<HTMLDivElement>(null);
 
     // ─── Scroll ─────────────────────────────────────────────────
     const scrollToBottom = useCallback(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-    }, [])
-    useEffect(() => { scrollToBottom() }, [messages, isTyping, scrollToBottom])
-
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, []);
+    useEffect(() => { scrollToBottom(); }, [messages, isTyping, scrollToBottom]);
 
     // ─── Text Chat ──────────────────────────────────────────────
     const handleSend = async () => {
-        if (!inputValue.trim()) return
+        if (!inputValue.trim()) return;
 
         const userMsg: Message = {
             id: Date.now().toString(),
             sender: "user",
             text: inputValue.trim(),
             time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        }
+        };
 
-        setMessages(prev => [...prev, userMsg])
-        setInputValue("")
-        setIsTyping(true)
+        setMessages(prev => [...prev, userMsg]);
+        setInputValue("");
+        setIsTyping(true);
 
         try {
-            const res = await apiFetch("/api/chat", {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/chat`, {
                 method: "POST",
+                headers: {
+                    ...await getAuthHeaders(),
+                    "Content-Type": "application/json"
+                },
                 body: JSON.stringify({ message: userMsg.text, session_id: SESSION_ID, user_id: USER_ID }),
-            })
-            if (!res.ok) throw new Error(`API error: ${res.status}`)
-            const data = await res.json()
+            });
 
+            if (!res.ok) throw new Error(`API error: ${res.status}`);
+            if (!res.body) throw new Error("No response body");
+
+            const aiMsgId = (Date.now() + 1).toString();
             setMessages(prev => [...prev, {
-                id: (Date.now() + 1).toString(),
+                id: aiMsgId,
                 sender: "api",
-                text: data.reply,
+                text: "",
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            }])
-        } catch {
+            }]);
+
+            const reader = res.body.getReader();
+            const decoder = new TextDecoder("utf-8");
+            let done = false;
+            let accumulatedText = "";
+
+            while (!done) {
+                const { value, done: doneReading } = await reader.read();
+                done = doneReading;
+                const chunkValue = decoder.decode(value, { stream: true });
+
+                if (chunkValue) {
+                    accumulatedText += chunkValue;
+                    setMessages(prev => {
+                        const updated = [...prev];
+                        const idx = updated.findIndex(m => m.id === aiMsgId);
+                        if (idx !== -1) {
+                            updated[idx] = { ...updated[idx], text: accumulatedText };
+                        }
+                        return updated;
+                    });
+                }
+            }
+        } catch (e) {
+            console.error(e);
             setMessages(prev => [...prev, {
                 id: (Date.now() + 1).toString(),
                 sender: "api",
                 text: "Sorry, I couldn't connect right now.",
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            }])
+            }]);
         } finally {
-            setIsTyping(false)
+            setIsTyping(false);
         }
-    }
+    };
 
-    // ─── Push-to-Talk ───────────────────────────────────────────
-    const startRecording = async () => {
+    // ─── Speak Message (Core/Pro) ───────────────────────────────
+    const handleSpeakMessage = async (msgId: string, text: string) => {
+        // Enforce Core/Pro Plan
+        const isPaid = nuravyaUser?.plan === "core" || nuravyaUser?.plan === "pro";
+        if (!isPaid) {
+            if (confirm("Voice playback requires Nuravya Core or Pro. Upgrade now?")) {
+                router.push("/pricing");
+            }
+            return;
+        }
+
+        // If currently playing the same message, do nothing or pause (optional)
+        if (playingMsgId === msgId && audioRef.current) {
+            audioRef.current.pause();
+            setPlayingMsgId(null);
+            return;
+        }
+
+        setPlayingMsgId(msgId);
+
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-            const mediaRecorder = new MediaRecorder(stream)
-            mediaRecorderRef.current = mediaRecorder
-            audioChunksRef.current = []
-
-            mediaRecorder.ondataavailable = (e) => {
-                if (e.data.size > 0) {
-                    audioChunksRef.current.push(e.data)
+            const data = await apiPost<{ audio_b64: string }>("/api/chat/speak", { text });
+            if (data?.audio_b64) {
+                if (audioRef.current) {
+                    audioRef.current.pause();
                 }
-            }
+                const audio = new Audio(`data:audio/mp3;base64,${data.audio_b64}`);
+                audioRef.current = audio;
 
-            mediaRecorder.onstop = async () => {
-                const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' })
-                await sendAudioMessage(audioBlob)
-            }
+                audio.onended = () => {
+                    setPlayingMsgId(null);
+                };
 
-            mediaRecorder.start()
-            setIsRecording(true)
-        } catch (error) {
-            console.error("Error accessing microphone:", error)
-            alert("Please allow microphone access to send voice messages.")
-        }
-    }
-
-    const stopRecording = () => {
-        if (mediaRecorderRef.current && isRecording) {
-            mediaRecorderRef.current.stop()
-            setIsRecording(false)
-            mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop())
-        }
-    }
-
-    const sendAudioMessage = async (audioBlob: Blob) => {
-        const tempId = Date.now().toString()
-        setMessages(prev => [...prev, {
-            id: tempId,
-            sender: "user",
-            text: "🔊 Analyzing...",
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        }])
-        setIsTyping(true)
-
-        try {
-            const formData = new FormData()
-            formData.append("audio", audioBlob, "audio.webm")
-            formData.append("session_id", SESSION_ID)
-            formData.append("user_id", USER_ID)
-
-            const res = await apiFetch("/api/chat/audio", {
-                method: "POST",
-                body: formData,
-            })
-
-            if (!res.ok) throw new Error("Audio API error")
-            const data = await res.json()
-
-            // Update user message text
-            setMessages(prev => {
-                const updated = [...prev]
-                const idx = updated.findIndex(m => m.id === tempId)
-                if (idx !== -1) updated[idx].text = data.user_transcript
-                return updated
-            })
-
-            // Add AI response
-            const aiMsgId = (Date.now() + 1).toString()
-            setMessages(prev => [...prev, {
-                id: aiMsgId,
-                sender: "api",
-                text: data.reply,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            }])
-
-            // Play the audio
-            if (data.audio_b64) {
-                const audio = new Audio(`data:audio/mp3;base64,${data.audio_b64}`)
-                audio.play()
+                await audio.play();
+            } else {
+                setPlayingMsgId(null);
             }
         } catch (e) {
-            console.error("Audio handling failed:", e)
-            setMessages(prev => {
-                const updated = [...prev]
-                const idx = updated.findIndex(m => m.id === tempId)
-                if (idx !== -1) updated[idx].text = "❌ Failed to process audio"
-                return updated
-            })
-        } finally {
-            setIsTyping(false)
+            console.error("Text to speech failed:", e);
+            setPlayingMsgId(null);
         }
-    }
+    };
+
+    // Clean up audio on unmount
+    useEffect(() => {
+        return () => {
+            if (audioRef.current) {
+                audioRef.current.pause();
+            }
+        };
+    }, []);
 
     // ─── Call Feature ───────────────────────────────────────────
     const startCall = async () => {
-        setIsConnectingCall(true)
-        setIsCallActive(true)
+        setIsCallActive(true);
         try {
             const res = await apiFetch("/api/voice/token", {
                 method: 'POST',
                 body: JSON.stringify({ user_id: USER_ID })
-            })
-            if (!res.ok) throw new Error("Failed to get LK token")
-            const data = await res.json()
-            setLiveKitToken(data.token)
-            setLiveKitUrl(data.livekit_url)
-            setShouldConnect(true)
+            });
+            if (!res.ok) throw new Error("Failed to get LK token");
+            const data = await res.json();
+            setLiveKitToken(data.token);
+            setLiveKitUrl(data.livekit_url);
+            setShouldConnect(true);
         } catch (e) {
-            console.error("Call connection failed:", e)
-            setIsCallActive(false)
-        } finally {
-            setIsConnectingCall(false)
+            console.error("Call connection failed:", e);
+            setIsCallActive(false);
         }
-    }
+    };
 
     const endCall = () => {
-        setShouldConnect(false)
-        setIsCallActive(false)
-        setLiveKitToken("")
-        setLiveKitUrl("")
-    }
+        setShouldConnect(false);
+        setIsCallActive(false);
+        setLiveKitToken("");
+        setLiveKitUrl("");
+    };
 
     return (
         <div className="fixed inset-0 z-[100] bg-[#FAFAFA] flex flex-col font-sans overflow-hidden">
@@ -293,7 +274,7 @@ export default function ChatPage() {
             </div>
 
             {/* ─── Chat Area ───────────────────────────────────── */}
-            <div className="flex-1 overflow-y-auto px-4 py-6 scroll-smooth relative z-10" style={{ paddingBottom: showKeyboard ? '20px' : '120px' }}>
+            <div className="flex-1 overflow-y-auto px-4 py-6 scroll-smooth relative z-10 pb-28">
                 <div className="flex flex-col gap-6 max-w-3xl mx-auto">
                     {messages.length === 0 && (
                         <div className="flex flex-col items-center justify-center pt-20 gap-4">
@@ -325,8 +306,24 @@ export default function ChatPage() {
                                     {msg.sender === "api" && <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />}
                                     <p className="text-base leading-relaxed relative z-10 font-medium tracking-wide">{msg.text}</p>
                                 </div>
-                                <div className="flex items-center gap-2 mt-1.5 px-1">
+                                <div className="flex items-center gap-2 mt-1.5 px-2">
                                     <span className="text-[10px] text-stone-400 font-medium">{msg.time}</span>
+
+                                    {/* TTS Action Button for Assistant Messages */}
+                                    {msg.sender === "api" && (
+                                        <button
+                                            onClick={() => handleSpeakMessage(msg.id, msg.text)}
+                                            className="ml-1 p-1 hover:bg-amber-100 text-stone-400 hover:text-amber-600 rounded-full transition-colors flex items-center gap-1"
+                                            title="Read aloud"
+                                        >
+                                            {playingMsgId === msg.id ? (
+                                                <Loader2 size={14} className="animate-spin text-amber-500" />
+                                            ) : (
+                                                <Volume2 size={14} />
+                                            )}
+                                            {nuravyaUser?.plan === "free" && <Crown size={10} className="text-amber-500" />}
+                                        </button>
+                                    )}
                                 </div>
                             </motion.div>
                         ))}
@@ -346,95 +343,66 @@ export default function ChatPage() {
             </div>
 
             {/* ─── Bottom Input ─────────────────────────────────── */}
-            <div className="absolute w-full bottom-0 left-0 bg-gradient-to-t from-[#FAFAFA] via-[#FAFAFA]/95 to-transparent pt-10 pb-safe z-20">
-                <div className="px-4 pb-4 md:pb-6 max-w-3xl mx-auto w-full">
-                    {!showKeyboard ? (
-                        <div className="flex flex-col items-center gap-4">
-                            <div className="flex items-center justify-between w-full px-4">
-                                <button onClick={() => setShowKeyboard(true)} className="p-3 bg-white border border-stone-200 shadow-sm hover:shadow-md transition-shadow rounded-full text-stone-500 hover:text-stone-700">
-                                    <Keyboard size={22} />
-                                </button>
-
-                                <motion.button
-                                    whileTap={{ scale: 0.9 }}
-                                    onClick={isRecording ? stopRecording : startRecording}
-                                    className={`relative flex items-center justify-center w-20 h-20 rounded-full shadow-[0_10px_40px_rgba(245,158,11,0.3)] text-white transition-all duration-300 ${isRecording ? "bg-red-500 hover:bg-red-600 animate-pulse shadow-red-500/50" : "bg-gradient-to-br from-amber-400 to-orange-500"}`}
-                                >
-                                    {isRecording ? <X size={32} strokeWidth={2.5} /> : <Mic size={32} strokeWidth={2.5} />}
-                                </motion.button>
-
-                                <button className="p-3 opacity-0 pointer-events-none"><Keyboard size={22} /></button>
-                            </div>
-                            <span className="text-xs font-semibold text-stone-400 uppercase tracking-widest">{isRecording ? "Tap to send Message" : "Tap to Speak"}</span>
-                        </div>
-                    ) : (
-                        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white/80 backdrop-blur-xl border border-stone-200/60 shadow-[0_8px_30px_rgb(0,0,0,0.06)] rounded-full p-2 flex items-center gap-2">
-                            <button onClick={() => setShowKeyboard(false)} className="p-2.5 text-stone-400 hover:text-amber-500 transition-colors ml-1 rounded-full hover:bg-stone-50">
-                                <Mic size={22} />
-                            </button>
-                            <input
-                                type="text"
-                                value={inputValue}
-                                onChange={(e) => setInputValue(e.target.value)}
-                                onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                                placeholder="Message Nuravya..."
-                                className="flex-1 bg-transparent border-none outline-none text-stone-700 placeholder:text-stone-400 font-medium px-2 py-2"
-                            />
-                            <button
-                                onClick={handleSend}
-                                disabled={!inputValue.trim()}
-                                className={`p-2.5 rounded-full transition-all flex items-center justify-center ${inputValue.trim() ? "bg-amber-500 text-white shadow-md hover:scale-105" : "bg-stone-100 text-stone-400"}`}
-                            >
-                                <Send size={20} className={inputValue.trim() ? "ml-0.5" : ""} />
-                            </button>
-                        </motion.div>
-                    )}
+            <div className="absolute w-full bottom-0 left-0 bg-[#FAFAFA] border-t border-stone-200/60 pb-safe z-20 shadow-[0_-10px_40px_rgba(0,0,0,0.03)]">
+                <div className="px-4 py-3 md:py-4 max-w-3xl mx-auto w-full">
+                    <div className="bg-white border border-stone-200/80 shadow-sm rounded-full p-1.5 flex items-center gap-2 pr-2 overflow-hidden focus-within:ring-2 focus-within:ring-amber-500/20 focus-within:border-amber-400 transition-all">
+                        <input
+                            type="text"
+                            value={inputValue}
+                            onChange={(e) => setInputValue(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                            placeholder="Message Nuravya..."
+                            className="flex-1 bg-transparent border-none outline-none text-stone-700 placeholder:text-stone-400 font-medium px-4 py-2.5 text-[15px] w-full"
+                        />
+                        <button
+                            onClick={handleSend}
+                            disabled={!inputValue.trim()}
+                            className={`p-2.5 shrink-0 rounded-full transition-all flex items-center justify-center ${inputValue.trim() ? "bg-amber-500 text-white shadow-md hover:scale-105" : "bg-stone-100 text-stone-400"}`}
+                        >
+                            <Send size={18} className={inputValue.trim() ? "ml-0.5" : ""} />
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
 function CallInterface({ onEndCall }: { onEndCall: () => void }) {
-    const { state: assistantState, audioTrack: assistantAudioTrack } = useVoiceAssistant()
-    const { localParticipant } = useLocalParticipant()
-    const participants = useParticipants()
-    const tracks = useTracks([Track.Source.Microphone, Track.Source.ScreenShareAudio])
+    const { state: assistantState, audioTrack: assistantAudioTrack } = useVoiceAssistant();
+    const { localParticipant } = useLocalParticipant();
+    const participants = useParticipants();
+    const tracks = useTracks([Track.Source.Microphone, Track.Source.ScreenShareAudio]);
 
-    // Find the agent participant (usually identity includes "Agent" or is different from local)
-    const agentParticipant = participants.find(p => p.identity !== localParticipant?.identity)
-    const remoteAudioTrack = tracks.find(t => t.participant.identity === agentParticipant?.identity && t.source === Track.Source.Microphone)
+    const agentParticipant = participants.find(p => p.identity !== localParticipant?.identity);
+    const remoteAudioTrack = tracks.find(t => t.participant.identity === agentParticipant?.identity && t.source === Track.Source.Microphone);
 
     const { toggle: toggleMic, enabled: isMicEnabled } = useTrackToggle({
         source: Track.Source.Microphone,
-    })
-    const connectionState = useConnectionState()
+    });
+    const connectionState = useConnectionState();
 
-    // States for nice UI
-    const isRinging = connectionState === ConnectionState.Connecting
-    const isConnected = connectionState === ConnectionState.Connected
+    const isRinging = connectionState === ConnectionState.Connecting;
+    const isConnected = connectionState === ConnectionState.Connected;
 
-    // Call Timer
-    const [callDuration, setCallDuration] = useState(0)
+    const [callDuration, setCallDuration] = useState(0);
     useEffect(() => {
-        if (!isConnected) return
-        const interval = setInterval(() => setCallDuration(d => d + 1), 1000)
-        return () => clearInterval(interval)
-    }, [isConnected])
+        if (!isConnected) return;
+        const interval = setInterval(() => setCallDuration(d => d + 1), 1000);
+        return () => clearInterval(interval);
+    }, [isConnected]);
 
     const formatCallTime = (s: number) =>
-        `${Math.floor(s / 60).toString().padStart(2, '0')}:${(s % 60).toString().padStart(2, '0')}`
+        `${Math.floor(s / 60).toString().padStart(2, '0')}:${(s % 60).toString().padStart(2, '0')}`;
 
-    // Custom mic toggle to align with UI expectations
     const handleMicToggle = useCallback(() => {
-        toggleMic()
-    }, [toggleMic])
+        toggleMic();
+    }, [toggleMic]);
 
     return (
         <>
             <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-amber-500/15 blur-[120px] rounded-full pointer-events-none" />
 
-            {/* Top */}
             <div className="flex flex-col items-center pt-20 gap-4 relative z-10 w-full">
                 <span className="text-stone-400 text-sm font-medium uppercase tracking-widest">
                     {isRinging ? "Calling..." : isConnected ? "Connected" : "Disconnected"}
@@ -455,7 +423,6 @@ function CallInterface({ onEndCall }: { onEndCall: () => void }) {
                 )}
             </div>
 
-            {/* Center Visualizer */}
             <div className="relative z-10 flex items-center justify-center flex-1 w-full">
                 {isRinging ? (
                     <motion.div className="relative">
@@ -467,7 +434,6 @@ function CallInterface({ onEndCall }: { onEndCall: () => void }) {
                     </motion.div>
                 ) : (
                     <div className="h-24 w-full px-12 flex justify-center">
-                        {/* LiveKit component to render audio visualizer */}
                         {(assistantAudioTrack || remoteAudioTrack) ? (
                             <BarVisualizer
                                 trackRef={assistantAudioTrack || remoteAudioTrack}
@@ -477,7 +443,6 @@ function CallInterface({ onEndCall }: { onEndCall: () => void }) {
                             />
                         ) : (
                             <div className="flex items-center gap-1 h-20">
-                                {/* Fallback animation if track is missing still */}
                                 {[...Array(12)].map((_, i) => (
                                     <div key={i} className="w-1.5 h-[15%] rounded-full bg-gradient-to-t from-stone-600 to-stone-400" />
                                 ))}
@@ -487,7 +452,6 @@ function CallInterface({ onEndCall }: { onEndCall: () => void }) {
                 )}
             </div>
 
-            {/* Bottom Controls */}
             <div className="pb-20 relative z-10 flex flex-col items-center gap-6 w-full">
                 {isConnected && (
                     <button
@@ -505,5 +469,5 @@ function CallInterface({ onEndCall }: { onEndCall: () => void }) {
                 </button>
             </div>
         </>
-    )
+    );
 }

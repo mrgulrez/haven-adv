@@ -21,6 +21,17 @@ async function getAuthToken(): Promise<string | null> {
 }
 
 /**
+ * Get headers with Firebase ID token for manual fetch requests.
+ */
+export async function getAuthHeaders(): Promise<Record<string, string>> {
+    const token = await getAuthToken();
+    if (token) {
+        return { "Authorization": `Bearer ${token}` };
+    }
+    return {};
+}
+
+/**
  * Make an authenticated API request.
  * Automatically attaches the Bearer token if the user is logged in.
  */
