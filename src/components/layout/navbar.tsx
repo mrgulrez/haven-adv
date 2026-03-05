@@ -58,7 +58,15 @@ export function Navbar() {
                 <div className="hidden md:flex items-center gap-4">
                     {user ? (
                         <div className="flex items-center gap-4">
-                            <span className="text-sm font-medium text-stone-600">Hi, {user.displayName?.split(' ')[0]}</span>
+                            <Link href="/memory" className="text-sm font-medium text-stone-600 hover:text-amber-600 transition-colors">
+                                Memory
+                            </Link>
+                            <Link href="/insights" className="text-sm font-medium text-stone-600 hover:text-purple-600 transition-colors">
+                                Insights
+                            </Link>
+                            <Link href="/profile" className="text-sm font-medium text-stone-600 hover:text-amber-600 transition-colors">
+                                {user.displayName?.split(' ')[0]}
+                            </Link>
                             <Button size="sm" variant="outline" className="rounded-full" onClick={logout}>Logout</Button>
                         </div>
                     ) : (

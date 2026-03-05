@@ -35,6 +35,12 @@ Pop-Location
 Write-Host "`n[STEP 3] Compiling APK with Gradle... ($androidDir)" -ForegroundColor Cyan
 Push-Location $androidDir
 try {
+    # Specify the Android Studio JBR path to avoid incompatibility with system JDK 24
+    $javaPath = "C:\Program Files\Android\Android Studio\jbr\bin\java.exe"
+    if (-not (Test-Path $javaPath)) {
+        $javaPath = "java" # Fallback to system java if Android Studio isn't in default path
+    }
+
     $javaArgs = @(
         "-Xmx2048m",
         "-Dorg.gradle.appname=gradlew",
@@ -43,7 +49,7 @@ try {
         "org.gradle.wrapper.GradleWrapperMain",
         "assembleDebug"
     )
-    & java $javaArgs
+    & $javaPath $javaArgs
 
     if ($LASTEXITCODE -eq 0) {
         $apkPath = Join-Path $androidDir "app\build\outputs\apk\debug\app-debug.apk"

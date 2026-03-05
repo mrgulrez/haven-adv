@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useRef, useEffect, useCallback } from "react"
+import React, { useState, useRef, useEffect, useCallback, useMemo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import {
     Mic,
@@ -28,6 +28,8 @@ import {
     useTracks,
 } from "@livekit/components-react"
 import { Track, ConnectionState, Participant, TrackPublication } from "livekit-client"
+import { apiFetch } from "@/lib/api"
+import { useAuth } from "@/components/auth/auth-provider"
 
 // ─── Types ──────────────────────────────────────────────────────
 
@@ -41,11 +43,11 @@ type Message = {
 
 // ─── Config ─────────────────────────────────────────────────────
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
 const SESSION_ID = `session_${Date.now()}`
-const USER_ID = "user_default"
 
 export default function ChatPage() {
+    const { user, nuravyaUser } = useAuth()
+    const USER_ID = useMemo(() => nuravyaUser?.id || user?.uid || "user_default", [nuravyaUser, user])
     const [messages, setMessages] = useState<Message[]>([])
     const [inputValue, setInputValue] = useState("")
     const [isTyping, setIsTyping] = useState(false)
@@ -88,9 +90,8 @@ export default function ChatPage() {
         setIsTyping(true)
 
         try {
-            const res = await fetch(`${API_BASE}/api/chat`, {
+            const res = await apiFetch("/api/chat", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ message: userMsg.text, session_id: SESSION_ID, user_id: USER_ID }),
             })
             if (!res.ok) throw new Error(`API error: ${res.status}`)
@@ -165,7 +166,7 @@ export default function ChatPage() {
             formData.append("session_id", SESSION_ID)
             formData.append("user_id", USER_ID)
 
-            const res = await fetch(`${API_BASE}/api/chat/audio`, {
+            const res = await apiFetch("/api/chat/audio", {
                 method: "POST",
                 body: formData,
             })
@@ -213,9 +214,8 @@ export default function ChatPage() {
         setIsConnectingCall(true)
         setIsCallActive(true)
         try {
-            const res = await fetch(`${API_BASE}/api/voice/token`, {
+            const res = await apiFetch("/api/voice/token", {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ user_id: USER_ID })
             })
             if (!res.ok) throw new Error("Failed to get LK token")

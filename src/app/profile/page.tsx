@@ -3,20 +3,56 @@
 import { useAuth } from "@/components/auth/auth-provider";
 import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
-import { User, Mail, Shield, LogOut, ChevronRight, Settings, Bell, CreditCard } from "lucide-react";
+import { User, Mail, Shield, LogOut, ChevronRight, Settings, Bell, CreditCard, Mic, BarChart3 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { apiGet, apiPost } from "@/lib/api";
+
+interface UsageData {
+    plan: string;
+    period_start: string;
+    voice_minutes_used: number;
+    voice_minutes_limit: number;
+    text_messages_sent: number;
+    voice_quota_pct: number;
+}
 
 export default function ProfilePage() {
-    const { user, loading, logout } = useAuth();
+    const { user, nuravyaUser, loading, logout } = useAuth();
     const router = useRouter();
+    const [usage, setUsage] = useState<UsageData | null>(null);
+    const [cancelling, setCancelling] = useState(false);
 
     useEffect(() => {
         if (!loading && !user) {
             router.push("/");
         }
     }, [user, loading, router]);
+
+    // Fetch usage data
+    useEffect(() => {
+        if (user && nuravyaUser) {
+            apiGet<UsageData>("/api/usage/current")
+                .then(setUsage)
+                .catch(console.warn);
+        }
+    }, [user, nuravyaUser]);
+
+    const handleCancelSubscription = async () => {
+        if (!confirm("Are you sure you want to cancel your subscription? You'll retain access until the end of your billing period.")) return;
+        setCancelling(true);
+        try {
+            await apiPost("/api/payments/cancel", {});
+            window.location.reload();
+        } catch (err) {
+            console.error("Cancel failed:", err);
+            alert("Failed to cancel subscription. Please try again.");
+        } finally {
+            setCancelling(false);
+        }
+    };
 
     if (loading || !user) {
         return (
@@ -25,6 +61,9 @@ export default function ProfilePage() {
             </div>
         );
     }
+
+    const currentPlan = nuravyaUser?.plan || "free";
+    const isPaid = currentPlan === "core" || currentPlan === "pro";
 
     return (
         <main className="min-h-screen bg-[#FFFBEB] flex flex-col font-sans">
@@ -61,14 +100,73 @@ export default function ProfilePage() {
                                     {user.email}
                                 </p>
                                 <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
-                                    <span className="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded-full border border-amber-200 uppercase tracking-wider">
-                                        Nuravya Free
+                                    <span className={`px-3 py-1 text-xs font-bold rounded-full border uppercase tracking-wider ${currentPlan === "pro" ? "bg-stone-900 text-white border-stone-700" :
+                                            currentPlan === "core" ? "bg-amber-100 text-amber-800 border-amber-200" :
+                                                "bg-stone-100 text-stone-600 border-stone-200"
+                                        }`}>
+                                        Nuravya {currentPlan === "pro" ? "Pro" : currentPlan === "core" ? "Core" : "Free"}
                                     </span>
-                                    <span className="text-xs text-stone-400">Joined March 2026</span>
+                                    <span className="text-xs text-stone-400">
+                                        {nuravyaUser?.created_at ? `Joined ${new Date(nuravyaUser.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}` : ""}
+                                    </span>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    {/* Usage Stats (for paid plans) */}
+                    {isPaid && usage && (
+                        <div className="bg-white rounded-3xl p-6 border border-stone-200 shadow-sm mb-8">
+                            <h2 className="text-sm font-bold text-stone-400 uppercase tracking-widest mb-4">This Month&apos;s Usage</h2>
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                {/* Voice Minutes */}
+                                <div className="bg-stone-50 rounded-2xl p-4">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <Mic size={16} className="text-amber-500" />
+                                        <span className="text-xs font-semibold text-stone-600">Voice Minutes</span>
+                                    </div>
+                                    <div className="text-2xl font-bold text-stone-900 mb-1">
+                                        {Math.round(usage.voice_minutes_used)}
+                                        <span className="text-sm font-normal text-stone-400">/{usage.voice_minutes_limit}</span>
+                                    </div>
+                                    <div className="w-full h-2 bg-stone-200 rounded-full overflow-hidden">
+                                        <div
+                                            className={`h-full rounded-full transition-all ${usage.voice_quota_pct > 90 ? "bg-red-500" :
+                                                    usage.voice_quota_pct > 70 ? "bg-amber-500" : "bg-emerald-500"
+                                                }`}
+                                            style={{ width: `${Math.min(usage.voice_quota_pct, 100)}%` }}
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Text Messages */}
+                                <div className="bg-stone-50 rounded-2xl p-4">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <BarChart3 size={16} className="text-blue-500" />
+                                        <span className="text-xs font-semibold text-stone-600">Messages</span>
+                                    </div>
+                                    <div className="text-2xl font-bold text-stone-900">
+                                        {usage.text_messages_sent}
+                                    </div>
+                                    <div className="text-xs text-stone-400 mt-1">Unlimited</div>
+                                </div>
+
+                                {/* Plan */}
+                                <div className="bg-stone-50 rounded-2xl p-4 col-span-2 md:col-span-1">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <CreditCard size={16} className="text-purple-500" />
+                                        <span className="text-xs font-semibold text-stone-600">Plan</span>
+                                    </div>
+                                    <div className="text-2xl font-bold text-stone-900 capitalize">
+                                        {currentPlan}
+                                    </div>
+                                    <div className="text-xs text-stone-400 mt-1">
+                                        ${currentPlan === "pro" ? "59" : "24"}/month
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
                     <div className="grid md:grid-cols-2 gap-8">
                         {/* Settings Group */}
@@ -116,22 +214,50 @@ export default function ProfilePage() {
                             </div>
                         </div>
 
-                        {/* Subscription Group */}
+                        {/* Billing & Support Group */}
                         <div className="space-y-4">
                             <h2 className="text-sm font-bold text-stone-400 uppercase tracking-widest px-4">Billing & Support</h2>
                             <div className="bg-white rounded-3xl border border-stone-200 shadow-sm overflow-hidden">
-                                <button className="w-full flex items-center justify-between p-4 hover:bg-stone-50 transition-colors group">
+                                <Link href="/pricing" className="w-full flex items-center justify-between p-4 hover:bg-stone-50 transition-colors group">
                                     <div className="flex items-center gap-3">
                                         <div className="p-2 bg-stone-100 rounded-xl text-stone-600 group-hover:bg-amber-50 group-hover:text-amber-600 transition-colors">
                                             <CreditCard size={20} />
                                         </div>
                                         <div className="text-left">
-                                            <p className="text-sm font-semibold text-stone-900">Subscription Plan</p>
-                                            <p className="text-xs text-stone-500">Manage your current plan</p>
+                                            <p className="text-sm font-semibold text-stone-900">
+                                                {isPaid ? "Manage Subscription" : "Upgrade Plan"}
+                                            </p>
+                                            <p className="text-xs text-stone-500">
+                                                {isPaid ? `Currently on ${currentPlan.charAt(0).toUpperCase() + currentPlan.slice(1)} plan` : "Unlock voice, memory, and more"}
+                                            </p>
                                         </div>
                                     </div>
                                     <ChevronRight size={18} className="text-stone-400 group-hover:text-amber-500 transition-colors" />
-                                </button>
+                                </Link>
+
+                                {isPaid && (
+                                    <>
+                                        <div className="h-px bg-stone-100 mx-4"></div>
+                                        <button
+                                            onClick={handleCancelSubscription}
+                                            disabled={cancelling}
+                                            className="w-full flex items-center justify-between p-4 hover:bg-orange-50 transition-colors group"
+                                        >
+                                            <div className="flex items-center gap-3">
+                                                <div className="p-2 bg-orange-100/50 rounded-xl text-orange-600 transition-colors">
+                                                    <CreditCard size={20} />
+                                                </div>
+                                                <div className="text-left">
+                                                    <p className="text-sm font-semibold text-orange-600">
+                                                        {cancelling ? "Cancelling..." : "Cancel Subscription"}
+                                                    </p>
+                                                    <p className="text-xs text-orange-500/70">You&apos;ll keep access until period ends</p>
+                                                </div>
+                                            </div>
+                                        </button>
+                                    </>
+                                )}
+
                                 <div className="h-px bg-stone-100 mx-4"></div>
                                 <button
                                     onClick={logout}
