@@ -22,6 +22,7 @@ interface NuravyaUser {
     photo_url: string | null;
     plan: string;
     created_at: string;
+    is_admin?: boolean;
 }
 
 interface AuthContextType {

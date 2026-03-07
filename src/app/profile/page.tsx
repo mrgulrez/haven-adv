@@ -211,6 +211,24 @@ export default function ProfilePage() {
                                     </div>
                                     <ChevronRight size={18} className="text-stone-400 group-hover:text-amber-500 transition-colors" />
                                 </button>
+
+                                {nuravyaUser?.is_admin && (
+                                    <>
+                                        <div className="h-px bg-stone-100 mx-4"></div>
+                                        <Link href="/admin" className="w-full flex items-center justify-between p-4 hover:bg-stone-50 transition-colors group">
+                                            <div className="flex items-center gap-3">
+                                                <div className="p-2 bg-stone-100 rounded-xl text-stone-600 group-hover:bg-amber-50 group-hover:text-amber-600 transition-colors">
+                                                    <Shield size={20} className="text-amber-600" />
+                                                </div>
+                                                <div className="text-left">
+                                                    <p className="text-sm font-semibold text-stone-900 border-b border-transparent group-hover:border-amber-600 transition-colors inline-block">Admin Panel</p>
+                                                    <p className="text-xs text-stone-500">Manage users, stats, limits</p>
+                                                </div>
+                                            </div>
+                                            <ChevronRight size={18} className="text-stone-400 group-hover:text-amber-500 transition-colors" />
+                                        </Link>
+                                    </>
+                                )}
                             </div>
                         </div>
 

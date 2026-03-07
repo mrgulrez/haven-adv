@@ -12,13 +12,13 @@ export function Navbar() {
     const { scrollY } = useScroll()
     const [isScrolled, setIsScrolled] = React.useState(false)
     const pathname = usePathname()
-    const { user, loginWithGoogle } = useAuth()
+    const { user, loginWithGoogle, nuravyaUser } = useAuth()
 
     useMotionValueEvent(scrollY, "change", (latest) => {
         setIsScrolled(latest > 50)
     })
 
-    if (pathname?.startsWith('/chat')) {
+    if (pathname?.startsWith('/chat') || pathname?.startsWith('/admin')) {
         return null;
     }
 
@@ -74,6 +74,11 @@ export function Navbar() {
                             <Link href="/insights" className="text-sm font-medium text-stone-600 hover:text-purple-600 transition-colors">
                                 Insights
                             </Link>
+                            {nuravyaUser?.is_admin && (
+                                <Link href="/admin" className="text-sm font-bold text-amber-700 hover:text-amber-800 transition-colors bg-amber-100/50 px-3 py-1.5 rounded-full outline outline-1 outline-amber-200">
+                                    Admin View
+                                </Link>
+                            )}
                             <Link href="/profile" className="text-sm font-bold text-stone-900 hover:text-amber-600 transition-colors flex items-center gap-2 bg-stone-100 hover:bg-amber-50 px-3 py-1.5 rounded-full">
                                 <div className="w-6 h-6 rounded-full bg-stone-200 overflow-hidden flex items-center justify-center">
                                     {user.photoURL ? (

@@ -184,13 +184,16 @@ export default function VoiceSettingsPage() {
                                                 key={voice.voice_id}
                                                 whileHover={{ scale: 1.02 }}
                                                 whileTap={{ scale: 0.98 }}
-                                                className={`bg-white rounded-2xl p-5 border-2 transition-all cursor-pointer relative ${voice.is_active
+                                                className={`bg-white rounded-2xl p-5 border-2 transition-all relative ${voice.is_active
                                                     ? "border-amber-400 shadow-md shadow-amber-100"
-                                                    : isLocked
-                                                        ? "border-stone-100 opacity-75"
-                                                        : "border-stone-200 hover:border-amber-200"
+                                                    : "border-stone-200 hover:border-amber-200"
                                                     }`}
-                                                onClick={() => handleSetVoice(voice)}
+                                                onClick={() => {
+                                                    // Only allow selecting if not locked
+                                                    if (!isLocked) {
+                                                        handleSetVoice(voice);
+                                                    }
+                                                }}
                                             >
                                                 <div className="flex items-center justify-between mb-3">
                                                     <div className="flex items-center gap-2">
@@ -238,8 +241,15 @@ export default function VoiceSettingsPage() {
                                                 <p className="text-xs text-stone-500">{voice.description}</p>
 
                                                 {isLocked && (
-                                                    <div className="absolute inset-0 bg-white/40 flex items-center justify-center rounded-2xl opacity-0 hover:opacity-100 transition-opacity">
-                                                        <Button className="bg-stone-900 text-white rounded-full shadow-lg" size="sm">
+                                                    <div className="mt-3 w-full">
+                                                        <Button
+                                                            className="w-full bg-stone-100 text-stone-600 hover:bg-stone-200 hover:text-stone-900 rounded-xl"
+                                                            size="sm"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation()
+                                                                router.push("/pricing")
+                                                            }}
+                                                        >
                                                             Upgrade to Unlock
                                                         </Button>
                                                     </div>

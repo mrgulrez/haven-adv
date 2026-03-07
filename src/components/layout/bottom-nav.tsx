@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, Sparkles, MessageSquare, HeartHandshake, User } from "lucide-react"
+import { Home, Sparkles, MessageSquare, HeartHandshake, User, Shield } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/components/auth/auth-provider"
 
@@ -15,7 +15,7 @@ const navItems = [
 
 export function BottomNav() {
     const pathname = usePathname()
-    const { user, loginWithGoogle } = useAuth()
+    const { user, loginWithGoogle, nuravyaUser } = useAuth()
 
     if (pathname?.startsWith('/chat')) {
         return null;
@@ -92,6 +92,16 @@ export function BottomNav() {
                             isActive={pathname === item.href}
                         />
                     ))}
+
+                    {nuravyaUser?.is_admin && (
+                        <NavButton
+                            key="/admin"
+                            href="/admin"
+                            label="Admin"
+                            icon={Shield}
+                            isActive={pathname?.startsWith("/admin")}
+                        />
+                    )}
 
                     <NavButton
                         label={user ? (user.displayName?.split(' ')[0] || "Profile") : "Login"}
