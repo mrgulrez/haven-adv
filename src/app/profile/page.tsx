@@ -89,9 +89,9 @@ export default function ProfilePage() {
                                         </div>
                                     )}
                                 </div>
-                                <button className="absolute -bottom-2 -right-2 bg-white p-2 rounded-xl border border-stone-200 shadow-sm text-stone-500 hover:text-amber-600 transition-colors">
-                                    <Settings size={16} />
-                                </button>
+                                <Link href="/settings" className="absolute -bottom-2 -right-2 bg-white p-2 rounded-xl border border-stone-200 shadow-sm text-stone-500 hover:text-amber-600 transition-all group hover:shadow-md">
+                                    <Settings size={16} className="group-hover:rotate-45 transition-transform duration-300" />
+                                </Link>
                             </div>
                             <div className="text-center md:text-left">
                                 <h1 className="text-2xl font-bold font-heading text-stone-900 mb-1">{user.displayName}</h1>
@@ -101,8 +101,8 @@ export default function ProfilePage() {
                                 </p>
                                 <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
                                     <span className={`px-3 py-1 text-xs font-bold rounded-full border uppercase tracking-wider ${currentPlan === "pro" ? "bg-stone-900 text-white border-stone-700" :
-                                            currentPlan === "core" ? "bg-amber-100 text-amber-800 border-amber-200" :
-                                                "bg-stone-100 text-stone-600 border-stone-200"
+                                        currentPlan === "core" ? "bg-amber-100 text-amber-800 border-amber-200" :
+                                            "bg-stone-100 text-stone-600 border-stone-200"
                                         }`}>
                                         Nuravya {currentPlan === "pro" ? "Pro" : currentPlan === "core" ? "Core" : "Free"}
                                     </span>
@@ -132,7 +132,7 @@ export default function ProfilePage() {
                                     <div className="w-full h-2 bg-stone-200 rounded-full overflow-hidden">
                                         <div
                                             className={`h-full rounded-full transition-all ${usage.voice_quota_pct > 90 ? "bg-red-500" :
-                                                    usage.voice_quota_pct > 70 ? "bg-amber-500" : "bg-emerald-500"
+                                                usage.voice_quota_pct > 70 ? "bg-amber-500" : "bg-emerald-500"
                                                 }`}
                                             style={{ width: `${Math.min(usage.voice_quota_pct, 100)}%` }}
                                         />

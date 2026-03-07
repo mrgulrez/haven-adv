@@ -19,6 +19,8 @@ interface VoiceProfile {
     voice_id: string;
     description?: string;
     gender?: string;
+    required_plan: string;
+    preview_url?: string;
     is_active: boolean;
     is_preset: boolean;
 }
@@ -40,7 +42,17 @@ export default function VoiceSettingsPage() {
     const [loading, setLoading] = useState(true);
     const [settingVoice, setSettingVoice] = useState<string | null>(null);
 
-    const isPaid = nuravyaUser?.plan === "core" || nuravyaUser?.plan === "pro";
+    // Audio preview state
+    const [playingUrl, setPlayingUrl] = useState<string | null>(null);
+    const audioRef = useState<HTMLAudioElement | null>(null);
+
+    // Check plan access
+    const userPlan = nuravyaUser?.plan || "free";
+    const hasCore = userPlan === "core" || userPlan === "pro";
+    const hasPro = userPlan === "pro";
+
+    // Fallback getter because the endpoint was gated, we need to pass true now since it's open
+    const [isPaid] = useState(true);
 
     useEffect(() => {
         if (!authLoading && !user) router.push("/");
@@ -72,6 +84,16 @@ export default function VoiceSettingsPage() {
     }, [user, isPaid]);
 
     const handleSetVoice = async (voice: VoiceProfile) => {
+        // Enforce plan locally before API call
+        if (voice.required_plan === "pro" && !hasPro) {
+            router.push("/pricing");
+            return;
+        }
+        if (voice.required_plan === "core" && !hasCore) {
+            router.push("/pricing");
+            return;
+        }
+
         setSettingVoice(voice.voice_id);
         try {
             await apiPost("/api/voice-settings/voices/set", {
@@ -89,6 +111,26 @@ export default function VoiceSettingsPage() {
             console.warn("Failed to set voice:", err);
         } finally {
             setSettingVoice(null);
+        }
+    };
+
+    const togglePlay = (url?: string) => {
+        if (!url) return;
+
+        let audio = audioRef[0];
+        if (!audio) {
+            audio = new Audio();
+            audioRef[1](audio);
+            audio.onended = () => setPlayingUrl(null);
+        }
+
+        if (playingUrl === url) {
+            audio.pause();
+            setPlayingUrl(null);
+        } else {
+            audio.src = url;
+            audio.play();
+            setPlayingUrl(url);
         }
     };
 
@@ -133,40 +175,60 @@ export default function VoiceSettingsPage() {
                             <section className="mb-12">
                                 <h2 className="text-sm font-bold text-stone-400 uppercase tracking-widest mb-4">Voice Personalities</h2>
 
-                                {!isPaid ? (
-                                    <div className="bg-white rounded-3xl p-8 border border-stone-200 text-center">
-                                        <Lock className="mx-auto mb-3 text-stone-300" size={32} />
-                                        <p className="text-stone-500 mb-4">Voice personalization requires Nuravya Core or Pro</p>
-                                        <Link href="/pricing">
-                                            <Button className="bg-amber-500 hover:bg-amber-600 text-white">Upgrade</Button>
-                                        </Link>
-                                    </div>
-                                ) : (
-                                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                                        {voices.map((voice) => (
+                                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {voices.map((voice) => {
+                                        const isLocked = (voice.required_plan === "pro" && !hasPro) || (voice.required_plan === "core" && !hasCore);
+
+                                        return (
                                             <motion.div
                                                 key={voice.voice_id}
                                                 whileHover={{ scale: 1.02 }}
                                                 whileTap={{ scale: 0.98 }}
-                                                className={`bg-white rounded-2xl p-5 border-2 transition-all cursor-pointer ${voice.is_active
-                                                        ? "border-amber-400 shadow-md shadow-amber-100"
+                                                className={`bg-white rounded-2xl p-5 border-2 transition-all cursor-pointer relative ${voice.is_active
+                                                    ? "border-amber-400 shadow-md shadow-amber-100"
+                                                    : isLocked
+                                                        ? "border-stone-100 opacity-75"
                                                         : "border-stone-200 hover:border-amber-200"
                                                     }`}
                                                 onClick={() => handleSetVoice(voice)}
                                             >
                                                 <div className="flex items-center justify-between mb-3">
                                                     <div className="flex items-center gap-2">
-                                                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${voice.is_active ? "bg-amber-100" : "bg-stone-100"
-                                                            }`}>
-                                                            <Volume2 size={18} className={voice.is_active ? "text-amber-600" : "text-stone-500"} />
+                                                        <div
+                                                            className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${voice.is_active ? "bg-amber-100" : "bg-stone-100 hover:bg-amber-50"
+                                                                }`}
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                togglePlay(voice.preview_url);
+                                                            }}
+                                                        >
+                                                            {playingUrl === voice.preview_url ? (
+                                                                <div className="flex gap-1">
+                                                                    <span className="w-1 h-3 bg-amber-500 animate-bounce" style={{ animationDelay: "0ms" }} />
+                                                                    <span className="w-1 h-4 bg-amber-500 animate-bounce" style={{ animationDelay: "150ms" }} />
+                                                                    <span className="w-1 h-3 bg-amber-500 animate-bounce" style={{ animationDelay: "300ms" }} />
+                                                                </div>
+                                                            ) : (
+                                                                <Volume2 size={18} className={voice.is_active ? "text-amber-600" : "text-stone-500"} />
+                                                            )}
                                                         </div>
                                                         <div>
-                                                            <p className="font-semibold text-stone-900 text-sm">{voice.name}</p>
-                                                            <p className="text-[10px] text-stone-400 uppercase tracking-wider">{voice.gender || voice.provider}</p>
+                                                            <p className="font-semibold text-stone-900 text-sm flex items-center gap-1">
+                                                                {voice.name}
+                                                                {isLocked && <Lock size={12} className="text-stone-400" />}
+                                                            </p>
+                                                            <div className="flex gap-2 text-[10px] items-center">
+                                                                <p className="text-stone-400 uppercase tracking-wider">{voice.gender}</p>
+                                                                {voice.required_plan !== "free" && (
+                                                                    <span className="bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded-full font-bold">
+                                                                        {voice.required_plan}
+                                                                    </span>
+                                                                )}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     {voice.is_active ? (
-                                                        <div className="w-6 h-6 rounded-full bg-amber-500 flex items-center justify-center">
+                                                        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-amber-500 flex items-center justify-center">
                                                             <Check size={14} className="text-white" />
                                                         </div>
                                                     ) : settingVoice === voice.voice_id ? (
@@ -174,10 +236,18 @@ export default function VoiceSettingsPage() {
                                                     ) : null}
                                                 </div>
                                                 <p className="text-xs text-stone-500">{voice.description}</p>
+
+                                                {isLocked && (
+                                                    <div className="absolute inset-0 bg-white/40 flex items-center justify-center rounded-2xl opacity-0 hover:opacity-100 transition-opacity">
+                                                        <Button className="bg-stone-900 text-white rounded-full shadow-lg" size="sm">
+                                                            Upgrade to Unlock
+                                                        </Button>
+                                                    </div>
+                                                )}
                                             </motion.div>
-                                        ))}
-                                    </div>
-                                )}
+                                        )
+                                    })}
+                                </div>
                             </section>
 
                             {/* ── Milestones ──────────────────────────── */}
@@ -200,8 +270,8 @@ export default function VoiceSettingsPage() {
                                                 initial={{ opacity: 0, y: 10 }}
                                                 animate={{ opacity: 1, y: 0 }}
                                                 className={`rounded-2xl p-5 border ${ms.is_celebrated
-                                                        ? "bg-amber-50 border-amber-200"
-                                                        : "bg-white border-stone-200"
+                                                    ? "bg-amber-50 border-amber-200"
+                                                    : "bg-white border-stone-200"
                                                     }`}
                                             >
                                                 <div className="flex items-start justify-between">

@@ -37,7 +37,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Web ID from the frontend (.env.example NEXT_PUBLIC_FIREBASE_APP_ID or standard GCP Web Client ID)
 // Capacitor Firebase Auth needs the Web Client ID to generate the idToken on native devices.
-const defaultWebClientId = "388836511470-3emebksk90f6q6ucl435qg5e2k78k73j.apps.googleusercontent.com";
+const defaultWebClientId = "275083657175-dk7qgflo9nmdstr8j9sv58sffmjh85pc.apps.googleusercontent.com";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null);

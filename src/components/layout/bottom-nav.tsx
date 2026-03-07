@@ -2,14 +2,14 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, Sparkles, Tag, HeartHandshake, User } from "lucide-react"
+import { Home, Sparkles, MessageSquare, HeartHandshake, User } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/components/auth/auth-provider"
 
 const navItems = [
     { href: "/", label: "Home", icon: Home },
     { href: "/features", label: "Features", icon: Sparkles },
-    { href: "/pricing", label: "Pricing", icon: Tag },
+    { href: "/chat", label: "Chat", icon: MessageSquare },
     { href: "/about", label: "Mission", icon: HeartHandshake },
 ]
 

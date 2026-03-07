@@ -30,6 +30,7 @@ import {
 import { Track, ConnectionState } from "livekit-client";
 import { apiFetch, apiPost, getAuthHeaders } from "@/lib/api";
 import { useAuth } from "@/components/auth/auth-provider";
+import { StatusModal } from "@/components/ui/success-modal";
 
 // ─── Types ──────────────────────────────────────────────────────
 
@@ -47,22 +48,25 @@ const SESSION_ID = `session_${Date.now()}`;
 export default function ChatPage() {
     const { user, nuravyaUser } = useAuth();
     const router = useRouter();
-    const USER_ID = useMemo(() => nuravyaUser?.id || user?.uid || "user_default", [nuravyaUser, user]);
     const [messages, setMessages] = useState<Message[]>([]);
     const [inputValue, setInputValue] = useState("");
     const [isTyping, setIsTyping] = useState(false);
 
-    // Call Component State
     const [isCallActive, setIsCallActive] = useState(false);
     const [liveKitToken, setLiveKitToken] = useState("");
     const [liveKitUrl, setLiveKitUrl] = useState("");
     const [shouldConnect, setShouldConnect] = useState(false);
+    const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
     // TTS playback state
     const [playingMsgId, setPlayingMsgId] = useState<string | null>(null);
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    const USER_ID = nuravyaUser?.id || user?.uid || "user_default"; // Modified from diff, keeping user?.uid
+    const userPlan = nuravyaUser?.plan || "free"; // Added from diff
+    const hasCore = userPlan === "core" || userPlan === "pro"; // Added from diff
 
     // ─── Scroll ─────────────────────────────────────────────────
     const scrollToBottom = useCallback(() => {
@@ -195,7 +199,27 @@ export default function ChatPage() {
 
     // ─── Call Feature ───────────────────────────────────────────
     const startCall = async () => {
+        if (!hasCore) {
+            setShowUpgradeModal(true);
+            return;
+        }
+
         setIsCallActive(true);
+
+        // 1. Play ringing sound
+        const ringAudio = new Audio('/ringing.mp3');
+        ringAudio.loop = true;
+        ringAudio.play().catch(e => console.warn("Ringing playback blocked:", e));
+        audioRef.current = ringAudio;
+
+        // 2. Wait a random amount of time to simulate ringing (2s - 5s)
+        const ringTime = Math.floor(Math.random() * 3000) + 2000;
+        await new Promise(resolve => setTimeout(resolve, ringTime));
+
+        // 3. Stop ringing
+        ringAudio.pause();
+        audioRef.current = null;
+
         try {
             const res = await apiFetch("/api/voice/token", {
                 method: 'POST',
@@ -208,6 +232,7 @@ export default function ChatPage() {
             setShouldConnect(true);
         } catch (e) {
             console.error("Call connection failed:", e);
+            ringAudio.pause();
             setIsCallActive(false);
         }
     };
@@ -247,6 +272,17 @@ export default function ChatPage() {
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            <StatusModal
+                isOpen={showUpgradeModal}
+                onClose={() => {
+                    setShowUpgradeModal(false);
+                    router.push("/pricing");
+                }}
+                title="Premium Feature"
+                message="Live voice calling requires Nuravya Core or Pro. Upgrade your plan to talk organically with your personalized AI companion."
+                variant="error"
+            />
 
             {/* ─── Header ──────────────────────────────────────── */}
             <div className="relative z-10 bg-white/60 backdrop-blur-xl border-b border-stone-200/50 pt-safe">
