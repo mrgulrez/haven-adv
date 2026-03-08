@@ -123,13 +123,13 @@ export default function ContactPage() {
                         <div className="bg-stone-900 text-stone-300 p-8 md:p-12 flex flex-col justify-center">
                             <h3 className="text-2xl font-bold font-heading text-white mb-8">Other ways to connect</h3>
 
-                            <div className="space-y-6 mb-12 flex-grow">
+                            <div className="space-y-8">
                                 <div className="flex items-start gap-4">
                                     <Mail className="w-6 h-6 text-amber-500 shrink-0 mt-1" />
                                     <div>
                                         <h4 className="text-white font-medium mb-1">Email Support</h4>
                                         <p className="text-sm text-stone-400">Our support team aims to respond within 24 hours.</p>
-                                        <p className="text-amber-400 mt-1 hover:underline cursor-pointer font-medium">hello@enord.in</p>
+                                        <a href="mailto:hello@nuravya.com" className="text-amber-400 mt-1 hover:underline inline-block font-medium">hello@nuravya.com</a>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-4">
@@ -144,7 +144,7 @@ export default function ContactPage() {
                                     <div>
                                         <h4 className="text-white font-medium mb-1">Press & Media</h4>
                                         <p className="text-sm text-stone-400">For interview requests and media resources.</p>
-                                        <p className="text-amber-400 mt-1 hover:underline cursor-pointer font-medium">press@enord.in</p>
+                                        <a href="mailto:press@nuravya.com" className="text-amber-400 mt-1 hover:underline inline-block font-medium">press@nuravya.com</a>
                                     </div>
                                 </div>
                             </div>

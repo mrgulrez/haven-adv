@@ -90,7 +90,7 @@ export default function ChatPage() {
         setIsTyping(true);
 
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/chat`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://backend.enord.in"}/api/chat`, {
                 method: "POST",
                 headers: {
                     ...await getAuthHeaders(),

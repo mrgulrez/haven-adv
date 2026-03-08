@@ -4,7 +4,7 @@
 
 import { auth } from "@/lib/firebase";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://backend.enord.in";
 
 /**
  * Get the current user's Firebase ID token (auto-refreshes if expired).

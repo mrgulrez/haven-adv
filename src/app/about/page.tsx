@@ -215,7 +215,7 @@ export default function AboutUs() {
                         whileHover={{ scale: 1.05 }}
                         className="inline-block"
                     >
-                        <a href="mailto:careers@enord.in" className="inline-flex items-center justify-center h-14 px-8 rounded-full bg-amber-500 hover:bg-amber-600 text-white font-semibold text-lg transition-colors shadow-lg">
+                        <a href="mailto:careers@nuravya.com" className="inline-flex items-center justify-center h-14 px-8 rounded-full bg-amber-500 hover:bg-amber-600 text-white font-semibold text-lg transition-colors shadow-lg">
                             Join Our Team
                         </a>
                     </motion.div>

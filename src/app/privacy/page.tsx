@@ -106,7 +106,7 @@ export default function PrivacyPolicy() {
                                 If you have questions or comments about this notice, you may email us at:
                             </p>
                             <p className="mt-2 font-semibold">
-                                privacy@enord.in
+                                privacy@nuravya.com
                             </p>
                         </section>
                     </div>

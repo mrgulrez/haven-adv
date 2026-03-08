@@ -36,7 +36,7 @@ export default function CareersPage() {
                                     { title: "Full-Stack Typescript Developer", dept: "Engineering", loc: "Remote" },
                                     { title: "Head of Privacy & Security", dept: "Security", loc: "Remote" }
                                 ].map((role, i) => (
-                                    <a key={i} href={`mailto:careers@enord.in?subject=Application for ${role.title}`} className="group flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl hover:bg-stone-50 transition-colors border border-transparent hover:border-stone-100 cursor-pointer block">
+                                    <a key={i} href={`mailto:careers@nuravya.com?subject=Application for ${role.title}`} className="group flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl hover:bg-stone-50 transition-colors border border-transparent hover:border-stone-100 cursor-pointer block">
                                         <div>
                                             <h4 className="font-bold text-stone-900 group-hover:text-amber-600 transition-colors">{role.title}</h4>
                                             <div className="text-sm text-stone-500 mt-1">{role.dept} • {role.loc}</div>
