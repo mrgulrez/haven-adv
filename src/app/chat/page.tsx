@@ -90,17 +90,12 @@ export default function ChatPage() {
         setIsTyping(true);
 
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://backend.enord.in"}/api/chat`, {
+            const res = await apiFetch("/api/chat", {
                 method: "POST",
-                headers: {
-                    ...await getAuthHeaders(),
-                    "Content-Type": "application/json"
-                },
                 body: JSON.stringify({ message: userMsg.text, session_id: SESSION_ID, user_id: USER_ID }),
             });
 
             if (!res.ok) throw new Error(`API error: ${res.status}`);
-            if (!res.body) throw new Error("No response body");
 
             const aiMsgId = (Date.now() + 1).toString();
             setMessages(prev => [...prev, {
@@ -109,6 +104,21 @@ export default function ChatPage() {
                 text: "",
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             }]);
+
+            // Capacitor native HTTP doesn't always support streaming yet.
+            // Check for body before attempting to stream.
+            if (!res.body) {
+                const text = await res.text();
+                setMessages(prev => {
+                    const updated = [...prev];
+                    const idx = updated.findIndex(m => m.id === aiMsgId);
+                    if (idx !== -1) {
+                        updated[idx] = { ...updated[idx], text };
+                    }
+                    return updated;
+                });
+                return;
+            }
 
             const reader = res.body.getReader();
             const decoder = new TextDecoder("utf-8");
@@ -132,12 +142,13 @@ export default function ChatPage() {
                     });
                 }
             }
-        } catch (e) {
+        } catch (e: any) {
             console.error(e);
+            const errorMsg = e instanceof Error ? e.message : String(e);
             setMessages(prev => [...prev, {
                 id: (Date.now() + 1).toString(),
                 sender: "api",
-                text: "Sorry, I couldn't connect right now.",
+                text: `Connection Error: ${errorMsg}. (Target: ${process.env.NEXT_PUBLIC_API_URL || "https://backend.enord.in"})`,
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             }]);
         } finally {

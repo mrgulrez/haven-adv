@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Twitter, Linkedin, Instagram } from "lucide-react"
 import { StatusModal } from "@/components/ui/success-modal"
 import { useState } from "react"
+import { apiFetch } from "@/lib/api"
 
 export function Footer() {
     const [modalConfig, setModalConfig] = useState<{
@@ -162,7 +163,7 @@ export function Footer() {
                                 const email = emailInput.value
                                 if (!email) return
                                 try {
-                                    const res = await fetch('/api/waitlist', {
+                                    const res = await apiFetch('/api/waitlist', {
                                         method: 'POST',
                                         headers: { 'Content-Type': 'application/json' },
                                         body: JSON.stringify({ email, source: 'Footer Newsletter' }),

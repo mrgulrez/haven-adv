@@ -10,6 +10,7 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2, CheckCircle2, PartyPopper } from "lucide-react"
 import { StatusModal } from "@/components/ui/success-modal"
+import { apiFetch } from "@/lib/api";
 
 const schema = z.object({
     name: z.string().min(2, "Name must be at least 2 characters"),
@@ -41,7 +42,7 @@ export function Waitlist() {
     const onSubmit = async (data: FormData) => {
         setIsLoading(true)
         try {
-            const response = await fetch('/api/waitlist', {
+            const response = await apiFetch('/api/waitlist', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ ...data, source: 'Waitlist Form' }),
