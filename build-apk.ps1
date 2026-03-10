@@ -29,6 +29,13 @@ if ($LASTEXITCODE -ne 0) {
     Pop-Location
     exit $LASTEXITCODE
 }
+
+# Step 2.5: Generate Android Icons/Splash
+Write-Host "`n[STEP 2.5] Generating Android assets (Icons/Splash)..." -ForegroundColor Cyan
+npx capacitor-assets generate --android
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "[WARNING] Asset generation failed. Continuing with existing assets." -ForegroundColor Yellow
+}
 Pop-Location
 
 # Step 3: Build the APK
