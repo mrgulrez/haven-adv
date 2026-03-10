@@ -10,7 +10,6 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2, CheckCircle2, PartyPopper } from "lucide-react"
 import { StatusModal } from "@/components/ui/success-modal"
-import { apiFetch } from "@/lib/api";
 
 const schema = z.object({
     name: z.string().min(2, "Name must be at least 2 characters"),
@@ -23,6 +22,7 @@ export function Waitlist() {
     const [isSubmitted, setIsSubmitted] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [position, setPosition] = useState(234)
+    const [submittedEmail, setSubmittedEmail] = useState("")
     const [modalConfig, setModalConfig] = useState<{
         isOpen: boolean;
         title: string;
@@ -42,13 +42,16 @@ export function Waitlist() {
     const onSubmit = async (data: FormData) => {
         setIsLoading(true)
         try {
-            const response = await apiFetch('/api/waitlist', {
+            // Use plain fetch with a relative URL so it hits the Next.js API route
+            // (not the FastAPI backend via apiFetch)
+            const response = await fetch('/api/waitlist', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ ...data, source: 'Waitlist Form' }),
             })
 
             if (response.ok) {
+                setSubmittedEmail(data.email)
                 setIsSubmitted(true)
                 setPosition(prev => prev + 1)
             } else {
@@ -148,7 +151,7 @@ export function Waitlist() {
                             </p>
                             <div className="bg-stone-50 rounded-xl p-6 w-full border border-stone-100 text-center">
                                 <p className="text-sm text-stone-500 mb-2">We'll notify you at:</p>
-                                <p className="text-lg font-bold text-amber-600 break-all">{(document.getElementById('email') as HTMLInputElement)?.value}</p>
+                                <p className="text-lg font-bold text-amber-600 break-all">{submittedEmail}</p>
                             </div>
                             <div className="mt-8 text-sm text-stone-500 flex gap-2 items-center">
                                 <PartyPopper size={16} className="text-amber-500" />

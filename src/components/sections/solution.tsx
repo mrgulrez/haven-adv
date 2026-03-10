@@ -1,132 +1,295 @@
 "use client"
 
-import { Section } from "@/components/ui/section"
-import { motion, useScroll, useTransform } from "framer-motion"
+import { motion, useInView } from "framer-motion"
 import { useRef } from "react"
-import { Mic, Brain, Clock, Heart } from "lucide-react"
+import {
+    Mic, Brain, Heart, Zap, Clock, Lock, BarChart3, Sparkles,
+    Star, ArrowRight
+} from "lucide-react"
+import Link from "next/link"
+import { FEATURES as FEATURE_CONFIG, PLANS } from "@/lib/site.config"
 
-const features = [
-    {
-        icon: Mic,
-        title: "Natural Voice",
-        description: "Talk naturally, your companion responds with warmth and genuine interest.",
-        color: "bg-amber-100 text-amber-600",
-    },
-    {
-        icon: Brain,
-        title: "Emotional Memory",
-        description: "Nuravya remembers your stories and important moments.",
-        color: "bg-rose-100 text-rose-600",
-    },
-    {
-        icon: Clock,
-        title: "Smart Reminders",
-        description: "Never miss medications or daily check-ins.",
-        color: "bg-blue-100 text-blue-600",
-    },
-    {
-        icon: Heart,
-        title: "Always Available",
-        description: "24/7 companionship without judgment or fatigue.",
-        color: "bg-emerald-100 text-emerald-600",
-    },
-]
+// ─── Icon map ─────────────────────────────────────────────────────────────────
 
-export function Solution() {
-    const containerRef = useRef<HTMLDivElement>(null)
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ["start end", "end start"],
-    })
+const ICON_MAP: Record<string, React.ComponentType<{ size?: number; strokeWidth?: number; className?: string }>> = {
+    Mic, Brain, Sparkles, BarChart3, Clock, Lock,
+}
 
-    const y = useTransform(scrollYProgress, [0, 1], [100, -100])
-    const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0])
+// ─── Color map ─────────────────────────────────────────────────────────────────
+
+const COLOR_MAP: Record<string, {
+    bg: string; text: string; border: string; badgeBg: string; badgeText: string
+}> = {
+    amber: { bg: "bg-amber-50", text: "text-amber-600", border: "border-amber-200", badgeBg: "bg-amber-100", badgeText: "text-amber-700" },
+    purple: { bg: "bg-purple-50", text: "text-purple-600", border: "border-purple-200", badgeBg: "bg-purple-100", badgeText: "text-purple-700" },
+    rose: { bg: "bg-rose-50", text: "text-rose-600", border: "border-rose-200", badgeBg: "bg-rose-100", badgeText: "text-rose-700" },
+    blue: { bg: "bg-blue-50", text: "text-blue-600", border: "border-blue-200", badgeBg: "bg-blue-100", badgeText: "text-blue-700" },
+    emerald: { bg: "bg-emerald-50", text: "text-emerald-600", border: "border-emerald-200", badgeBg: "bg-emerald-100", badgeText: "text-emerald-700" },
+    stone: { bg: "bg-stone-100", text: "text-stone-600", border: "border-stone-200", badgeBg: "bg-stone-200", badgeText: "text-stone-700" },
+}
+
+// ─── Live mini-demos (stable, deterministic animations only) ──────────────────
+
+const WAVEFORM_BARS = [6, 10, 14, 8, 18, 12, 20, 9, 15, 7, 19, 11, 16, 8, 13, 10, 17, 9]
+
+function WaveformDemo() {
+    return (
+        <div className="flex items-end gap-0.5 h-8">
+            {WAVEFORM_BARS.map((h, i) => (
+                <motion.div key={i}
+                    animate={{ height: [h + "px", Math.min(h + 8, 22) + "px", h + "px"] }}
+                    transition={{ duration: 0.65 + i * 0.04, repeat: Infinity, delay: i * 0.05, ease: "easeInOut" }}
+                    className="w-1.5 rounded-full bg-amber-400/70 flex-shrink-0"
+                    style={{ height: h + "px" }}
+                />
+            ))}
+        </div>
+    )
+}
+
+function MemoryDemo() {
+    const tags = ["Loves jazz 🎷", "Dog: Mochi 🐶", "Big presentation", "Nervous yesterday", "Garden project"]
+    return (
+        <div className="flex flex-wrap gap-1.5">
+            {tags.map((t, i) => (
+                <motion.span key={i}
+                    initial={{ opacity: 0, scale: 0.85 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: i * 0.12 }}
+                    className="px-2.5 py-1 bg-purple-100 text-purple-700 text-[10px] font-semibold rounded-full"
+                >
+                    {t}
+                </motion.span>
+            ))}
+        </div>
+    )
+}
+
+function PersonasDemo() {
+    const chars = [
+        { n: "Aria", r: "Warm mentor", c: "bg-amber-500" },
+        { n: "Sage", r: "Philosopher", c: "bg-purple-500" },
+        { n: "Nova", r: "Bold coach", c: "bg-rose-500" },
+    ]
+    return (
+        <div className="flex gap-2">
+            {chars.map((c, i) => (
+                <motion.div key={i}
+                    initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.12 }}
+                    className="flex-1 bg-white rounded-xl p-2.5 border border-rose-100 text-center"
+                >
+                    <div className={`w-8 h-8 ${c.c} rounded-full mx-auto mb-1 flex items-center justify-center text-white text-xs font-bold`}>{c.n[0]}</div>
+                    <p className="text-[10px] font-bold text-stone-800">{c.n}</p>
+                    <p className="text-[9px] text-stone-400">{c.r}</p>
+                </motion.div>
+            ))}
+        </div>
+    )
+}
+
+function ChartDemo() {
+    const bars = [40, 60, 50, 75, 65, 85, 70]
+    const days = ["M", "T", "W", "T", "F", "S", "S"]
+    return (
+        <div className="flex gap-1 items-end h-10">
+            {bars.map((h, i) => (
+                <div key={i} className="flex-1 flex flex-col items-center gap-0.5">
+                    <motion.div
+                        initial={{ height: 0 }} animate={{ height: `${h}%` }}
+                        transition={{ delay: i * 0.07, duration: 0.45 }}
+                        className="w-full rounded-t-sm bg-gradient-to-t from-blue-400 to-blue-300"
+                        style={{ maxHeight: "32px", minHeight: "3px" }}
+                    />
+                    <span className="text-[8px] text-stone-400">{days[i]}</span>
+                </div>
+            ))}
+        </div>
+    )
+}
+
+function AvailabilityDemo() {
+    return (
+        <div className="flex items-center gap-3">
+            {["6 AM", "12 PM", "9 PM", "3 AM"].map((t, i) => (
+                <div key={i} className="flex flex-col items-center gap-1">
+                    <div className="w-2 h-2 rounded-full bg-emerald-400" style={{ animationDelay: `${i * 0.4}s` }} />
+                    <span className="text-[9px] text-stone-400">{t}</span>
+                </div>
+            ))}
+        </div>
+    )
+}
+
+function PrivacyDemo() {
+    return (
+        <div className="flex flex-col gap-1.5">
+            {["AES-256 encryption", "Zero data selling", "User-owned memory"].map((l, i) => (
+                <motion.div key={i} initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.14 }}
+                    className="flex items-center gap-2">
+                    <div className="w-4 h-4 rounded-full bg-stone-900 flex items-center justify-center flex-shrink-0">
+                        <span className="text-[8px] text-emerald-400 font-bold">✓</span>
+                    </div>
+                    <span className="text-[11px] text-stone-600">{l}</span>
+                </motion.div>
+            ))}
+        </div>
+    )
+}
+
+const DEMO_MAP: Record<string, React.ComponentType> = {
+    voice: WaveformDemo,
+    memory: MemoryDemo,
+    personas: PersonasDemo,
+    insights: ChartDemo,
+    always: AvailabilityDemo,
+    private: PrivacyDemo,
+}
+
+// ─── Feature Card ─────────────────────────────────────────────────────────────
+
+function FeatureCard({ feature, index }: { feature: typeof FEATURE_CONFIG[number]; index: number }) {
+    const ref = useRef<HTMLDivElement>(null)
+    const inView = useInView(ref, { once: true, margin: "-8%" })
+    const c = COLOR_MAP[feature.badgeColor] ?? COLOR_MAP.stone
+    const Icon = ICON_MAP[feature.icon] ?? Mic
+    const Demo = DEMO_MAP[feature.id]
 
     return (
-        <Section id="features" className="bg-white relative overflow-hidden py-24" ref={containerRef}>
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-stone-50 rounded-full blur-[100px] pointer-events-none" />
-            <div className="text-center max-w-3xl mx-auto mb-24 relative z-10">
-                <h2 className="text-4xl md:text-6xl font-bold font-heading mb-6 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-stone-900 via-stone-800 to-stone-500">
-                    The Intelligence of Empathy
-                </h2>
-                <p className="text-xl text-stone-600 font-light">
-                    More than just an interface. Nuravya is engineered to be present, attentive, and seamlessly integrated into your daily life.
-                </p>
-            </div>
+        <motion.div
+            ref={ref}
+            initial={{ opacity: 0, y: 28 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, delay: (index % 3) * 0.08 }}
+            whileHover={{ y: -5, transition: { duration: 0.2 } }}
+            className={`bg-white rounded-3xl border-2 ${c.border} p-7 flex flex-col gap-5 shadow-sm hover:shadow-lg transition-all duration-400 group relative overflow-hidden`}
+        >
+            <div className={`absolute inset-0 ${c.bg} opacity-0 group-hover:opacity-50 transition-opacity duration-500 rounded-3xl`} />
 
-            <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                {/* Interactive Demo Placeholder */}
-                <div className="relative h-[400px] md:h-[500px] bg-white/40 backdrop-blur-2xl rounded-[2rem] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] border border-stone-200/60 overflow-hidden flex flex-col group backdrop-saturate-150 z-10">
-                    <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/5 via-transparent to-rose-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-                    <div className="bg-stone-50 border-b border-stone-100 p-4 flex items-center justify-between">
-                        <div className="flex gap-2">
-                            <div className="w-3 h-3 rounded-full bg-red-400" />
-                            <div className="w-3 h-3 rounded-full bg-amber-400" />
-                            <div className="w-3 h-3 rounded-full bg-green-400" />
-                        </div>
-                        <div className="text-xs font-medium text-stone-400">NURAVYA VOICE INTERFACE</div>
+            <div className="relative z-10">
+                {/* Top row */}
+                <div className="flex items-start justify-between mb-4">
+                    <div className={`p-3.5 rounded-2xl ${c.bg} ${c.text} group-hover:scale-110 transition-transform duration-300`}>
+                        <Icon size={20} strokeWidth={2} />
                     </div>
-                    <div className="flex-1 p-4 md:p-6 flex flex-col justify-end space-y-4">
-                        <div className="bg-stone-100 self-start rounded-2xl rounded-tl-none p-3 md:p-4 max-w-[90%] md:max-w-[80%]">
-                            <p className="text-sm md:text-base text-stone-700">Good morning, Sarah! How did you sleep? I remember you were worried about your appointment today.</p>
-                        </div>
-                        <div className="bg-amber-100 self-end rounded-2xl rounded-tr-none p-3 md:p-4 max-w-[90%] md:max-w-[80%]">
-                            <p className="text-sm md:text-base text-stone-800">I slept okay. Yes, I'm a bit nervous about the doctor visit.</p>
-                        </div>
-                        <div className="bg-stone-100 self-start rounded-2xl rounded-tl-none p-3 md:p-4 max-w-[90%] md:max-w-[80%] flex gap-2 items-center">
-                            <div className="flex gap-1">
-                                <div className="w-1.5 h-1.5 bg-stone-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                                <div className="w-1.5 h-1.5 bg-stone-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                                <div className="w-1.5 h-1.5 bg-stone-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Voice Input Bar */}
-                    <div className="p-4 border-t border-stone-100 bg-white">
-                        <div className="flex items-center gap-4">
-                            <div className="h-10 w-10 rounded-full bg-amber-500 flex items-center justify-center text-white shadow-lg shadow-amber-200">
-                                <Mic size={20} />
-                            </div>
-                            <div className="flex-1 h-2 bg-stone-100 rounded-full overflow-hidden">
-                                <motion.div
-                                    animate={{ width: ["0%", "40%", "20%", "60%", "30%"] }}
-                                    transition={{ duration: 2, repeat: Infinity }}
-                                    className="h-full bg-gradient-to-r from-amber-400 to-orange-400"
-                                />
-                            </div>
+                    <div className="flex flex-col items-end gap-2">
+                        <span className={`px-2.5 py-0.5 ${c.badgeBg} ${c.badgeText} rounded-full text-[9px] font-bold uppercase tracking-widest`}>
+                            {feature.badge}
+                        </span>
+                        <div className="text-right">
+                            <p className="text-base font-black text-stone-900 leading-none">{feature.stat.value}</p>
+                            <p className="text-[10px] text-stone-400">{feature.stat.label}</p>
                         </div>
                     </div>
                 </div>
 
-                {/* Feature Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    {features.map((feature, index) => (
-                        <motion.div
-                            key={index}
-                            initial={{ opacity: 0, x: 50 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.5, delay: index * 0.1 }}
-                            viewport={{ once: true }}
-                            whileHover={{ y: -5 }}
-                            className="bg-white/60 backdrop-blur-xl p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-stone-200/50 hover:shadow-[0_8px_40px_rgba(245,158,11,0.12)] transition-all duration-500 group relative overflow-hidden"
-                        >
-                            <div className="absolute inset-0 bg-gradient-to-br from-stone-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                            <div className="relative z-10">
-                                <div className={`p-4 rounded-2xl w-fit ${feature.color} mb-6 shadow-sm group-hover:scale-110 transition-transform duration-500`}>
-                                    <feature.icon size={26} strokeWidth={2.5} />
-                                </div>
-                                <h3 className="text-xl font-bold font-heading text-stone-900 mb-3 tracking-tight">
-                                    {feature.title}
-                                </h3>
-                                <p className="text-stone-600 leading-relaxed font-light">
-                                    {feature.description}
-                                </p>
-                            </div>
-                        </motion.div>
+                <h3 className="text-base font-bold font-heading text-stone-900 mb-2">{feature.title}</h3>
+                <p className="text-stone-500 text-sm leading-relaxed font-light">{feature.description}</p>
+
+                <div className={`mt-5 pt-4 border-t ${c.border}`}>
+                    {Demo && <Demo />}
+                </div>
+            </div>
+        </motion.div>
+    )
+}
+
+// ─── Main Section ─────────────────────────────────────────────────────────────
+
+export function Solution() {
+    const headerRef = useRef<HTMLDivElement>(null)
+    const headerInView = useInView(headerRef, { once: true })
+
+    return (
+        <section id="features" className="relative bg-[#FFFBEB] py-24 md:py-32 overflow-hidden">
+
+            {/* Background grid */}
+            <div className="absolute inset-0 pointer-events-none opacity-[0.025]" style={{
+                backgroundImage: "linear-gradient(#78716c 1px, transparent 1px),linear-gradient(90deg, #78716c 1px, transparent 1px)",
+                backgroundSize: "64px 64px",
+            }} />
+
+            {/* Dark header banner */}
+            <div className="container px-4 md:px-6 mx-auto max-w-6xl mb-16">
+                <motion.div
+                    ref={headerRef}
+                    initial={{ opacity: 0, y: 24 }}
+                    animate={headerInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ duration: 0.65 }}
+                    className="bg-stone-950 rounded-[2rem] p-10 md:p-14 relative overflow-hidden"
+                >
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl" />
+                    <div className="absolute bottom-0 left-0 w-48 h-48 bg-rose-500/10 rounded-full blur-3xl" />
+
+                    <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+                        <div className="max-w-2xl">
+                            <p className="text-amber-400 text-[11px] font-bold uppercase tracking-[0.25em] mb-3">Why Nuravya</p>
+                            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-white tracking-tight leading-tight mb-4">
+                                Built for{" "}
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400">real connection.</span>
+                                <br />Not just chat.
+                            </h2>
+                            <p className="text-stone-400 text-base leading-relaxed font-light">
+                                Nuravya is engineered around emotional intelligence — with memory, voice, and genuine
+                                presence to make every conversation feel like it matters.
+                            </p>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3 flex-shrink-0">
+                            {[
+                                { v: "Voice + Text", l: "Multi-modal" },
+                                { v: "100%", l: "Private" },
+                                { v: "24/7", l: "Available" },
+                                { v: "E2E", l: "Encrypted" },
+                            ].map((s, i) => (
+                                <motion.div key={i}
+                                    initial={{ opacity: 0, scale: 0.85 }}
+                                    animate={headerInView ? { opacity: 1, scale: 1 } : {}}
+                                    transition={{ delay: 0.3 + i * 0.08 }}
+                                    className="bg-white/5 border border-white/10 rounded-2xl p-4 text-center"
+                                >
+                                    <p className="text-base font-black text-white">{s.v}</p>
+                                    <p className="text-[10px] text-stone-500 mt-0.5">{s.l}</p>
+                                </motion.div>
+                            ))}
+                        </div>
+                    </div>
+                </motion.div>
+            </div>
+
+            {/* Feature bento grid */}
+            <div className="container px-4 md:px-6 mx-auto max-w-6xl">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    {FEATURE_CONFIG.map((f, i) => (
+                        <FeatureCard key={f.id} feature={f} index={i} />
                     ))}
                 </div>
+
+                {/* Bottom CTA */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5 }}
+                    className="mt-14 flex flex-col md:flex-row items-center justify-between gap-6 bg-white rounded-3xl border border-stone-100 shadow-sm p-8"
+                >
+                    <div>
+                        <h3 className="text-2xl font-bold font-heading text-stone-900 mb-1">Ready to try Nuravya?</h3>
+                        <p className="text-stone-500 text-sm">Free to start. No credit card needed.</p>
+                    </div>
+                    <div className="flex gap-3 flex-shrink-0">
+                        <Link href="/chat">
+                            <button className="flex items-center gap-2 px-7 py-3.5 bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-sm rounded-2xl transition-all shadow-md shadow-amber-100 hover:scale-105">
+                                <Mic size={15} /> Start Free
+                            </button>
+                        </Link>
+                        <Link href="/pricing">
+                            <button className="flex items-center gap-2 px-7 py-3.5 border border-stone-200 text-stone-700 hover:bg-stone-50 font-semibold text-sm rounded-2xl transition-all">
+                                View Plans <ArrowRight size={13} />
+                            </button>
+                        </Link>
+                    </div>
+                </motion.div>
             </div>
-        </Section>
+        </section>
     )
 }

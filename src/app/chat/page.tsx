@@ -1,11 +1,10 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
     Send,
     ChevronLeft,
-    MoreVertical,
     PhoneCall,
     PhoneOff,
     Mic,
@@ -13,8 +12,11 @@ import {
     Volume2,
     Loader2,
     Crown,
+    Sparkles,
+    Brain,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
     LiveKitRoom,
@@ -31,6 +33,8 @@ import { Track, ConnectionState } from "livekit-client";
 import { apiFetch, apiPost, getAuthHeaders } from "@/lib/api";
 import { useAuth } from "@/components/auth/auth-provider";
 import { StatusModal } from "@/components/ui/success-modal";
+import { CharacterPanel, Character, NURAVYA_DEFAULT } from "@/components/chat/character-panel";
+import { MemoryPanel } from "@/components/chat/memory-panel";
 
 // ─── Types ──────────────────────────────────────────────────────
 
@@ -45,6 +49,59 @@ type Message = {
 
 const SESSION_ID = `session_${Date.now()}`;
 
+// ─── Audio Helpers (Synthesized Ringing) ─────────────────────────
+
+class RingingSession {
+    private ctx: AudioContext | null = null;
+    private osc1: OscillatorNode | null = null;
+    private osc2: OscillatorNode | null = null;
+    private gain: GainNode | null = null;
+
+    start() {
+        try {
+            this.ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+            this.gain = this.ctx.createGain();
+
+            // Traditional US Ringback tone: 440Hz + 480Hz
+            this.osc1 = this.ctx.createOscillator();
+            this.osc2 = this.ctx.createOscillator();
+
+            this.osc1.frequency.setValueAtTime(440, this.ctx.currentTime);
+            this.osc2.frequency.setValueAtTime(480, this.ctx.currentTime);
+
+            this.osc1.connect(this.gain);
+            this.osc2.connect(this.gain);
+            this.gain.connect(this.ctx.destination);
+
+            // Rhythmic ringing: 2s on, 4s off (Standard cadence)
+            const now = this.ctx.currentTime;
+            this.gain.gain.setValueAtTime(0, now);
+
+            // Loop the gain automation
+            const duration = 60; // 60 seconds total "ringing" time
+            for (let i = 0; i < duration; i += 6) {
+                this.gain.gain.linearRampToValueAtTime(0.15, now + i + 0.1);
+                this.gain.gain.linearRampToValueAtTime(0.15, now + i + 2);
+                this.gain.gain.linearRampToValueAtTime(0, now + i + 2.1);
+            }
+
+            this.osc1.start();
+            this.osc2.start();
+        } catch (e) {
+            console.error("Failed to start ringing synthesis:", e);
+        }
+    }
+
+    stop() {
+        if (this.ctx) {
+            this.osc1?.stop();
+            this.osc2?.stop();
+            this.ctx.close();
+            this.ctx = null;
+        }
+    }
+}
+
 export default function ChatPage() {
     const { user, nuravyaUser } = useAuth();
     const router = useRouter();
@@ -58,9 +115,17 @@ export default function ChatPage() {
     const [shouldConnect, setShouldConnect] = useState(false);
     const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
+    // Character state
+    const [showCharPanel, setShowCharPanel] = useState(false);
+    const [showMemoryPanel, setShowMemoryPanel] = useState(false);
+    const [selectedCharacter, setSelectedCharacter] = useState<Character>(NURAVYA_DEFAULT);
+    const [isUncapped, setIsUncapped] = useState(false);
+    const isDefaultCharacter = selectedCharacter.id === "__nuravya__";
+
     // TTS playback state
     const [playingMsgId, setPlayingMsgId] = useState<string | null>(null);
     const audioRef = useRef<HTMLAudioElement | null>(null);
+    const ringRef = useRef<RingingSession | null>(null);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -90,9 +155,17 @@ export default function ChatPage() {
         setIsTyping(true);
 
         try {
+            const chatPayload: Record<string, unknown> = {
+                message: userMsg.text,
+                session_id: SESSION_ID,
+                user_id: USER_ID,
+                is_uncapped: isUncapped || selectedCharacter.is_uncapped,
+            };
+            if (!isDefaultCharacter) chatPayload.character_id = selectedCharacter.id;
+
             const res = await apiFetch("/api/chat", {
                 method: "POST",
-                body: JSON.stringify({ message: userMsg.text, session_id: SESSION_ID, user_id: USER_ID }),
+                body: JSON.stringify(chatPayload),
             });
 
             if (!res.ok) throw new Error(`API error: ${res.status}`);
@@ -217,24 +290,26 @@ export default function ChatPage() {
 
         setIsCallActive(true);
 
-        // 1. Play ringing sound
-        const ringAudio = new Audio('/ringing.mp3');
-        ringAudio.loop = true;
-        ringAudio.play().catch(e => console.warn("Ringing playback blocked:", e));
-        audioRef.current = ringAudio;
+        // 1. Start synthesized ringing
+        const ringer = new RingingSession();
+        ringer.start();
+        ringRef.current = ringer;
 
-        // 2. Wait a random amount of time to simulate ringing (2s - 5s)
-        const ringTime = Math.floor(Math.random() * 3000) + 2000;
+        // 2. Wait a random amount of time to simulate ringing (2s - 4s)
+        const ringTime = Math.floor(Math.random() * 2000) + 2000;
         await new Promise(resolve => setTimeout(resolve, ringTime));
 
-        // 3. Stop ringing
-        ringAudio.pause();
-        audioRef.current = null;
+        // 3. Stop ringing if we haven't already
+        ringer.stop();
+        ringRef.current = null;
 
         try {
             const res = await apiFetch("/api/voice/token", {
                 method: 'POST',
-                body: JSON.stringify({ user_id: USER_ID })
+                body: JSON.stringify({
+                    user_id: USER_ID,
+                    character_id: isDefaultCharacter ? undefined : selectedCharacter.id
+                })
             });
             if (!res.ok) throw new Error("Failed to get LK token");
             const data = await res.json();
@@ -243,12 +318,13 @@ export default function ChatPage() {
             setShouldConnect(true);
         } catch (e) {
             console.error("Call connection failed:", e);
-            ringAudio.pause();
             setIsCallActive(false);
         }
     };
 
     const endCall = () => {
+        ringRef.current?.stop();
+        ringRef.current = null;
         setShouldConnect(false);
         setIsCallActive(false);
         setLiveKitToken("");
@@ -259,6 +335,21 @@ export default function ChatPage() {
         <div className="fixed inset-0 z-[100] bg-[#FAFAFA] flex flex-col font-sans overflow-hidden">
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-amber-400/10 blur-[100px] rounded-full pointer-events-none" />
             <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-rose-400/5 blur-[120px] rounded-full pointer-events-none" />
+
+            {/* ─── Character Panel ─────────────────────────────────────────────── */}
+            <CharacterPanel
+                isOpen={showCharPanel}
+                onClose={() => setShowCharPanel(false)}
+                selectedCharacter={selectedCharacter}
+                onSelectCharacter={(c) => { setSelectedCharacter(c); setShowCharPanel(false); }}
+                isUncapped={isUncapped}
+                onToggleUncapped={setIsUncapped}
+            />
+
+            <MemoryPanel
+                isOpen={showMemoryPanel}
+                onClose={() => setShowMemoryPanel(false)}
+            />
 
             {/* ─── Call Overlay (LiveKit Room) ─────────────────────────────────── */}
             <AnimatePresence>
@@ -303,18 +394,46 @@ export default function ChatPage() {
                     </Link>
                     <div className="flex flex-col items-center">
                         <div className="flex items-center gap-2">
-                            <span className="font-heading font-bold text-lg text-stone-900 tracking-tight">Nuravya</span>
+                            {isDefaultCharacter && (
+                                <Image
+                                    src="/images/NuravyaLogo.png"
+                                    alt="Nuravya"
+                                    width={24}
+                                    height={24}
+                                    className="rounded-md"
+                                />
+                            )}
+                            <span className="font-heading font-bold text-lg text-stone-900 tracking-tight">
+                                {selectedCharacter.name}
+                            </span>
+                            {(isUncapped || selectedCharacter.is_uncapped) && (
+                                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-purple-100 text-purple-600">UNCAPPED</span>
+                            )}
                         </div>
                         <span className="text-xs font-medium text-stone-500">
-                            Always here
+                            {isDefaultCharacter ? "Always here" : selectedCharacter.description || "Custom persona"}
                         </span>
                     </div>
                     <div className="flex items-center gap-1">
                         <button onClick={startCall} className="p-2 text-stone-600 hover:text-amber-500 transition-colors">
                             <PhoneCall size={20} />
                         </button>
-                        <button className="p-2 -mr-2 text-stone-600 hover:text-stone-900 transition-colors">
-                            <MoreVertical size={20} />
+                        <button
+                            onClick={() => setShowCharPanel(true)}
+                            className="p-2 text-stone-600 hover:text-amber-500 transition-colors relative"
+                            title="Characters"
+                        >
+                            <Sparkles size={20} />
+                            {!isDefaultCharacter && (
+                                <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-amber-500 border border-white" />
+                            )}
+                        </button>
+                        <button
+                            onClick={() => setShowMemoryPanel(true)}
+                            className="p-2 -mr-2 text-stone-600 hover:text-amber-500 transition-colors"
+                            title="Memory Dashboard"
+                        >
+                            <Brain size={20} className="text-amber-400" />
                         </button>
                     </div>
                 </div>
@@ -454,7 +573,18 @@ function CallInterface({ onEndCall }: { onEndCall: () => void }) {
                 <span className="text-stone-400 text-sm font-medium uppercase tracking-widest">
                     {isRinging ? "Calling..." : isConnected ? "Connected" : "Disconnected"}
                 </span>
-                <h2 className="text-white text-4xl font-bold tracking-tight">Nuravya</h2>
+                <div className="flex flex-col items-center gap-2">
+                    <div className="w-20 h-20 rounded-2xl overflow-hidden bg-white/10 shadow-lg shadow-black/30 flex items-center justify-center">
+                        <Image
+                            src="/images/NuravyaLogo.png"
+                            alt="Nuravya"
+                            width={80}
+                            height={80}
+                            className="w-full h-full object-contain p-2"
+                        />
+                    </div>
+                    <h2 className="text-white text-4xl font-bold tracking-tight">Nuravya</h2>
+                </div>
                 {isConnected && (
                     <>
                         <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-amber-400 text-lg font-mono tracking-wider">

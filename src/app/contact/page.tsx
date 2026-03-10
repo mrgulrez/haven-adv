@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { Mail, MapPin, MessageSquare } from "lucide-react";
 import { StatusModal } from "@/components/ui/success-modal";
 import { useState } from "react";
-import { apiFetch } from "@/lib/api";
 
 export default function ContactPage() {
     const [modalConfig, setModalConfig] = useState<{
@@ -53,7 +52,8 @@ export default function ContactPage() {
                                     submitBtn.innerText = "Sending...";
 
                                     try {
-                                        const res = await apiFetch('/api/contact', {
+                                        // Plain fetch with relative URL → hits Next.js API route, not FastAPI
+                                        const res = await fetch('/api/contact', {
                                             method: 'POST',
                                             headers: { 'Content-Type': 'application/json' },
                                             body: JSON.stringify(data),

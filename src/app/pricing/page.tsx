@@ -1,12 +1,14 @@
 "use client";
 
 import { Footer } from "@/components/layout/footer";
-import { Check, X, Loader2 } from "lucide-react";
+import { Check, X, Loader2, Sparkles, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/auth/auth-provider";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { apiPost } from "@/lib/api";
+import { PLANS, BRAND } from "@/lib/site.config";
+import { motion } from "framer-motion";
 
 // Load Razorpay Checkout.js
 declare global {
@@ -34,14 +36,22 @@ export default function PricingPage() {
         }
     }, []);
 
-    const handleSubscribe = async (plan: "core" | "pro") => {
+    const handleSubscribe = async (plan: string) => {
+        if (plan === "free") {
+            router.push("/chat");
+            return;
+        }
+
         // Require login first
         if (!user) {
             try {
                 await loginWithGoogle();
+                // After login, we don't automatically trigger payment to avoid popup blockers
+                // but we let them click again or redirect to chat with plan param
             } catch {
                 return;
             }
+            return;
         }
 
         setLoading(plan);
@@ -57,11 +67,16 @@ export default function PricingPage() {
                 name: string;
             }>("/api/payments/create-subscription", { plan });
 
+            if (!window.Razorpay) {
+                alert("Payment gateway not loaded. Please refresh.");
+                return;
+            }
+
             // Open Razorpay Checkout
             const options = {
                 key: data.razorpay_key_id,
                 subscription_id: data.subscription_id,
-                name: "Nuravya AI",
+                name: BRAND.name,
                 description: data.name,
                 image: "/icon.png",
                 handler: async function (response: any) {
@@ -82,7 +97,6 @@ export default function PricingPage() {
                         }
                     } catch (err) {
                         console.error("Payment verification failed:", err);
-                        alert("Payment verification failed. Please contact support.");
                     }
                 },
                 prefill: {
@@ -101,22 +115,8 @@ export default function PricingPage() {
             rzp.open();
         } catch (err) {
             console.error("Subscription creation failed:", err);
-            alert("Failed to start checkout. Please try again.");
         } finally {
             setLoading(null);
-        }
-    };
-
-    const handleFreeStart = async () => {
-        if (!user) {
-            try {
-                await loginWithGoogle();
-                router.push("/chat");
-            } catch {
-                return;
-            }
-        } else {
-            router.push("/chat");
         }
     };
 
@@ -124,125 +124,134 @@ export default function PricingPage() {
 
     return (
         <main className="min-h-screen bg-[#FFFBEB] flex flex-col font-sans">
-            <div className="flex-grow pt-safe pb-24 px-4 md:px-6">
+            <div className="flex-grow pt-24 pb-24 px-4 md:px-6">
                 <div className="container mx-auto max-w-6xl">
-                    <div className="text-center mb-20">
-                        <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-amber-100 border border-amber-200 shadow-sm mb-6 max-w-full overflow-hidden">
-                            <span className="text-[10px] md:text-sm font-semibold text-amber-800 uppercase tracking-widest md:tracking-wide whitespace-nowrap overflow-hidden text-ellipsis">Nuravya is built on one belief</span>
-                        </div>
-                        <h1 className="text-4xl md:text-6xl font-bold font-heading text-stone-900 mb-6">Everyone deserves to feel heard.</h1>
-                        <p className="text-xl text-stone-600 max-w-2xl mx-auto">
+                    <div className="text-center mb-16">
+                        <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-100 border border-amber-200 shadow-sm mb-6"
+                        >
+                            <Sparkles size={14} className="text-amber-600" />
+                            <span className="text-xs font-bold text-amber-800 uppercase tracking-widest">{BRAND.tagline}</span>
+                        </motion.div>
+                        <motion.h1
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.1 }}
+                            className="text-5xl md:text-7xl font-bold font-heading text-stone-900 mb-6 tracking-tight"
+                        >
+                            Everyone deserves to<br />feel heard.
+                        </motion.h1>
+                        <motion.p
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2 }}
+                            className="text-xl text-stone-500 max-w-2xl mx-auto font-light leading-relaxed"
+                        >
                             Whether you are exploring or seeking a deeply personalized companion experience, there is a plan designed for you.
-                        </p>
+                        </motion.p>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-8">
-                        {/* Free Tier */}
-                        <div className="bg-white p-8 rounded-3xl border border-stone-200 shadow-sm flex flex-col hover:shadow-md transition-shadow relative">
-                            <div className="mb-10 pr-16 md:pr-20">
-                                <h2 className="text-2xl font-bold text-stone-900 mb-2">Free</h2>
-                                <p className="text-stone-500 text-sm min-h-[3rem]">Start your journey with zero barriers. Perfect for experiencing Nuravya&apos;s emotional intelligence at your own pace.</p>
-                            </div>
-                            <div className="absolute top-8 right-8 text-right">
-                                <span className="text-2xl md:text-3xl lg:text-4xl font-bold text-stone-900">$0</span>
-                                <div className="text-stone-500 text-[10px] md:text-xs">/month</div>
-                            </div>
-                            <ul className="space-y-4 mb-8 flex-grow text-sm">
-                                <li className="flex items-start gap-3 text-stone-700"><Check className="h-5 w-5 text-emerald-500 shrink-0" /><span>Unlimited text conversations</span></li>
-                                <li className="flex items-start gap-3 text-stone-700"><Check className="h-5 w-5 text-emerald-500 shrink-0" /><span>30-day rolling memory</span></li>
-                                <li className="flex items-start gap-3 text-stone-700"><Check className="h-5 w-5 text-emerald-500 shrink-0" /><span>Foundational emotional understanding</span></li>
-                                <li className="flex items-start gap-3 text-stone-700"><Check className="h-5 w-5 text-emerald-500 shrink-0" /><span>Late-night supportive chat mode</span></li>
-                                <li className="flex items-start gap-3 text-stone-700"><Check className="h-5 w-5 text-emerald-500 shrink-0" /><span>Standard encrypted conversations</span></li>
-                                <li className="flex items-start gap-3 text-stone-700"><Check className="h-5 w-5 text-emerald-500 shrink-0" /><span>Access via web and mobile</span></li>
-                                <li className="flex items-start gap-3 text-stone-400"><X className="h-5 w-5 text-stone-300 shrink-0" /><span>No voice conversations</span></li>
-                                <li className="flex items-start gap-3 text-stone-400"><X className="h-5 w-5 text-stone-300 shrink-0" /><span>No proactive outreach</span></li>
-                            </ul>
-                            <div className="text-xs text-stone-500 text-center mb-4">Built for accessibility. Always free.</div>
-                            <Button
-                                className="w-full bg-stone-100 hover:bg-stone-200 text-stone-900 h-12"
-                                size="lg"
-                                onClick={handleFreeStart}
-                                disabled={currentPlan !== "free"}
-                            >
-                                {currentPlan === "free" && user ? "Current Plan" : "Get Started"}
-                            </Button>
-                        </div>
+                    <div className="grid md:grid-cols-3 gap-8 mb-20">
+                        {PLANS.map((plan, i) => {
+                            const isCurrent = currentPlan === plan.id;
+                            const isPro = plan.id === "pro";
+                            const isCore = plan.id === "core";
+                            const isFree = plan.id === "free";
 
-                        {/* Core Tier */}
-                        <div className="bg-gradient-to-b from-amber-50 to-orange-50 p-8 rounded-3xl border-2 border-amber-300 shadow-xl relative flex flex-col transform md:-translate-y-4">
-                            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-500 text-white px-4 py-1 rounded-full text-xs font-bold tracking-widest uppercase shadow-sm whitespace-nowrap z-20">
-                                Most Popular
-                            </div>
-                            <div className="mb-10 pr-16 md:pr-20">
-                                <h2 className="text-2xl font-bold text-stone-900 mb-2">Nuravya Core</h2>
-                                <p className="text-stone-700 font-medium text-sm min-h-[3rem]">Deeper connection. Real continuity. For users who want Nuravya to truly grow with them.</p>
-                            </div>
-                            <div className="absolute top-8 right-8 text-right z-10">
-                                <span className="text-2xl md:text-3xl lg:text-4xl font-bold text-stone-900">$24</span>
-                                <div className="text-stone-600 text-[10px] md:text-xs">/month</div>
-                            </div>
-                            <div className="text-sm font-semibold text-stone-900 mb-4 pb-4 border-b border-amber-200/50">Everything in Free, plus:</div>
-                            <ul className="space-y-4 mb-8 flex-grow text-sm">
-                                <li className="flex items-start gap-3 text-stone-800"><Check className="h-5 w-5 text-amber-500 shrink-0" /><span className="font-semibold">300 voice minutes per month</span></li>
-                                <li className="flex items-start gap-3 text-stone-800"><Check className="h-5 w-5 text-amber-500 shrink-0" /><span className="font-semibold">Infinite long-term memory retention</span></li>
-                                <li className="flex items-start gap-3 text-stone-800"><Check className="h-5 w-5 text-amber-500 shrink-0" /><span>Emotional pattern recognition</span></li>
-                                <li className="flex items-start gap-3 text-stone-800"><Check className="h-5 w-5 text-amber-500 shrink-0" /><span>Proactive check-ins and thoughtful reminders</span></li>
-                                <li className="flex items-start gap-3 text-stone-800"><Check className="h-5 w-5 text-amber-500 shrink-0" /><span>One customizable voice personality</span></li>
-                                <li className="flex items-start gap-3 text-stone-800"><Check className="h-5 w-5 text-amber-500 shrink-0" /><span>Faster response priority</span></li>
-                                <li className="flex items-start gap-3 text-stone-800"><Check className="h-5 w-5 text-amber-500 shrink-0" /><span>Weekly emotional insight summaries</span></li>
-                                <li className="flex items-start gap-3 text-stone-800"><Check className="h-5 w-5 text-amber-500 shrink-0" /><span>Enhanced encrypted memory storage</span></li>
-                                <li className="flex items-start gap-3 text-stone-800"><Check className="h-5 w-5 text-amber-500 shrink-0" /><span>Full memory dashboard (view, edit, delete)</span></li>
-                            </ul>
-                            <div className="text-xs text-amber-700/80 text-center font-medium mb-4">Designed for meaningful, evolving companionship.</div>
-                            <Button
-                                className="w-full bg-amber-500 hover:bg-amber-600 text-white h-12 shadow-md"
-                                size="lg"
-                                onClick={() => handleSubscribe("core")}
-                                disabled={loading === "core" || currentPlan === "core" || currentPlan === "pro"}
-                            >
-                                {loading === "core" ? (
-                                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Processing...</>
-                                ) : currentPlan === "core" ? "Current Plan" : currentPlan === "pro" ? "Included in Pro" : "Subscribe Now"}
-                            </Button>
-                        </div>
+                            const isHigher = (currentPlan === "free" && (isCore || isPro)) || (currentPlan === "core" && isPro);
+                            const isLower = (currentPlan === "pro" && (isCore || isFree)) || (currentPlan === "core" && isFree);
 
-                        {/* Pro Tier */}
-                        <div className="bg-stone-900 p-8 rounded-3xl border border-stone-800 shadow-xl flex flex-col relative overflow-hidden">
-                            <div className="absolute inset-0 bg-gradient-to-br from-stone-800/50 to-transparent pointer-events-none"></div>
-                            <div className="mb-10 relative z-10 pr-16 md:pr-20">
-                                <h2 className="text-2xl font-bold text-white mb-2">Nuravya Pro</h2>
-                                <p className="text-stone-300 text-sm min-h-[3rem]">The ultimate emotionally intelligent AI companion for a deeply personalized relationship.</p>
-                            </div>
-                            <div className="absolute top-8 right-8 text-right z-20">
-                                <span className="text-2xl md:text-3xl lg:text-4xl font-bold text-white">$59</span>
-                                <div className="text-stone-400 text-[10px] md:text-xs">/month</div>
-                            </div>
-                            <div className="text-sm font-semibold text-white mb-4 pb-4 border-b border-stone-800 relative z-10">Everything in Core, plus:</div>
-                            <ul className="space-y-4 mb-8 flex-grow text-sm relative z-10">
-                                <li className="flex items-start gap-3 text-stone-200"><Check className="h-5 w-5 text-amber-400 shrink-0" /><span className="font-semibold text-white">700 voice minutes per month</span></li>
-                                <li className="flex items-start gap-3 text-stone-200"><Check className="h-5 w-5 text-amber-400 shrink-0" /><span>Multiple companion personalities</span></li>
-                                <li className="flex items-start gap-3 text-stone-200"><Check className="h-5 w-5 text-amber-400 shrink-0" /><span>Custom voice cloning</span></li>
-                                <li className="flex items-start gap-3 text-stone-200"><Check className="h-5 w-5 text-amber-400 shrink-0" /><span className="text-amber-200 font-medium">Full video companion mode</span></li>
-                                <li className="flex items-start gap-3 text-stone-200"><Check className="h-5 w-5 text-amber-400 shrink-0" /><span>Advanced long-term contextual intelligence</span></li>
-                                <li className="flex items-start gap-3 text-stone-200"><Check className="h-5 w-5 text-amber-400 shrink-0" /><span>Mood trend analytics and growth reports</span></li>
-                                <li className="flex items-start gap-3 text-stone-200"><Check className="h-5 w-5 text-amber-400 shrink-0" /><span>Shared milestone tracking</span></li>
-                                <li className="flex items-start gap-3 text-stone-200"><Check className="h-5 w-5 text-amber-400 shrink-0" /><span>Adaptive personality evolution</span></li>
-                                <li className="flex items-start gap-3 text-stone-200"><Check className="h-5 w-5 text-amber-400 shrink-0" /><span>Private encrypted memory vault</span></li>
-                                <li className="flex items-start gap-3 text-stone-200"><Check className="h-5 w-5 text-amber-400 shrink-0" /><span>Early access to experimental features</span></li>
-                                <li className="flex items-start gap-3 text-stone-200"><Check className="h-5 w-5 text-amber-400 shrink-0" /><span>Priority human support</span></li>
-                            </ul>
-                            <div className="text-xs text-stone-400 text-center mb-4 relative z-10">Built for depth. Built for trust.</div>
-                            <Button
-                                className="w-full bg-white hover:bg-stone-200 text-stone-900 h-12 shadow-lg z-10"
-                                size="lg"
-                                onClick={() => handleSubscribe("pro")}
-                                disabled={loading === "pro" || currentPlan === "pro"}
-                            >
-                                {loading === "pro" ? (
-                                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Processing...</>
-                                ) : currentPlan === "pro" ? "Current Plan" : "Subscribe Now"}
-                            </Button>
-                        </div>
+                            return (
+                                <motion.div
+                                    key={plan.id}
+                                    initial={{ opacity: 0, y: 30 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.5, delay: i * 0.15 }}
+                                    className={`relative rounded-[2.5rem] p-8 flex flex-col transition-all duration-500 border-2 ${plan.highlight
+                                            ? "bg-white border-amber-400 shadow-[0_32px_64px_-16px_rgba(245,158,11,0.15)] ring-4 ring-amber-50"
+                                            : isPro
+                                                ? "bg-stone-950 text-white border-stone-800 shadow-xl"
+                                                : "bg-white border-stone-100 shadow-sm hover:shadow-md hover:border-stone-200"
+                                        }`}
+                                >
+                                    {plan.badge && (
+                                        <div className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm z-20 ${plan.highlight ? "bg-amber-500 text-white" : "bg-stone-100 text-stone-600"
+                                            }`}>
+                                            {plan.badge}
+                                        </div>
+                                    )}
+
+                                    <div className="mb-8">
+                                        <h2 className={`text-2xl font-bold mb-2 ${isPro ? "text-white" : "text-stone-900"}`}>{plan.name}</h2>
+                                        <p className={`text-sm leading-relaxed min-h-[3rem] ${isPro ? "text-stone-400" : "text-stone-500"}`}>
+                                            {plan.description}
+                                        </p>
+                                    </div>
+
+                                    <div className="mb-8">
+                                        <div className="flex items-baseline gap-1">
+                                            <span className={`text-5xl font-black font-heading tracking-tighter ${isPro ? "text-white" : plan.highlight ? "text-amber-500" : "text-stone-900"}`}>
+                                                {plan.priceLabel}
+                                            </span>
+                                            <span className={`text-sm font-medium ${isPro ? "text-stone-500" : "text-stone-400"}`}>{plan.period}</span>
+                                        </div>
+                                    </div>
+
+                                    <ul className="space-y-4 mb-10 flex-grow">
+                                        {plan.features.map((feature, fIndex) => (
+                                            <li key={fIndex} className={`flex items-start gap-3 text-sm ${isPro ? "text-stone-300" : "text-stone-700"}`}>
+                                                <div className={`mt-0.5 rounded-full p-0.5 flex-shrink-0 ${isPro ? "bg-amber-500/20 text-amber-400" : "bg-emerald-100 text-emerald-600"}`}>
+                                                    <Check className="h-3.5 w-3.5" strokeWidth={3} />
+                                                </div>
+                                                <span className={feature.toLowerCase().includes("unlimited") || feature.toLowerCase().includes("infinite") ? "font-bold" : ""}>
+                                                    {feature}
+                                                </span>
+                                            </li>
+                                        ))}
+                                    </ul>
+
+                                    <Button
+                                        className={`w-full h-14 rounded-2xl font-bold text-base transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] ${isCurrent
+                                                ? "bg-stone-100 text-stone-400 cursor-default"
+                                                : isPro
+                                                    ? "bg-white text-stone-900 hover:bg-stone-100"
+                                                    : plan.highlight
+                                                        ? "bg-amber-500 text-stone-950 hover:bg-amber-400 shadow-lg shadow-amber-200"
+                                                        : "bg-stone-100 text-stone-800 hover:bg-stone-200"
+                                            }`}
+                                        disabled={loading === plan.id || (isCurrent && !!user)}
+                                        onClick={() => handleSubscribe(plan.id)}
+                                    >
+                                        {loading === plan.id ? (
+                                            <><Loader2 className="w-5 h-5 mr-2 animate-spin" />Connecting...</>
+                                        ) : isCurrent && user ? (
+                                            "Current Plan"
+                                        ) : (
+                                            <>
+                                                {isFree ? "Start Free" : "Subscribe Now"}
+                                                <ArrowRight size={18} className="ml-2" />
+                                            </>
+                                        )}
+                                    </Button>
+
+                                    {isCurrent && user && (
+                                        <div className={`text-center mt-4 text-[10px] font-bold uppercase tracking-widest ${isPro ? "text-stone-500" : "text-stone-400"}`}>
+                                            Active since {nuravyaUser?.plan_started_at ? new Date(nuravyaUser.plan_started_at).toLocaleDateString() : "launch"}
+                                        </div>
+                                    )}
+                                </motion.div>
+                            );
+                        })}
+                    </div>
+
+                    <div className="max-w-3xl mx-auto bg-white/50 backdrop-blur-xl rounded-[2.5rem] p-10 md:p-14 border border-stone-100 text-center">
+                        <h2 className="text-3xl font-bold font-heading text-stone-900 mb-4">Enterprise & Volume</h2>
+                        <p className="text-stone-500 mb-8 font-light">Looking for Nuravya for your team, organization, or specialized use case? We offer custom API access and volume licensing.</p>
+                        <Button variant="outline" className="h-14 px-10 rounded-2xl border-stone-200 hover:bg-stone-50 font-bold" onClick={() => router.push("/contact")}>
+                            Contact Sales
+                        </Button>
                     </div>
                 </div>
             </div>
