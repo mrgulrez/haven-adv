@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Footer } from "@/components/layout/footer";
 import { useAuth } from "@/components/auth/auth-provider";
@@ -52,9 +52,9 @@ const TABS = [
 
 type TabId = typeof TABS[number]["id"];
 
-// ─── Main Page ───────────────────────────────────────────────────────────────
+// ─── Main Content Component ──────────────────────────────────────────────────
 
-export default function SettingsPage() {
+function SettingsContent() {
     const { user, nuravyaUser, loading: authLoading, logout } = useAuth();
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -796,5 +796,19 @@ export default function SettingsPage() {
             </div>
             <Footer />
         </main>
+    );
+}
+
+// ─── Suspense Wrapper ────────────────────────────────────────────────────────
+
+export default function SettingsPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-[#FFFBEB] flex items-center justify-center">
+                <div className="w-8 h-8 border-[3px] border-amber-500 border-t-transparent rounded-full animate-spin" />
+            </div>
+        }>
+            <SettingsContent />
+        </Suspense>
     );
 }
