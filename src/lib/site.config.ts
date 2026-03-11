@@ -11,7 +11,7 @@
 export const BRAND = {
     name: "Nuravya",
     tagline: "An AI that truly knows you",
-    description: "Nuravya is your AI companion built for real conversation — voice-first, memory-powered, and warm enough to feel like a friend who never forgets.",
+    description: "Nuravya is an AI companion that truly knows you — voice-first, memory-powered, and warm enough to feel like a friend who never forgets.",
     email: {
         hello: "hello@nuravya.com",
         support: "support@nuravya.com",

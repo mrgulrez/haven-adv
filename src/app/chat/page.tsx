@@ -288,6 +288,16 @@ export default function ChatPage() {
             return;
         }
 
+        // Request microphone permission explicitly for WebView/Android
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            stream.getTracks().forEach(track => track.stop()); // Stop immediately, we just wanted the perm
+        } catch (e) {
+            console.error("Mic permission denied:", e);
+            alert("Microphone access is required for calls. Please enable it in your settings.");
+            return;
+        }
+
         setIsCallActive(true);
 
         // 1. Start synthesized ringing
@@ -322,13 +332,20 @@ export default function ChatPage() {
         }
     };
 
-    const endCall = () => {
+    const endCall = (durationSeconds?: number) => {
         ringRef.current?.stop();
         ringRef.current = null;
         setShouldConnect(false);
         setIsCallActive(false);
         setLiveKitToken("");
         setLiveKitUrl("");
+
+        // Report call duration to backend (fire-and-forget)
+        if (durationSeconds && durationSeconds > 0) {
+            apiPost("/api/usage/report-call", { duration_seconds: durationSeconds })
+                .then((res) => console.log(`Call reported: ${durationSeconds}s`, res))
+                .catch((err) => console.warn("Failed to report call duration:", err));
+        }
     };
 
     return (
@@ -534,7 +551,7 @@ export default function ChatPage() {
     );
 }
 
-function CallInterface({ onEndCall }: { onEndCall: () => void }) {
+function CallInterface({ onEndCall }: { onEndCall: (durationSeconds?: number) => void }) {
     const { state: assistantState, audioTrack: assistantAudioTrack } = useVoiceAssistant();
     const { localParticipant } = useLocalParticipant();
     const participants = useParticipants();
@@ -633,15 +650,16 @@ function CallInterface({ onEndCall }: { onEndCall: () => void }) {
                 {isConnected && (
                     <button
                         onClick={handleMicToggle}
-                        className={`w-14 h-14 justify-center items-center rounded-full flex transition-all ${!isMicEnabled
+                        className={`w-14 h-14 justify-center items-center rounded-full flex transition-all ${isMicEnabled
                             ? "bg-amber-500 text-white shadow-lg shadow-amber-500/30"
-                            : "bg-stone-700/50 text-stone-300 hover:bg-stone-600"
+                            : "bg-stone-700/50 text-stone-400 border border-stone-600"
                             }`}
+                        title={isMicEnabled ? "Mute Microphone" : "Unmute Microphone"}
                     >
-                        {!isMicEnabled ? <MicOff size={24} /> : <Mic size={24} />}
+                        {isMicEnabled ? <Mic size={24} /> : <MicOff size={24} />}
                     </button>
                 )}
-                <button onClick={onEndCall} className="w-16 h-16 rounded-full bg-red-500 text-white flex items-center justify-center shadow-lg shadow-red-500/30 hover:bg-red-600 transition-colors">
+                <button onClick={() => onEndCall(callDuration)} className="w-16 h-16 rounded-full bg-red-500 text-white flex items-center justify-center shadow-lg shadow-red-500/30 hover:bg-red-600 transition-colors">
                     <PhoneOff size={28} />
                 </button>
             </div>

@@ -235,7 +235,10 @@ function SettingsContent() {
 
     return (
         <main className="min-h-screen bg-[#FFFBEB] flex flex-col font-sans">
-            <div className="flex-grow pt-24 pb-32 px-4 md:px-6">
+            {/* Status bar safe-area overlay for mobile */}
+            <div className="status-bar-overlay md:hidden" />
+            {/* pt-safe on mobile (below status bar), md:pt-24 on desktop (below floating nav) */}
+            <div className="flex-grow pt-safe md:pt-24 pb-32 px-4 md:px-6">
                 <div className="container mx-auto max-w-4xl">
 
                     {/* ─── Page header ─── */}
