@@ -9,8 +9,11 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@breezystack/lamejs": "^1.2.7",
     "@capacitor-firebase/authentication": "^7.5.0",
     "@capacitor/core": "^7.0.0",
+    "@capacitor/filesystem": "^8.1.2",
+    "@capacitor/share": "^8.0.1",
     "@hookform/resolvers": "^5.2.2",
     "@livekit/components-react": "^2.9.20",
     "@livekit/components-styles": "^1.2.0",
@@ -18,8 +21,10 @@
     "@types/nodemailer": "^7.0.10",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "cordova-plugin-audiotoggle": "^1.0.3",
     "firebase": "^11.10.0",
     "framer-motion": "^12.34.0",
+    "lamejs": "^1.2.1",
     "livekit-client": "^2.17.2",
     "lucide-react": "^0.564.0",
     "next": "16.1.6",

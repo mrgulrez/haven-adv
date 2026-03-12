@@ -9,11 +9,15 @@ import {
     PhoneOff,
     Mic,
     MicOff,
+    Volume1,
     Volume2,
-    Loader2,
-    Crown,
+    Headphones,
+    Circle,
+    StopCircle,
     Sparkles,
     Brain,
+    Crown,
+    Loader2,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -28,6 +32,7 @@ import {
     useConnectionState,
     useParticipants,
     useTracks,
+    useRoomContext,
 } from "@livekit/components-react";
 import { Track, ConnectionState } from "livekit-client";
 import { apiFetch, apiPost, getAuthHeaders } from "@/lib/api";
@@ -35,6 +40,10 @@ import { useAuth } from "@/components/auth/auth-provider";
 import { StatusModal } from "@/components/ui/success-modal";
 import { CharacterPanel, Character, NURAVYA_DEFAULT } from "@/components/chat/character-panel";
 import { MemoryPanel } from "@/components/chat/memory-panel";
+import { Capacitor } from "@capacitor/core";
+import { Filesystem, Directory } from "@capacitor/filesystem";
+import { Share } from "@capacitor/share";
+import lamejs from '@breezystack/lamejs';
 
 // ─── Types ──────────────────────────────────────────────────────
 
@@ -569,11 +578,99 @@ function CallInterface({ onEndCall }: { onEndCall: (durationSeconds?: number) =>
     const isConnected = connectionState === ConnectionState.Connected;
 
     const [callDuration, setCallDuration] = useState(0);
+    
+    // ─── Native Audio Routing (Speaker / Earpiece / Bluetooth) ───
+    const room = useRoomContext();
+    const [audioOutputDevices, setAudioOutputDevices] = useState<MediaDeviceInfo[]>([]);
+    const [currentOutputIndex, setCurrentOutputIndex] = useState(0);
+
+    useEffect(() => {
+        const getDevices = async () => {
+            try {
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const outputs = devices.filter(d => d.kind === 'audiooutput');
+                if (outputs.length > 0) {
+                    setAudioOutputDevices(outputs);
+                    // Match current active device if available
+                    const activeId = room?.getActiveDevice('audiooutput');
+                    const idx = outputs.findIndex(d => d.deviceId === activeId);
+                    setCurrentOutputIndex(Math.max(0, idx));
+                }
+            } catch (e) {
+                console.warn("Failed to enumerate audio devices:", e);
+            }
+        };
+        // Needs a slight delay to ensure permissions are fully granted
+        setTimeout(getDevices, 1000);
+        navigator.mediaDevices.addEventListener('devicechange', getDevices);
+        return () => navigator.mediaDevices.removeEventListener('devicechange', getDevices);
+    }, [room]);
+
+    const cycleAudioOutput = async () => {
+        if (isNativeApp && typeof window !== 'undefined' && 'AudioToggle' in window) {
+            const Toggle = (window as any).AudioToggle;
+            if (!Toggle) return;
+            
+            if (currentOutputIndex === 0) { // Speaker -> Earpiece
+                Toggle.setAudioMode(Toggle.EARPIECE);
+                setCurrentOutputIndex(1); 
+            } else { // Earpiece -> Speaker
+                Toggle.setAudioMode(Toggle.SPEAKER);
+                setCurrentOutputIndex(0); 
+            }
+            return;
+        }
+
+        if (audioOutputDevices.length <= 1 || !room) return;
+        const nextIndex = (currentOutputIndex + 1) % audioOutputDevices.length;
+        const nextDevice = audioOutputDevices[nextIndex];
+        try {
+            await room.switchActiveDevice('audiooutput', nextDevice.deviceId);
+            setCurrentOutputIndex(nextIndex);
+        } catch (e) {
+            console.error("Failed to switch audio output:", e);
+        }
+    };
+
+    const getAudioOutputIcon = () => {
+        if (isNativeApp && typeof window !== 'undefined' && 'AudioToggle' in window) {
+            return currentOutputIndex === 0 ? <Volume2 size={24} /> : <Volume1 size={24} />;
+        }
+
+        if (audioOutputDevices.length === 0) return <Volume2 size={24} />;
+        const label = audioOutputDevices[currentOutputIndex]?.label?.toLowerCase() || "";
+        if (label.includes("bluetooth") || label.includes("head")) return <Headphones size={24} />;
+        if (label.includes("ear") || label.includes("phone")) return <Volume1 size={24} />;
+        return <Volume2 size={24} />; // default to speaker
+    };
+    
+    // ─── Client-Side Call Recording (App-Only, MP3) ───────────────
+    
+    const [isNativeApp, setIsNativeApp] = useState(false);
+    const [isRecording, setIsRecording] = useState(false);
+    const [recordingTime, setRecordingTime] = useState(0);
+    
+    // Audio Context references
+    const audioCtxRef = useRef<AudioContext | null>(null);
+    const mp3EncoderRef = useRef<any>(null); // lamejs encoder
+    const mp3ChunksRef = useRef<Int8Array[]>([]);
+    const scriptProcessorRef = useRef<ScriptProcessorNode | null>(null);
+
+    useEffect(() => {
+        setIsNativeApp(Capacitor.isNativePlatform());
+    }, []);
+
     useEffect(() => {
         if (!isConnected) return;
         const interval = setInterval(() => setCallDuration(d => d + 1), 1000);
         return () => clearInterval(interval);
     }, [isConnected]);
+
+    useEffect(() => {
+        if (!isRecording) return;
+        const interval = setInterval(() => setRecordingTime(t => t + 1), 1000);
+        return () => clearInterval(interval);
+    }, [isRecording]);
 
     const formatCallTime = (s: number) =>
         `${Math.floor(s / 60).toString().padStart(2, '0')}:${(s % 60).toString().padStart(2, '0')}`;
@@ -581,6 +678,189 @@ function CallInterface({ onEndCall }: { onEndCall: (durationSeconds?: number) =>
     const handleMicToggle = useCallback(() => {
         toggleMic();
     }, [toggleMic]);
+
+    // Cleanup recording if call ends abruptly
+    useEffect(() => {
+        if (!isConnected && isRecording) {
+            stopRecording();
+        }
+    }, [isConnected, isRecording]);
+
+    const startRecording = async () => {
+        if (!localParticipant || !room) return;
+        
+        try {
+            const localPub = localParticipant.getTrackPublication(Track.Source.Microphone);
+            const remotePub = agentParticipant?.getTrackPublication(Track.Source.Microphone);
+            
+            const localMediaStreamTrack = localPub?.track?.mediaStreamTrack;
+            const remoteMediaStreamTrack = remotePub?.track?.mediaStreamTrack;
+            
+            if (!localMediaStreamTrack) {
+                alert("Cannot record: Microphone track not available yet.");
+                return;
+            }
+
+            // 2. Setup Web Audio API Context
+            const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+            const ctx = new AudioContextClass();
+            if (ctx.state === 'suspended') {
+                await ctx.resume();
+            }
+            audioCtxRef.current = ctx;
+
+            const mixer = ctx.createGain();
+            mixer.gain.value = 1.0;
+            
+            // Connect Local Track
+            const localStream = new MediaStream([localMediaStreamTrack]);
+            const localSource = ctx.createMediaStreamSource(localStream);
+            localSource.connect(mixer);
+            
+            // Connect Remote Track (if available)
+            if (remoteMediaStreamTrack) {
+                const remoteStream = new MediaStream([remoteMediaStreamTrack]);
+                const remoteSource = ctx.createMediaStreamSource(remoteStream);
+                remoteSource.connect(mixer);
+            }
+
+            // Set up lamejs MP3 Encoder
+            // 1 channel (mono), 44100Hz sample rate, 128kbps bitrate
+            const sampleRate = ctx.sampleRate;
+            const EncoderClass = lamejs.Mp3Encoder || (lamejs as any).default?.Mp3Encoder;
+            if (!EncoderClass) {
+                 throw new Error("LameJS MP3 Encoder not found in bundle.");
+            }
+            mp3EncoderRef.current = new EncoderClass(1, sampleRate, 128);
+            mp3ChunksRef.current = [];
+
+            // 3. Process raw PCM audio into MP3 chunks
+            const processor = ctx.createScriptProcessor(4096, 1, 1);
+            scriptProcessorRef.current = processor;
+            
+            mixer.connect(processor);
+            processor.connect(ctx.destination); // Required for processor to run, but shouldn't cause echo if we don't route back to speaker
+
+            processor.onaudioprocess = (e) => {
+                const channelData = e.inputBuffer.getChannelData(0);
+                // Convert Float32 to Int16
+                const sampleBuffer = new Int16Array(channelData.length);
+                for (let i = 0; i < channelData.length; i++) {
+                    const s = Math.max(-1, Math.min(1, channelData[i]));
+                    sampleBuffer[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+                }
+                
+                // Encode chunk
+                const mp3buf = mp3EncoderRef.current.encodeBuffer(sampleBuffer);
+                if (mp3buf.length > 0) {
+                    mp3ChunksRef.current.push(new Int8Array(mp3buf));
+                }
+            };
+
+            setRecordingTime(0);
+            setIsRecording(true);
+
+        } catch (e: any) {
+            console.error("Failed to start recording:", e);
+            const errName = e?.name || "";
+            const errMsg = e?.message || String(e);
+            alert(`Could not start recording: ${errName} - ${errMsg}`);
+        }
+    };
+
+    const stopRecording = async () => {
+        setIsRecording(false);
+        try {
+            // Stop processing
+            if (scriptProcessorRef.current) {
+                scriptProcessorRef.current.disconnect();
+                scriptProcessorRef.current = null;
+            }
+            if (audioCtxRef.current) {
+                await audioCtxRef.current.close();
+                audioCtxRef.current = null;
+            }
+            
+            // Flush final MP3 frames
+            if (mp3EncoderRef.current) {
+                const mp3buf = mp3EncoderRef.current.flush();
+                if (mp3buf.length > 0) {
+                    mp3ChunksRef.current.push(new Int8Array(mp3buf));
+                }
+                mp3EncoderRef.current = null;
+            }
+
+            if (mp3ChunksRef.current.length === 0) return;
+
+            // Combine chunks into a single Blob
+            const blob = new Blob(mp3ChunksRef.current as any[], { type: 'audio/mpeg' });
+            mp3ChunksRef.current = [];
+
+            // Convert to Base64 for Capacitor
+            const reader = new FileReader();
+            reader.readAsDataURL(blob);
+            reader.onloadend = async () => {
+                const base64Data = (reader.result as string).split(',')[1];
+                
+                const fileName = `Nuravya_Call_${new Date().toISOString().replace(/[:.]/g, '-')}.mp3`;
+                
+                // Save using Capacitor Filesystem
+                try {
+                    // 1. Request permissions explicitly (esp. for Android)
+                    if (isNativeApp) {
+                        const permStatus = await Filesystem.checkPermissions();
+                        if (permStatus.publicStorage !== 'granted') {
+                            await Filesystem.requestPermissions();
+                        }
+                        
+                        // 2. Ensure Documents directory exists (some Androids need this)
+                        try {
+                            await Filesystem.mkdir({
+                                path: '',
+                                directory: Directory.Documents,
+                                recursive: true
+                            });
+                        } catch (e) {
+                            // Directory might already exist, ignore error this time.
+                        }
+                    }
+
+                    const savedFile = await Filesystem.writeFile({
+                        path: fileName,
+                        data: base64Data,
+                        directory: Directory.Documents,
+                    });
+
+                    // Prompt user to Share/Save natively
+                    if (isNativeApp) {
+                        await Share.share({
+                            title: 'Nuravya Call Recording',
+                            text: 'Here is your recorded conversation.',
+                            url: savedFile.uri,
+                            dialogTitle: 'Save or Share Recording',
+                        });
+                    } else {
+                        // Web fallback for testing
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement("a");
+                        document.body.appendChild(a);
+                        a.style.display = "none";
+                        a.href = url;
+                        a.download = fileName;
+                        a.click();
+                        URL.revokeObjectURL(url);
+                    }
+                } catch (writeErr: any) {
+                    console.error("Failed to write recording:", writeErr);
+                    alert(`Failed to save recording: ${writeErr.message || String(writeErr)}`);
+                }
+            };
+
+        } catch (e) {
+            console.error("Failed to save recording:", e);
+            alert("Failed to save the recording. Check permissions.");
+        }
+    };
 
     return (
         <>
@@ -603,17 +883,22 @@ function CallInterface({ onEndCall }: { onEndCall: (durationSeconds?: number) =>
                     <h2 className="text-white text-4xl font-bold tracking-tight">Nuravya</h2>
                 </div>
                 {isConnected && (
-                    <>
-                        <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-amber-400 text-lg font-mono tracking-wider">
+                    <div className="flex flex-col items-center gap-1">
+                        <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-amber-400 text-lg font-mono tracking-wider flex items-center gap-2">
                             {formatCallTime(callDuration)}
+                            {isRecording && (
+                                <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-red-500/20 text-red-400 text-xs font-bold tracking-widest animate-pulse">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-red-500" /> REC {formatCallTime(recordingTime)}
+                                </span>
+                            )}
                         </motion.span>
-                        <span className="text-stone-400 text-xs font-medium mt-1">
+                        <span className="text-stone-400 text-xs font-medium">
                             {(!agentParticipant && participants.length <= 1) ? "Agent joining..." :
                                 assistantState === "listening" ? "Listening..." :
                                     assistantState === "thinking" ? "Thinking..." :
                                         assistantState === "speaking" ? "Speaking..." : "Connected"}
                         </span>
-                    </>
+                    </div>
                 )}
             </div>
 
@@ -646,20 +931,60 @@ function CallInterface({ onEndCall }: { onEndCall: (durationSeconds?: number) =>
                 )}
             </div>
 
-            <div className="pb-20 relative z-10 flex flex-col items-center gap-6 w-full">
+            <div className="pb-20 relative z-10 flex flex-col items-center gap-6 w-full px-8">
                 {isConnected && (
-                    <button
-                        onClick={handleMicToggle}
-                        className={`w-14 h-14 justify-center items-center rounded-full flex transition-all ${isMicEnabled
-                            ? "bg-amber-500 text-white shadow-lg shadow-amber-500/30"
-                            : "bg-stone-700/50 text-stone-400 border border-stone-600"
-                            }`}
-                        title={isMicEnabled ? "Mute Microphone" : "Unmute Microphone"}
-                    >
-                        {isMicEnabled ? <Mic size={24} /> : <MicOff size={24} />}
-                    </button>
+                    <div className="flex items-center justify-center gap-6 w-full max-w-[300px]">
+                        
+                        {/* Audio Routing Toggle */}
+                        <button
+                            onClick={cycleAudioOutput}
+                            disabled={!isNativeApp && audioOutputDevices.length <= 1}
+                            className="w-12 h-12 justify-center items-center rounded-full flex transition-all bg-stone-700/50 text-stone-300 border border-stone-600 hover:bg-stone-600/50 disabled:opacity-30 disabled:hover:bg-stone-700/50"
+                            title="Switch Audio Output"
+                        >
+                            {getAudioOutputIcon()}
+                        </button>
+
+                        {/* Mute Mic */}
+                        <button
+                            onClick={handleMicToggle}
+                            className={`w-14 h-14 justify-center items-center rounded-full flex transition-all ${isMicEnabled
+                                ? "bg-amber-500 text-white shadow-lg shadow-amber-500/30"
+                                : "bg-stone-700/50 text-stone-400 border border-stone-600"
+                                }`}
+                            title={isMicEnabled ? "Mute Microphone" : "Unmute Microphone"}
+                        >
+                            {isMicEnabled ? <Mic size={24} /> : <MicOff size={24} />}
+                        </button>
+
+                        {/* Record Button (App Only) */}
+                        {isNativeApp ? (
+                            <button
+                                onClick={isRecording ? stopRecording : startRecording}
+                                className={`w-12 h-12 justify-center items-center rounded-full flex transition-all ${isRecording
+                                    ? "bg-red-500/20 text-red-500 border border-red-500 animate-pulse"
+                                    : "bg-stone-700/50 text-red-400 border border-stone-600 hover:bg-stone-600/50"
+                                    }`}
+                                title={isRecording ? "Stop Recording" : "Start MP3 Recording"}
+                            >
+                                {isRecording ? <StopCircle size={22} /> : <Circle size={22} className="fill-red-400" />}
+                            </button>
+                        ) : (
+                            <div className="w-12 h-12" /> // spacer to maintain layout
+                        )}
+                    </div>
                 )}
-                <button onClick={() => onEndCall(callDuration)} className="w-16 h-16 rounded-full bg-red-500 text-white flex items-center justify-center shadow-lg shadow-red-500/30 hover:bg-red-600 transition-colors">
+                
+                <button 
+                    onClick={() => {
+                        if (isRecording) {
+                            stopRecording().then(() => onEndCall(callDuration));
+                        } else {
+                            onEndCall(callDuration);
+                        }
+                    }} 
+                    className="w-16 h-16 rounded-full bg-red-500 text-white flex items-center justify-center shadow-lg shadow-red-500/30 hover:bg-red-600 transition-colors"
+                >
                     <PhoneOff size={28} />
                 </button>
             </div>
