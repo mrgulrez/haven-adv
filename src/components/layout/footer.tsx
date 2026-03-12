@@ -114,17 +114,22 @@ export function Footer() {
 
                     {/* Brand */}
                     <div className="col-span-2 md:col-span-2">
-                        <Link href="/" className="inline-flex items-center gap-2 mb-4 group">
+                        <Link href="/" className="inline-flex items-center gap-3 mb-6 group">
                             <Image
-                                src="/images/NuravyaLogo.png"
+                                src="/images/NuravyaLogo.svg"
                                 alt="Nuravya AI Logo"
-                                width={32}
-                                height={32}
-                                className="rounded-lg opacity-90 group-hover:opacity-100 transition-opacity duration-200"
+                                width={36}
+                                height={36}
+                                className="group-hover:scale-110 transition-transform duration-500"
                             />
-                            <span className="text-xl font-bold font-heading text-white">
-                                {BRAND.name} <span className="text-amber-400">AI</span>
-                            </span>
+                            <div className="flex flex-col">
+                                <span className="text-xl font-bold font-heading text-white tracking-tight leading-none group-hover:text-amber-400 transition-colors">
+                                    {BRAND.name} <span className="text-amber-500 font-extrabold">AI</span>
+                                </span>
+                                <span className="text-[9px] font-bold text-stone-600 uppercase tracking-[0.2em] leading-none mt-1">
+                                    Engineering Connection
+                                </span>
+                            </div>
                         </Link>
                         <p className="text-sm text-stone-500 leading-relaxed mb-6 max-w-xs">
                             {BRAND.description}

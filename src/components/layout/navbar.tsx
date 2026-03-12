@@ -60,19 +60,27 @@ export function Navbar() {
             )}
         >
             <div className="container mx-auto px-6 flex items-center justify-between">
-                {/* Logo */}
-                <Link href="/" className="flex items-center gap-2 group">
-                    <Image
-                        src="/images/NuravyaLogo.png"
-                        alt="Nuravya AI Logo"
-                        width={36}
-                        height={36}
-                        className="rounded-lg transition-transform duration-200 group-hover:scale-105"
-                        priority
-                    />
-                    <span className="text-2xl font-bold font-heading text-stone-900 group-hover:text-amber-600 transition-colors duration-200">
-                        Nuravya <span className="text-amber-500">AI</span>
-                    </span>
+                <Link href="/" className="flex items-center gap-3 group">
+                    <div className="relative">
+                        <Image
+                            src="/images/NuravyaLogo.svg"
+                            alt="Nuravya AI Logo"
+                            width={38}
+                            height={38}
+                            className="transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 group-hover:drop-shadow-[0_0_15px_rgba(245,158,11,0.3)]"
+                            priority
+                        />
+                        {/* Shimmer effect on hover */}
+                        <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 opacity-0 group-hover:opacity-100" />
+                    </div>
+                    <div className="flex flex-col">
+                        <span className="text-2xl font-bold font-heading text-stone-900 tracking-tight leading-none group-hover:text-amber-600 transition-colors duration-300">
+                            Nuravya <span className="text-amber-500 font-extrabold">AI</span>
+                        </span>
+                        <span className="text-[10px] font-bold text-stone-400 uppercase tracking-[0.2em] leading-none mt-1 opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 h-0 group-hover:h-auto overflow-hidden">
+                            True Friendship
+                        </span>
+                    </div>
                 </Link>
 
                 {/* Nav links */}
