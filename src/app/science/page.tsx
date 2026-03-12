@@ -8,7 +8,7 @@ export default function SciencePage() {
     return (
         <main className="min-h-screen bg-[#FFFBEB] flex flex-col font-sans overflow-hidden">
             {/* Hero Section */}
-            <section className="relative pt-safe pb-24 px-4 md:px-6 flex flex-col items-center justify-center text-center">
+            <section className="relative pt-safe md:pt-28 pb-24 px-4 md:px-6 flex flex-col items-center justify-center text-center">
                 <div className="relative z-10 max-w-4xl mx-auto">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}

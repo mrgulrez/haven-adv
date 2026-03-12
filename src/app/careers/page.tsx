@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 export default function CareersPage() {
     return (
         <main className="min-h-screen bg-[#FFFBEB] flex flex-col font-sans">
-            <div className="flex-grow pt-safe pb-24 px-4 md:px-6">
+            <div className="flex-grow pt-safe md:pt-28 pb-24 px-4 md:px-6">
                 <div className="container mx-auto max-w-5xl">
                     <div className="text-center mb-16">
                         <h1 className="text-5xl md:text-7xl font-bold font-heading text-stone-900 mb-6">Build the future <br />of companionship.</h1>

@@ -116,7 +116,7 @@ export default function InsightsPage() {
     if (!isPaid) {
         return (
             <main className="min-h-screen bg-[#FFFBEB] flex flex-col font-sans">
-                <div className="flex-grow pt-24 pb-24 px-4 md:px-6 flex items-center justify-center">
+                <div className="flex-grow pt-safe md:pt-28 pb-24 px-4 md:px-6 flex items-center justify-center">
                     <div className="bg-white rounded-3xl p-12 border border-stone-200 shadow-sm text-center max-w-md">
                         <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center mx-auto mb-6 shadow-lg shadow-purple-200">
                             <Lock size={28} className="text-white" />
@@ -137,7 +137,7 @@ export default function InsightsPage() {
 
     return (
         <main className="min-h-screen bg-[#FFFBEB] flex flex-col font-sans">
-            <div className="flex-grow pt-24 pb-24 px-4 md:px-6">
+            <div className="flex-grow pt-safe md:pt-28 pb-24 px-4 md:px-6">
                 <div className="container mx-auto max-w-5xl">
 
                     {/* Header */}

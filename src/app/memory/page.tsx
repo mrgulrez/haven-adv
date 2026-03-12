@@ -142,7 +142,7 @@ export default function MemoryPage() {
 
     return (
         <main className="min-h-screen bg-[#FFFBEB] flex flex-col font-sans">
-            <div className="flex-grow pt-24 pb-24 px-4 md:px-6">
+            <div className="flex-grow pt-safe md:pt-28 pb-24 px-4 md:px-6">
                 <div className="container mx-auto max-w-5xl">
 
                     {/* Header */}

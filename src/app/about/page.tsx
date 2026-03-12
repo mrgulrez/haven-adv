@@ -31,7 +31,7 @@ export default function AboutUs() {
     return (
         <main className="min-h-screen bg-[#FFFBEB] flex flex-col font-sans overflow-hidden">
             {/* Hero Section */}
-            <section className="relative pt-safe pb-24 px-4 md:px-6 flex flex-col items-center justify-center text-center">
+            <section className="relative pt-safe md:pt-28 pb-24 px-4 md:px-6 flex flex-col items-center justify-center text-center">
                 <div className="absolute inset-0 w-full h-full -z-0">
                     <motion.div
                         animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.4, 0.3] }}

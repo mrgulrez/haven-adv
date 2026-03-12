@@ -4,7 +4,7 @@ import { ShieldAlert, Lock, Server, EyeOff } from "lucide-react";
 export default function SecurityPage() {
     return (
         <main className="min-h-screen bg-[#FFFBEB] flex flex-col font-sans">
-            <div className="flex-grow pt-safe pb-24 px-4 md:px-6">
+            <div className="flex-grow pt-safe md:pt-28 pb-24 px-4 md:px-6">
                 <div className="container mx-auto max-w-5xl">
                     <div className="text-center mb-16">
                         <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-emerald-100 mb-6">

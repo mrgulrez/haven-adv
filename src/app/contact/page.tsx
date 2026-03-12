@@ -22,7 +22,7 @@ export default function ContactPage() {
 
     return (
         <main className="min-h-screen bg-[#FFFBEB] flex flex-col font-sans">
-            <div className="flex-grow pt-24 pb-24 px-4 md:px-6 flex flex-col items-center">
+            <div className="flex-grow pt-safe md:pt-28 pb-24 px-4 md:px-6 flex flex-col items-center">
                 <div className="container mx-auto max-w-5xl">
                     <div className="text-center mb-16">
                         <h1 className="text-4xl md:text-6xl font-bold font-heading text-stone-900 mb-6">Get in touch</h1>
