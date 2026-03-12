@@ -98,37 +98,35 @@ body {
  * Never hard-code pixel values for header height — always use these classes.
  * ─────────────────────────────────────────────────────────────────────────── */
 
-@layer utilities {
-  /* Top inset — push content below status bar / notch */
-  .pt-safe {
-    padding-top: env(safe-area-inset-top, 0px);
-  }
+/* Top inset — push content below status bar / notch */
+@utility pt-safe {
+  padding-top: env(safe-area-inset-top, 0px);
+}
 
-  /* Bottom inset — push content above home indicator */
-  .pb-safe {
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-  }
+/* Bottom inset — push content above home indicator */
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
 
-  /* Left / right insets for landscape edge cases */
-  .pl-safe { padding-left:  env(safe-area-inset-left,   0px); }
-  .pr-safe { padding-right: env(safe-area-inset-right,  0px); }
+/* Left / right insets for landscape edge cases */
+@utility pl-safe { padding-left:  env(safe-area-inset-left,   0px); }
+@utility pr-safe { padding-right: env(safe-area-inset-right,  0px); }
 
-  /* All-sides safe padding — use on full-screen layout roots */
-  .p-safe {
-    padding-top:    env(safe-area-inset-top,    0px);
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-    padding-left:   env(safe-area-inset-left,   0px);
-    padding-right:  env(safe-area-inset-right,  0px);
-  }
+/* All-sides safe padding — use on full-screen layout roots */
+@utility p-safe {
+  padding-top:    env(safe-area-inset-top,    0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left:   env(safe-area-inset-left,   0px);
+  padding-right:  env(safe-area-inset-right,  0px);
+}
 
-  /* Margin variants — for elements that use margin instead of padding */
-  .mt-safe { margin-top:    env(safe-area-inset-top,    0px); }
-  .mb-safe { margin-bottom: env(safe-area-inset-bottom, 0px); }
+/* Margin variants — for elements that use margin instead of padding */
+@utility mt-safe { margin-top:    env(safe-area-inset-top,    0px); }
+@utility mb-safe { margin-bottom: env(safe-area-inset-bottom, 0px); }
 
-  /* Legacy alias — prefer pb-safe on new components */
-  .bottom-nav-bar {
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-  }
+/* Legacy alias — prefer pb-safe on new components */
+@utility bottom-nav-bar {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 /* ─── Status Bar Overlays ────────────────────────────────────────────────────

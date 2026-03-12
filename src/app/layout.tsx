@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/layout/navbar";
 import { BottomNav } from "@/components/layout/bottom-nav";
+import { PageWrapper } from "@/components/layout/page-wrapper";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
@@ -88,9 +89,11 @@ export default function RootLayout({
           {/* Status bar blur overlay for mobile notch/battery visibility */}
           <div className="status-bar-overlay md:hidden"></div>
 
-          {/* pb-24 on mobile so content clears the floating BottomNav card */}
+          {/* Main content wrapper */}
           <div className="pb-24 md:pb-0">
-            {children}
+            <PageWrapper>
+              {children}
+            </PageWrapper>
           </div>
           <BottomNav />
         </AuthProvider>
