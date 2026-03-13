@@ -11,7 +11,13 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://backend.enord.in";
  */
 async function getAuthToken(): Promise<string | null> {
     const user = auth.currentUser;
-    if (!user) return null;
+    if (!user) {
+        // Check for reviewer backdoor token
+        if (typeof window !== "undefined") {
+            return localStorage.getItem("BYPASS_TOKEN");
+        }
+        return null;
+    }
 
     try {
         return await user.getIdToken();
