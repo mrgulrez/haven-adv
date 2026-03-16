@@ -7,8 +7,8 @@ import { motion } from "framer-motion"
 const features = [
     {
         icon: Cpu,
-        title: "Google Gemini LLM",
-        description: "Powered by the latest enterprise-grade AI for natural, safe conversations.",
+        title: "Nuravya AI Engine",
+        description: "Powered by our proprietary, enterprise-grade AI for natural, safe conversations.",
     },
     {
         icon: ShieldCheck,

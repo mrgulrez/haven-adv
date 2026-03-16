@@ -177,8 +177,8 @@ export const FEATURES = [
 export const TRUST_POINTS = [
     {
         icon: "Cpu",
-        title: "Google Gemini LLM",
-        description: "Powered by enterprise-grade AI for natural, safe, and nuanced conversation.",
+        title: "Nuravya AI Engine",
+        description: "Powered by our proprietary, enterprise-grade AI for natural, safe, and nuanced conversation.",
     },
     {
         icon: "ShieldCheck",
