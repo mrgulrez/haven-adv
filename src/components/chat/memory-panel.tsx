@@ -64,17 +64,21 @@ export function MemoryPanel({ isOpen, onClose }: MemoryPanelProps) {
             <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={onClose} />
 
             <div className="relative w-full max-w-sm h-full bg-white shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
-                <div className="p-6 border-b border-stone-100 flex items-center justify-between bg-amber-50/50">
+                <div className="px-6 py-4 pt-safe border-b border-stone-100 flex items-center justify-between bg-amber-50/50">
                     <div className="flex items-center gap-3">
-                        <div className="p-2 bg-amber-100 rounded-xl text-amber-600">
+                        <div className="p-2 bg-amber-100 rounded-xl text-amber-600 hidden xs:block">
                             <Brain size={20} />
                         </div>
-                        <div>
+                        <div className="py-1">
                             <h2 className="font-bold text-stone-800 leading-tight">Long-Term Memory</h2>
                             <p className="text-[10px] text-stone-500 font-medium uppercase tracking-wider">Pinned Facts & Deep Context</p>
                         </div>
                     </div>
-                    <button onClick={onClose} className="p-2 hover:bg-stone-100 rounded-full text-stone-400 transition-colors">
+                    <button 
+                        onClick={onClose} 
+                        className="p-2 -mr-2 hover:bg-stone-200/50 rounded-full text-stone-400 hover:text-stone-600 transition-all active:scale-95"
+                        aria-label="Close"
+                    >
                         <X size={20} />
                     </button>
                 </div>

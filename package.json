@@ -11,6 +11,7 @@
   "dependencies": {
     "@breezystack/lamejs": "^1.2.7",
     "@capacitor-firebase/authentication": "^7.5.0",
+    "@capacitor/app": "^7.0.0",
     "@capacitor/core": "^7.0.0",
     "@capacitor/filesystem": "^7.0.0",
     "@capacitor/share": "^7.0.0",
@@ -31,6 +32,8 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-hook-form": "^7.71.1",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
     "tailwind-merge": "^3.4.1",
     "zod": "^4.3.6"
   },

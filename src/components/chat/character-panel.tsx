@@ -141,12 +141,12 @@ export function CharacterPanel({
                         className="fixed right-0 top-0 bottom-0 z-[160] w-[340px] bg-white shadow-2xl flex flex-col"
                     >
                         {/* Header */}
-                        <div className="flex items-center justify-between px-5 py-4 border-b border-stone-100">
-                            <div>
+                        <div className="flex items-center justify-between px-5 py-4 pt-safe border-b border-stone-100 bg-white">
+                            <div className="py-1">
                                 <h2 className="font-bold text-stone-900 text-lg">Characters</h2>
                                 <p className="text-xs text-stone-500">Choose your AI companion</p>
                             </div>
-                            <button onClick={onClose} className="p-2 rounded-full hover:bg-stone-100 transition-colors text-stone-500">
+                            <button onClick={onClose} className="p-2 -mr-2 rounded-full hover:bg-stone-100 transition-colors text-stone-500">
                                 <X size={20} />
                             </button>
                         </div>

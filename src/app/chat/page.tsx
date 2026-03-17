@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
 import {
     Send,
     ChevronLeft,
@@ -44,6 +45,8 @@ import { Capacitor } from "@capacitor/core";
 import { Filesystem, Directory } from "@capacitor/filesystem";
 import { Share } from "@capacitor/share";
 import lamejs from '@breezystack/lamejs';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 // ─── Types ──────────────────────────────────────────────────────
 
@@ -129,6 +132,7 @@ export default function ChatPage() {
     const [showMemoryPanel, setShowMemoryPanel] = useState(false);
     const [selectedCharacter, setSelectedCharacter] = useState<Character>(NURAVYA_DEFAULT);
     const [isUncapped, setIsUncapped] = useState(false);
+    const [isListening, setIsListening] = useState(false);
     const isDefaultCharacter = selectedCharacter.id === "__nuravya__";
 
     // TTS playback state
@@ -236,6 +240,38 @@ export default function ChatPage() {
         } finally {
             setIsTyping(false);
         }
+    };
+    
+    // ─── Speech to Text ─────────────────────────────────────────
+    const toggleListening = () => {
+        if (isListening) {
+            setIsListening(false);
+            return;
+        }
+
+        const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            alert("Speech recognition is not supported in this browser.");
+            return;
+        }
+
+        const recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = "en-US";
+
+        recognition.onstart = () => setIsListening(true);
+        recognition.onend = () => setIsListening(false);
+        recognition.onerror = (event: any) => {
+            console.error("Speech recognition error", event.error);
+            setIsListening(false);
+        };
+        recognition.onresult = (event: any) => {
+            const transcript = event.results[0][0].transcript;
+            setInputValue(prev => prev + (prev ? " " : "") + transcript);
+        };
+
+        recognition.start();
     };
 
     // ─── Speak Message (Core/Pro) ───────────────────────────────
@@ -496,7 +532,24 @@ export default function ChatPage() {
                                     : "bg-white border border-stone-200/60 text-stone-800 rounded-tl-sm backdrop-blur-md"
                                     }`}>
                                     {msg.sender === "api" && <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />}
-                                    <p className="text-base leading-relaxed relative z-10 font-medium tracking-wide">{msg.text}</p>
+                                    <div className="text-base leading-relaxed relative z-10 font-medium tracking-wide">
+                                        <ReactMarkdown 
+                                            remarkPlugins={[remarkGfm]}
+                                            components={{
+                                                h1: ({node, ...props}) => <h1 className="text-xl font-bold my-2" {...props} />,
+                                                h2: ({node, ...props}) => <h2 className="text-lg font-bold my-2" {...props} />,
+                                                h3: ({node, ...props}) => <h3 className="text-base font-extrabold my-2 text-amber-600" {...props} />,
+                                                p: ({node, ...props}) => <p className="mb-2 last:mb-0" {...props} />,
+                                                ul: ({node, ...props}) => <ul className="list-disc ml-5 mb-2" {...props} />,
+                                                ol: ({node, ...props}) => <ol className="list-decimal ml-5 mb-2" {...props} />,
+                                                li: ({node, ...props}) => <li className="mb-0.5" {...props} />,
+                                                strong: ({node, ...props}) => <strong className="font-extrabold text-amber-700" {...props} />,
+                                                a: ({node, ...props}) => <a className="text-amber-600 underline hover:text-amber-700" {...props} />,
+                                            }}
+                                        >
+                                            {msg.text}
+                                        </ReactMarkdown>
+                                    </div>
                                 </div>
                                 <div className="flex items-center gap-2 mt-1.5 px-2">
                                     <span className="text-[10px] text-stone-400 font-medium">{msg.time}</span>
@@ -546,13 +599,32 @@ export default function ChatPage() {
                             placeholder="Message Nuravya..."
                             className="flex-1 bg-transparent border-none outline-none text-stone-700 placeholder:text-stone-400 font-medium px-4 py-2.5 text-[15px] w-full"
                         />
-                        <button
-                            onClick={handleSend}
-                            disabled={!inputValue.trim()}
-                            className={`p-2.5 shrink-0 rounded-full transition-all flex items-center justify-center ${inputValue.trim() ? "bg-amber-500 text-white shadow-md hover:scale-105" : "bg-stone-100 text-stone-400"}`}
-                        >
-                            <Send size={18} className={inputValue.trim() ? "ml-0.5" : ""} />
-                        </button>
+                        <div className="flex items-center gap-1.5 px-1.5">
+                            <button
+                                onClick={toggleListening}
+                                className={cn(
+                                    "p-2.5 rounded-full transition-all flex items-center justify-center",
+                                    isListening 
+                                        ? "bg-rose-100 text-rose-500 animate-pulse shadow-sm" 
+                                        : "text-stone-400 hover:text-stone-600 hover:bg-stone-50"
+                                )}
+                                title={isListening ? "Stop listening" : "Voice message"}
+                            >
+                                {isListening ? <MicOff size={18} /> : <Mic size={18} />}
+                            </button>
+                            <button
+                                onClick={handleSend}
+                                disabled={!inputValue.trim()}
+                                className={cn(
+                                    "p-2.5 shrink-0 rounded-full transition-all flex items-center justify-center",
+                                    inputValue.trim() 
+                                        ? "bg-amber-500 text-white shadow-md hover:scale-105" 
+                                        : "bg-stone-100 text-stone-400"
+                                )}
+                            >
+                                <Send size={18} className={inputValue.trim() ? "ml-0.5" : ""} />
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

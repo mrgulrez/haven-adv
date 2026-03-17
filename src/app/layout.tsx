@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/layout/navbar";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { PageWrapper } from "@/components/layout/page-wrapper";
+import { CapacitorManager } from "@/components/layout/capacitor-manager";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
@@ -85,6 +86,7 @@ export default function RootLayout({
         )}
       >
         <AuthProvider>
+          <CapacitorManager />
           <Navbar />
           {/* Status bar blur overlay for mobile notch/battery visibility */}
           <div className="status-bar-overlay md:hidden"></div>
