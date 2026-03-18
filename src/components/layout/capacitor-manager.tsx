@@ -12,25 +12,31 @@ export function CapacitorManager() {
         if (!Capacitor.isNativePlatform()) return;
 
         // Dynamic import to avoid SSR issues
+        let cleanup: (() => void) | undefined;
+
         const handleBackButton = async () => {
             const { App } = await import("@capacitor/app");
 
-            const listener = await App.addListener("backButton", (data: { canGoBack: boolean }) => {
+            const listener = await App.addListener("backButton", () => {
                 if (pathname === "/" || pathname === "/home") {
                     // If on home, allow exit
                     App.exitApp();
                 } else {
-                    // If not on home, go home first
-                    router.push("/");
+                    // Navigate back through history instead of always going home
+                    router.back();
                 }
             });
 
-            return () => {
+            cleanup = () => {
                 listener.remove();
             };
         };
 
         handleBackButton();
+
+        return () => {
+            cleanup?.();
+        };
     }, [pathname, router]);
 
     return null;

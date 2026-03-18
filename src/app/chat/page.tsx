@@ -36,7 +36,7 @@ import {
     useRoomContext,
 } from "@livekit/components-react";
 import { Track, ConnectionState } from "livekit-client";
-import { apiFetch, apiPost, getAuthHeaders } from "@/lib/api";
+import { apiFetch, apiGet, apiPost, getAuthHeaders } from "@/lib/api";
 import { useAuth } from "@/components/auth/auth-provider";
 import { StatusModal } from "@/components/ui/success-modal";
 import { CharacterPanel, Character, NURAVYA_DEFAULT } from "@/components/chat/character-panel";
@@ -134,6 +134,33 @@ export default function ChatPage() {
     const [isUncapped, setIsUncapped] = useState(false);
     const [isListening, setIsListening] = useState(false);
     const isDefaultCharacter = selectedCharacter.id === "__nuravya__";
+
+    // Restore saved character preference from database on mount
+    useEffect(() => {
+        if (!nuravyaUser?.selected_character_id) return;
+        const savedId = nuravyaUser.selected_character_id;
+        // Fetch user's characters and find the saved one
+        (async () => {
+            try {
+                const chars = await apiGet<Character[]>("/api/characters");
+                const found = chars.find(c => c.id === savedId);
+                if (found) setSelectedCharacter(found);
+            } catch { /* ignore — will default to Nuravya */ }
+        })();
+    }, [nuravyaUser?.selected_character_id]);
+
+    // Persist selected character to database
+    const handleSelectCharacter = async (c: Character) => {
+        setSelectedCharacter(c);
+        try {
+            await apiFetch("/api/users/me", {
+                method: "PUT",
+                body: JSON.stringify({
+                    selected_character_id: c.id === "__nuravya__" ? "" : c.id,
+                }),
+            });
+        } catch { /* ignore — local state still updated */ }
+    };
 
     // TTS playback state
     const [playingMsgId, setPlayingMsgId] = useState<string | null>(null);
@@ -403,7 +430,7 @@ export default function ChatPage() {
                 isOpen={showCharPanel}
                 onClose={() => setShowCharPanel(false)}
                 selectedCharacter={selectedCharacter}
-                onSelectCharacter={(c) => { setSelectedCharacter(c); setShowCharPanel(false); }}
+                onSelectCharacter={(c) => { handleSelectCharacter(c); setShowCharPanel(false); }}
                 isUncapped={isUncapped}
                 onToggleUncapped={setIsUncapped}
             />
@@ -597,6 +624,10 @@ export default function ChatPage() {
                             onChange={(e) => setInputValue(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                             placeholder="Message Nuravya..."
+                            autoComplete="on"
+                            autoCorrect="on"
+                            autoCapitalize="sentences"
+                            spellCheck={true}
                             className="flex-1 bg-transparent border-none outline-none text-stone-700 placeholder:text-stone-400 font-medium px-4 py-2.5 text-[15px] w-full"
                         />
                         <div className="flex items-center gap-1.5 px-1.5">

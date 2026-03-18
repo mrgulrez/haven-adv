@@ -24,6 +24,7 @@ interface NuravyaUser {
     created_at: string;
     is_admin?: boolean;
     plan_started_at?: string | null;
+    selected_character_id?: string | null;
 }
 
 interface AuthContextType {
