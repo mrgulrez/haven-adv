@@ -13,7 +13,8 @@ import {
 import { auth, googleProvider } from "@/lib/firebase";
 import { Capacitor } from '@capacitor/core';
 import { FirebaseAuthentication } from '@capacitor-firebase/authentication';
-import { apiFetch } from "@/lib/api";
+import { PushNotifications } from '@capacitor/push-notifications';
+import { apiFetch, apiPost } from "@/lib/api";
 
 interface NuravyaUser {
     id: string;
@@ -77,10 +78,65 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
+    const initializePushNotifications = async () => {
+        if (!Capacitor.isNativePlatform()) return;
+
+        try {
+            // Request permissions if not granted
+            let permStatus = await PushNotifications.checkPermissions();
+            if (permStatus.receive === 'prompt') {
+                permStatus = await PushNotifications.requestPermissions();
+            }
+
+            if (permStatus.receive !== 'granted') {
+                console.warn("User denied push notifications");
+                return;
+            }
+
+            // Register with Apple / Google to receive a token
+            await PushNotifications.register();
+
+            // Handle registration (token generation)
+            await PushNotifications.addListener('registration', async (token) => {
+                console.log("FCM Registration success, token:", token.value);
+                try {
+                    await apiPost("/api/notifications/fcm-token", { token: token.value });
+                } catch (e) {
+                    console.error("Failed to sync FCM token with backend:", e);
+                }
+            });
+
+            // Handle errors
+            await PushNotifications.addListener('registrationError', (error) => {
+                console.error("FCM Registration error:", error.error);
+            });
+
+            // Handle received notifications
+            await PushNotifications.addListener('pushNotificationReceived', (notification) => {
+                console.log("Push received:", notification);
+                // Optional: Show local toast or reload data
+            });
+
+            // Handle tapping a notification
+            await PushNotifications.addListener('pushNotificationActionPerformed', (action) => {
+                console.log("Push action performed:", action);
+                // Handle navigation based on action.notification.data
+            });
+
+        } catch (e) {
+            console.error("Failed to init push notifications:", e);
+        }
+    };
+
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             setUser(user);
-            await syncWithBackend(user);
+            if (user) {
+                await syncWithBackend(user);
+                await initializePushNotifications();
+            } else {
+                setNuravyaUser(null);
+            }
             setLoading(false);
         });
 

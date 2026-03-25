@@ -19,6 +19,7 @@ import {
     Brain,
     Crown,
     Loader2,
+    X,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -166,6 +167,31 @@ export default function ChatPage() {
     const [playingMsgId, setPlayingMsgId] = useState<string | null>(null);
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const ringRef = useRef<RingingSession | null>(null);
+
+    // Daily briefing state
+    const [briefing, setBriefing] = useState<{
+        greeting: string;
+        highlights: string[];
+        mood_trend: string;
+        streak: number;
+    } | null>(null);
+    const [briefingDismissed, setBriefingDismissed] = useState(false);
+
+    // Fetch daily briefing on mount
+    useEffect(() => {
+        if (!user) return;
+        (async () => {
+            try {
+                const data = await apiGet<{
+                    greeting: string;
+                    highlights: string[];
+                    mood_trend: string;
+                    streak: number;
+                }>("/api/briefing/today");
+                if (data?.greeting) setBriefing(data);
+            } catch { /* silent — briefing is optional */ }
+        })();
+    }, [user]);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -531,6 +557,39 @@ export default function ChatPage() {
             {/* ─── Chat Area ───────────────────────────────────── */}
             <div className="flex-1 overflow-y-auto px-4 py-6 scroll-smooth relative z-10 pb-28">
                 <div className="flex flex-col gap-6 max-w-3xl mx-auto">
+                    {/* ─── Daily Briefing Card ─────────────── */}
+                    {briefing && !briefingDismissed && (
+                        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 border border-amber-200/60 shadow-sm">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-amber-200/30 to-transparent rounded-bl-full" />
+                            <div className="relative p-5">
+                                <div className="flex items-start justify-between mb-3">
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-2xl">☀️</span>
+                                        <span className="text-sm font-bold text-amber-700 uppercase tracking-wider">Daily Briefing</span>
+                                    </div>
+                                    <button
+                                        onClick={() => setBriefingDismissed(true)}
+                                        className="p-1 text-stone-400 hover:text-stone-600 transition-colors"
+                                    >
+                                        <X size={16} />
+                                    </button>
+                                </div>
+                                <p className="text-stone-700 text-[15px] leading-relaxed font-medium">
+                                    {briefing.greeting}
+                                </p>
+                                {briefing.highlights.length > 0 && (
+                                    <div className="flex flex-wrap gap-2 mt-3">
+                                        {briefing.highlights.map((h, i) => (
+                                            <span key={i} className="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/70 text-amber-700 border border-amber-200/50">
+                                                {h}
+                                            </span>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
                     {messages.length === 0 && (
                         <div className="flex flex-col items-center justify-center pt-20 gap-4">
                             <button onClick={startCall} className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-200 hover:scale-105 transition-transform">

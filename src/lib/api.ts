@@ -109,4 +109,38 @@ export async function apiGet<T = unknown>(path: string): Promise<T> {
     return res.json();
 }
 
+/**
+ * Convenience: PUT JSON to authenticated API endpoint.
+ */
+export async function apiPut<T = unknown>(
+    path: string,
+    body: Record<string, unknown>
+): Promise<T> {
+    const res = await apiFetch(path, {
+        method: "PUT",
+        body: JSON.stringify(body),
+    });
+
+    if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(`API error ${res.status}: ${errText}`);
+    }
+
+    return res.json();
+}
+
+/**
+ * Convenience: DELETE authenticated API endpoint.
+ */
+export async function apiDelete<T = unknown>(path: string): Promise<T> {
+    const res = await apiFetch(path, { method: "DELETE" });
+
+    if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(`API error ${res.status}: ${errText}`);
+    }
+
+    return res.json();
+}
+
 export { API_BASE };
