@@ -8,7 +8,7 @@ import { StatusModal } from "@/components/ui/success-modal"
 import { useState } from "react"
 
 
-import { PLANS, BRAND } from "@/lib/site.config"
+import { BRAND } from "@/lib/site.config"
 
 const FOOTER_LINKS = {
     Product: [
@@ -21,7 +21,6 @@ const FOOTER_LINKS = {
         { label: "About", href: "/about" },
         { label: "Blog", href: "/blog" },
         { label: "Science", href: "/science" },
-        { label: "Careers", href: "/careers" },
         { label: "Contact", href: "/contact" },
         { label: "Partners", href: `mailto:${BRAND.email.hello}` },
     ],

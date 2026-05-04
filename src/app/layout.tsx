@@ -21,8 +21,8 @@ export const metadata: Metadata = {
   title: "Nuravya AI - Your Warm AI Companion",
   description: "Meet your true everyday companion. Nuravya AI is a voice friend that remembers, cares, and hangs out. Built for genuine connection and privacy.",
   keywords: ["AI companion", "everyday friend", "voice AI", "true companion", "daily check-ins", "virtual companion", "AI friendship"],
-  authors: [{ name: "Nuravya AI Team" }],
-  creator: "Nuravya AI",
+  authors: [{ name: "Gulrez Alam" }],
+  creator: "Gulrez Alam",
   publisher: "Nuravya AI",
   formatDetection: {
     email: false,

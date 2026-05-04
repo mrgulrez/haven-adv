@@ -3,6 +3,7 @@
 import { Footer } from "@/components/layout/footer";
 import { motion } from "framer-motion";
 import { Heart, Brain, Shield, Users } from "lucide-react";
+import Image from "next/image";
 
 export default function AboutUs() {
   const values = [
@@ -86,10 +87,10 @@ export default function AboutUs() {
                 Nuravya AI was born out of a simple, profound observation: people need to be heard. Not analyzed, not pitched to, and not optimized. Just heard.
               </p>
               <p>
-                In an era where AI is primarily being used to increase productivity, write emails faster, and write code, we saw an opportunity to use this breakthrough technology to solve a very human problem. What if an AI wasn't built to be a servant, but a companion?
+                In an era where AI is primarily being used to increase productivity, write emails faster, and write code, we saw an opportunity to use this breakthrough technology to solve a very human problem. What if an AI wasn&apos;t built to be a servant, but a companion?
               </p>
               <p>
-                What if it remembered your dog's name, asked you how your big presentation went, and noticed when you sounded a bit stressed in your voice? That vision became Nuravya.
+                What if it remembered your dog&apos;s name, asked you how your big presentation went, and noticed when you sounded a bit stressed in your voice? That vision became Nuravya.
               </p>
             </motion.div>
 
@@ -142,62 +143,31 @@ export default function AboutUs() {
         </div>
       </section>
 
-      {/* Team Pedigree Section */}
+      {/* Founder Section */}
       <section className="py-20 px-4 md:px-6 bg-stone-50 z-10 relative">
-        <div className="container mx-auto max-w-5xl">
+        <div className="container mx-auto max-w-4xl">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold font-heading text-stone-900 mb-6">Our Founding Team</h2>
+            <h2 className="text-3xl md:text-5xl font-bold font-heading text-stone-900 mb-6">Built by Gulrez Alam</h2>
             <p className="text-lg text-stone-600 max-w-2xl mx-auto">
-              We bring together world-class expertise in artificial intelligence, clinical psychology, and scalable consumer software.
+              Nuravya AI is an independent product built across full-stack web, mobile, AI, voice, memory, authentication, and deployment systems.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Member 1 */}
-            <div className="bg-white p-8 rounded-3xl border border-stone-200 text-center">
+          <div className="max-w-xl mx-auto">
+            <div className="bg-white p-8 md:p-10 rounded-3xl border border-stone-200 text-center shadow-sm">
               <div className="w-24 h-24 mx-auto bg-stone-200 rounded-full mb-6 overflow-hidden border-2 border-amber-100 shadow-inner">
-                <img
+                <Image
                   src="/images/Teams/Gulrez.png"
                   alt="Gulrez Alam"
+                  width={96}
+                  height={96}
                   className="w-full h-full object-cover"
                 />
               </div>
               <h3 className="text-xl font-bold text-stone-900 mb-1">Gulrez Alam</h3>
-              <p className="text-amber-600 font-medium text-sm mb-4">CEO & Founder</p>
+              <p className="text-amber-600 font-medium text-sm mb-4">Founder & Full-Stack Builder</p>
               <p className="text-stone-600 text-sm leading-relaxed">
-                Building a human-centered digital companion platform focused on emotionally intelligent, privacy-first technology.
-              </p>
-            </div>
-
-            {/* Member 2 */}
-            <div className="bg-white p-8 rounded-3xl border border-stone-200 text-center">
-              <div className="w-24 h-24 mx-auto bg-stone-200 rounded-full mb-6 overflow-hidden border-2 border-amber-100 shadow-inner">
-                <img
-                  src="/images/Teams/Sarah.png"
-                  alt="Dr. Sarah Jenkins"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <h3 className="text-xl font-bold text-stone-900 mb-1">Dr. Sarah Jenkins</h3>
-              <p className="text-amber-600 font-medium text-sm mb-4">Chief Psychology Officer</p>
-              <p className="text-stone-600 text-sm leading-relaxed">
-                Ph.D. in Clinical Psychology. 15 years researching human-computer interaction and emotional attachment.
-              </p>
-            </div>
-
-            {/* Member 3 */}
-            <div className="bg-white p-8 rounded-3xl border border-stone-200 text-center">
-              <div className="w-24 h-24 mx-auto bg-stone-200 rounded-full mb-6 overflow-hidden border-2 border-amber-100 shadow-inner">
-                <img
-                  src="/images/Teams/Marcus.png"
-                  alt="Marcus Thorne"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <h3 className="text-xl font-bold text-stone-900 mb-1">Marcus Thorne</h3>
-              <p className="text-amber-600 font-medium text-sm mb-4">CTO & Co-founder</p>
-              <p className="text-stone-600 text-sm leading-relaxed">
-                Scaled cloud infrastructure at Stripe and AWS. Expert in low-latency voice architecture and vector databases.
+                Designed and built Nuravya AI as a human-centered companion platform focused on emotionally intelligent conversation, voice interaction, memory, and privacy-first product thinking.
               </p>
             </div>
           </div>
@@ -209,14 +179,14 @@ export default function AboutUs() {
         <div className="container mx-auto max-w-4xl text-center">
           <h2 className="text-3xl md:text-5xl font-bold font-heading text-white mb-6">Built by humans, for humans.</h2>
           <p className="text-lg md:text-xl text-stone-400 mb-10 max-w-2xl mx-auto">
-            We are a small, dedicated team of engineers, designers, and psychologists who believe that technology should bring light into the world.
+            Nuravya AI is currently an independent project by Gulrez Alam, built with the belief that technology should feel useful, respectful, and emotionally aware.
           </p>
           <motion.div
             whileHover={{ scale: 1.05 }}
             className="inline-block"
           >
-            <a href="mailto:careers@nuravya.com" className="inline-flex items-center justify-center h-14 px-8 rounded-full bg-amber-500 hover:bg-amber-600 text-white font-semibold text-lg transition-colors shadow-lg">
-              Join Our Team
+            <a href="mailto:hello@nuravya.com" className="inline-flex items-center justify-center h-14 px-8 rounded-full bg-amber-500 hover:bg-amber-600 text-white font-semibold text-lg transition-colors shadow-lg">
+              Get in Touch
             </a>
           </motion.div>
         </div>
