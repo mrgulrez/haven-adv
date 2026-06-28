@@ -62,6 +62,13 @@ type Message = {
 
 const SESSION_ID = `session_${Date.now()}`;
 
+const CHAT_SUGGESTIONS = [
+    "Help me sort out what I am feeling right now.",
+    "Plan a calmer morning routine with me.",
+    "Remember that I am preparing for an important interview.",
+    "Ask me three questions to reflect on today.",
+];
+
 // ─── Audio Helpers (Synthesized Ringing) ─────────────────────────
 
 class RingingSession {
@@ -127,6 +134,7 @@ export default function ChatPage() {
     const [liveKitUrl, setLiveKitUrl] = useState("");
     const [shouldConnect, setShouldConnect] = useState(false);
     const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+    const [noticeModal, setNoticeModal] = useState<{ title: string; message: string } | null>(null);
 
     // Character state
     const [showCharPanel, setShowCharPanel] = useState(false);
@@ -207,7 +215,7 @@ export default function ChatPage() {
 
     // ─── Text Chat ──────────────────────────────────────────────
     const handleSend = async () => {
-        if (!inputValue.trim()) return;
+        if (!inputValue.trim() || isTyping) return;
 
         const userMsg: Message = {
             id: Date.now().toString(),
@@ -284,10 +292,14 @@ export default function ChatPage() {
         } catch (e: any) {
             console.error(e);
             const errorMsg = e instanceof Error ? e.message : String(e);
+            setNoticeModal({
+                title: "Message could not be sent",
+                message: "Nuravya could not reach the chat service. Please check your connection and try again.",
+            });
             setMessages(prev => [...prev, {
                 id: (Date.now() + 1).toString(),
                 sender: "api",
-                text: `Connection Error: ${errorMsg}. (Target: ${process.env.NEXT_PUBLIC_API_URL || "https://backend.enord.in"})`,
+                text: "I could not send that message. Please try again in a moment.",
                 time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
             }]);
         } finally {
@@ -304,7 +316,10 @@ export default function ChatPage() {
 
         const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
         if (!SpeechRecognition) {
-            alert("Speech recognition is not supported in this browser.");
+            setNoticeModal({
+                title: "Voice input unavailable",
+                message: "This browser does not support speech recognition yet. You can still type to Nuravya or use live voice calling on a supported device.",
+            });
             return;
         }
 
@@ -332,9 +347,7 @@ export default function ChatPage() {
         // Enforce Core/Pro Plan
         const isPaid = nuravyaUser?.plan === "core" || nuravyaUser?.plan === "pro";
         if (!isPaid) {
-            if (confirm("Voice playback requires Nuravya Core or Pro. Upgrade now?")) {
-                router.push("/pricing");
-            }
+            setShowUpgradeModal(true);
             return;
         }
 
@@ -392,7 +405,10 @@ export default function ChatPage() {
             stream.getTracks().forEach(track => track.stop()); // Stop immediately, we just wanted the perm
         } catch (e) {
             console.error("Mic permission denied:", e);
-            alert("Microphone access is required for calls. Please enable it in your settings.");
+            setNoticeModal({
+                title: "Microphone access needed",
+                message: "Nuravya needs microphone permission before a live call can start. Enable microphone access in your browser or device settings, then try again.",
+            });
             return;
         }
 
@@ -403,8 +419,8 @@ export default function ChatPage() {
         ringer.start();
         ringRef.current = ringer;
 
-        // 2. Wait a random amount of time to simulate ringing (2s - 4s)
-        const ringTime = Math.floor(Math.random() * 2000) + 2000;
+        // 2. Wait briefly to let the call state feel intentional before connecting.
+        const ringTime = 2800;
         await new Promise(resolve => setTimeout(resolve, ringTime));
 
         // 3. Stop ringing if we haven't already
@@ -483,7 +499,7 @@ export default function ChatPage() {
                             video={false}
                             className="w-full h-full flex flex-col items-center justify-between"
                         >
-                            <CallInterface onEndCall={endCall} />
+                            <CallInterface onEndCall={endCall} onNotice={setNoticeModal} />
                             <RoomAudioRenderer />
                         </LiveKitRoom>
                     </motion.div>
@@ -504,7 +520,7 @@ export default function ChatPage() {
             {/* ─── Header ──────────────────────────────────────── */}
             <div className="relative z-10 bg-white/60 backdrop-blur-xl border-b border-stone-200/50 pt-safe">
                 <div className="flex items-center justify-between px-4 py-3 h-16">
-                    <Link href="/" className="p-2 -ml-2 text-stone-600 hover:text-stone-900 transition-colors">
+                    <Link href="/" aria-label="Back to home" className="p-2 -ml-2 text-stone-600 hover:text-stone-900 transition-colors">
                         <ChevronLeft size={24} />
                     </Link>
                     <div className="flex flex-col items-center">
@@ -530,13 +546,14 @@ export default function ChatPage() {
                         </span>
                     </div>
                     <div className="flex items-center gap-1">
-                        <button onClick={startCall} className="p-2 text-stone-600 hover:text-amber-500 transition-colors">
+                        <button onClick={startCall} aria-label="Start voice call" className="p-2 text-stone-600 hover:text-amber-500 transition-colors">
                             <PhoneCall size={20} />
                         </button>
                         <button
                             onClick={() => setShowCharPanel(true)}
                             className="p-2 text-stone-600 hover:text-amber-500 transition-colors relative"
                             title="Characters"
+                            aria-label="Open character selector"
                         >
                             <Sparkles size={20} />
                             {!isDefaultCharacter && (
@@ -547,6 +564,7 @@ export default function ChatPage() {
                             onClick={() => setShowMemoryPanel(true)}
                             className="p-2 -mr-2 text-stone-600 hover:text-amber-500 transition-colors"
                             title="Memory Dashboard"
+                            aria-label="Open memory dashboard"
                         >
                             <Brain size={20} className="text-amber-400" />
                         </button>
@@ -591,11 +609,36 @@ export default function ChatPage() {
                     )}
 
                     {messages.length === 0 && (
-                        <div className="flex flex-col items-center justify-center pt-20 gap-4">
-                            <button onClick={startCall} className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-200 hover:scale-105 transition-transform">
-                                <PhoneCall size={28} className="text-white" />
-                            </button>
-                            <p className="text-stone-500 text-center text-sm font-medium">Tap the phone to talk to Nuravya, or say hello below!</p>
+                        <div className="pt-8 md:pt-14">
+                            <div className="mx-auto max-w-2xl rounded-3xl border border-stone-200/80 bg-white/80 p-6 md:p-8 shadow-sm backdrop-blur">
+                                <div className="flex flex-col items-center text-center gap-4">
+                                    <button
+                                        onClick={startCall}
+                                        aria-label="Start voice call with Nuravya"
+                                        className="w-16 h-16 rounded-2xl bg-stone-950 flex items-center justify-center shadow-lg shadow-stone-200 hover:bg-stone-800 transition-colors"
+                                    >
+                                        <PhoneCall size={28} className="text-white" />
+                                    </button>
+                                    <div>
+                                        <h1 className="text-2xl md:text-3xl font-bold font-heading text-stone-950 tracking-tight">Start with whatever is on your mind.</h1>
+                                        <p className="mt-2 text-stone-500 text-sm md:text-base leading-relaxed">
+                                            Type a message, dictate a quick thought, or start a voice call when conversation feels easier than writing.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="mt-7 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                                    {CHAT_SUGGESTIONS.map((suggestion) => (
+                                        <button
+                                            key={suggestion}
+                                            onClick={() => setInputValue(suggestion)}
+                                            className="text-left rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm text-stone-700 hover:border-amber-300 hover:bg-amber-50/60 transition-colors"
+                                        >
+                                            {suggestion}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
                     )}
 
@@ -674,26 +717,32 @@ export default function ChatPage() {
             </div>
 
             {/* ─── Bottom Input ─────────────────────────────────── */}
-            <div className="absolute w-full bottom-0 left-0 bg-[#FAFAFA] border-t border-stone-200/60 pb-safe z-20 shadow-[0_-10px_40px_rgba(0,0,0,0.03)]">
+            <div className="absolute w-full bottom-0 left-0 bg-[#FAFAFA]/95 backdrop-blur-xl border-t border-stone-200/60 pb-safe z-20 shadow-[0_-10px_40px_rgba(0,0,0,0.03)]">
                 <div className="px-4 py-3 md:py-4 max-w-3xl mx-auto w-full">
-                    <div className="bg-white border border-stone-200/80 shadow-sm rounded-full p-1.5 flex items-center gap-2 pr-2 overflow-hidden focus-within:ring-2 focus-within:ring-amber-500/20 focus-within:border-amber-400 transition-all">
-                        <input
-                            type="text"
+                    <div className="bg-white/95 border border-stone-200 shadow-sm rounded-[28px] p-2.5 flex items-end gap-2 pr-2.5 focus-within:ring-4 focus-within:ring-stone-950/5 focus-within:border-stone-300 transition-all">
+                        <textarea
                             value={inputValue}
                             onChange={(e) => setInputValue(e.target.value)}
-                            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' && !e.shiftKey) {
+                                    e.preventDefault();
+                                    handleSend();
+                                }
+                            }}
                             placeholder="Message Nuravya..."
                             autoComplete="on"
                             autoCorrect="on"
                             autoCapitalize="sentences"
                             spellCheck={true}
-                            className="flex-1 bg-transparent border-none outline-none text-stone-700 placeholder:text-stone-400 font-medium px-4 py-2.5 text-[15px] w-full"
+                            rows={1}
+                            className="max-h-32 min-h-11 flex-1 resize-none bg-transparent border-none outline-none focus:outline-none focus-visible:outline-none text-stone-800 placeholder:text-stone-400 font-medium px-4 py-2.5 text-[15px] w-full leading-relaxed"
                         />
-                        <div className="flex items-center gap-1.5 px-1.5">
+                        <div className="flex items-center gap-1.5 px-1.5 pb-0.5">
                             <button
                                 onClick={toggleListening}
+                                aria-label={isListening ? "Stop voice dictation" : "Start voice dictation"}
                                 className={cn(
-                                    "p-2.5 rounded-full transition-all flex items-center justify-center",
+                                    "p-2.5 rounded-full transition-all flex items-center justify-center shrink-0",
                                     isListening 
                                         ? "bg-rose-100 text-rose-500 animate-pulse shadow-sm" 
                                         : "text-stone-400 hover:text-stone-600 hover:bg-stone-50"
@@ -704,17 +753,22 @@ export default function ChatPage() {
                             </button>
                             <button
                                 onClick={handleSend}
-                                disabled={!inputValue.trim()}
+                                disabled={!inputValue.trim() || isTyping}
+                                aria-label="Send message"
                                 className={cn(
                                     "p-2.5 shrink-0 rounded-full transition-all flex items-center justify-center",
-                                    inputValue.trim() 
-                                        ? "bg-amber-500 text-white shadow-md hover:scale-105" 
+                                    inputValue.trim() && !isTyping
+                                        ? "bg-stone-950 text-white shadow-md hover:bg-stone-800" 
                                         : "bg-stone-100 text-stone-400"
                                 )}
                             >
-                                <Send size={18} className={inputValue.trim() ? "ml-0.5" : ""} />
+                                {isTyping ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} className={inputValue.trim() ? "ml-0.5" : ""} />}
                             </button>
                         </div>
+                    </div>
+                    <div className="mt-2 px-3 text-[11px] text-stone-400 flex justify-between gap-4">
+                        <span>Enter to send. Shift + Enter adds a line.</span>
+                        <span className="shrink-0">{inputValue.length > 0 ? `${inputValue.length} chars` : ""}</span>
                     </div>
                 </div>
             </div>
@@ -722,7 +776,7 @@ export default function ChatPage() {
     );
 }
 
-function CallInterface({ onEndCall }: { onEndCall: (durationSeconds?: number) => void }) {
+function CallInterface({ onEndCall, onNotice }: { onEndCall: (durationSeconds?: number) => void; onNotice: (notice: { title: string; message: string }) => void }) {
     const { state: assistantState, audioTrack: assistantAudioTrack } = useVoiceAssistant();
     const { localParticipant } = useLocalParticipant();
     const participants = useParticipants();
@@ -859,7 +913,7 @@ function CallInterface({ onEndCall }: { onEndCall: (durationSeconds?: number) =>
             const remoteMediaStreamTrack = remotePub?.track?.mediaStreamTrack;
             
             if (!localMediaStreamTrack) {
-                alert("Cannot record: Microphone track not available yet.");
+                onNotice({ title: "Recording not ready", message: "The microphone track is not available yet. Wait for the call to connect, then try recording again." });
                 return;
             }
 
@@ -926,7 +980,7 @@ function CallInterface({ onEndCall }: { onEndCall: (durationSeconds?: number) =>
             console.error("Failed to start recording:", e);
             const errName = e?.name || "";
             const errMsg = e?.message || String(e);
-            alert(`Could not start recording: ${errName} - ${errMsg}`);
+            onNotice({ title: "Recording could not start", message: `${errName}: ${errMsg}` });
         }
     };
 
@@ -1014,13 +1068,13 @@ function CallInterface({ onEndCall }: { onEndCall: (durationSeconds?: number) =>
                     }
                 } catch (writeErr: any) {
                     console.error("Failed to write recording:", writeErr);
-                    alert(`Failed to save recording: ${writeErr.message || String(writeErr)}`);
+                    onNotice({ title: "Recording was not saved", message: writeErr.message || String(writeErr) });
                 }
             };
 
         } catch (e) {
             console.error("Failed to save recording:", e);
-            alert("Failed to save the recording. Check permissions.");
+            onNotice({ title: "Recording was not saved", message: "Check storage permissions and try again." });
         }
     };
 
@@ -1103,6 +1157,7 @@ function CallInterface({ onEndCall }: { onEndCall: (durationSeconds?: number) =>
                             disabled={!isNativeApp && audioOutputDevices.length <= 1}
                             className="w-12 h-12 justify-center items-center rounded-full flex transition-all bg-stone-700/50 text-stone-300 border border-stone-600 hover:bg-stone-600/50 disabled:opacity-30 disabled:hover:bg-stone-700/50"
                             title="Switch Audio Output"
+                            aria-label="Switch audio output"
                         >
                             {getAudioOutputIcon()}
                         </button>
@@ -1115,6 +1170,7 @@ function CallInterface({ onEndCall }: { onEndCall: (durationSeconds?: number) =>
                                 : "bg-stone-700/50 text-stone-400 border border-stone-600"
                                 }`}
                             title={isMicEnabled ? "Mute Microphone" : "Unmute Microphone"}
+                            aria-label={isMicEnabled ? "Mute microphone" : "Unmute microphone"}
                         >
                             {isMicEnabled ? <Mic size={24} /> : <MicOff size={24} />}
                         </button>
@@ -1128,6 +1184,7 @@ function CallInterface({ onEndCall }: { onEndCall: (durationSeconds?: number) =>
                                     : "bg-stone-700/50 text-red-400 border border-stone-600 hover:bg-stone-600/50"
                                     }`}
                                 title={isRecording ? "Stop Recording" : "Start MP3 Recording"}
+                                aria-label={isRecording ? "Stop recording" : "Start recording"}
                             >
                                 {isRecording ? <StopCircle size={22} /> : <Circle size={22} className="fill-red-400" />}
                             </button>
@@ -1138,6 +1195,7 @@ function CallInterface({ onEndCall }: { onEndCall: (durationSeconds?: number) =>
                 )}
                 
                 <button 
+                    aria-label="End call"
                     onClick={() => {
                         if (isRecording) {
                             stopRecording().then(() => onEndCall(callDuration));

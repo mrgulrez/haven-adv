@@ -7,32 +7,31 @@ import { motion } from "framer-motion"
 const features = [
     {
         icon: Cpu,
-        title: "Nuravya AI Engine",
-        description: "Powered by our proprietary, enterprise-grade AI for natural, safe conversations.",
+        title: "Memory-aware conversations",
+        description: "Built around conversation context, long-term memory, and safety boundaries instead of one-off replies.",
     },
     {
         icon: ShieldCheck,
-        title: "HIPAA-Ready Security",
-        description: "Your health data is encrypted and protected with the highest standards.",
+        title: "Authenticated access",
+        description: "User data is scoped through signed-in accounts and protected API routes.",
     },
     {
         icon: Lock,
-        title: "Privacy First",
-        description: "You own your data. We never sell or share your personal conversations.",
+        title: "Privacy-first promise",
+        description: "We do not sell personal conversations. Users should be able to inspect and delete remembered context.",
     },
     {
         icon: Database,
-        title: "Secure Cloud",
-        description: "Enterprise infrastructure ensuring 99.9% uptime and data reliability.",
+        title: "Cloud foundation",
+        description: "The platform uses managed storage, service checks, and encrypted transport as it matures toward broader launch.",
     },
 ]
 
 export function Trust() {
     return (
-        <Section className="bg-stone-900 py-24 text-stone-100">
+        <Section className="bg-stone-950 py-24 text-stone-100">
             <div className="container mx-auto px-4 md:px-6">
-                <div className="flex flex-col md:flex-row gap-16 items-center">
-
+                <div className="flex flex-col md:flex-row gap-14 items-center">
                     <div className="flex-1 space-y-8">
                         <motion.div
                             initial={{ opacity: 0, x: -20 }}
@@ -40,39 +39,31 @@ export function Trust() {
                             transition={{ duration: 0.6 }}
                             viewport={{ once: true }}
                         >
-                            {/* <div className="flex items-center gap-4 mb-8">
-                                <span className="text-sm font-semibold tracking-wider text-stone-500 uppercase">Backed By</span>
-                                <div className="h-px bg-stone-700 flex-grow"></div>
-                                <div className="flex gap-6 text-stone-400">
-                                    <div className="font-bold text-xl opacity-50 hover:opacity-100 transition-opacity cursor-default">Y Combinator</div>
-                                    <div className="font-bold text-xl opacity-50 hover:opacity-100 transition-opacity cursor-default">Sequoia</div>
-                                </div>
-                            </div> */}
-                            <h2 className="text-3xl md:text-5xl font-bold font-heading text-white mb-6">
-                                Built for Trust & Scale
+                            <p className="text-xs font-bold text-amber-400 uppercase tracking-[0.18em] mb-4">Trust model</p>
+                            <h2 className="text-3xl md:text-5xl font-bold font-heading text-white mb-6 tracking-tight">
+                                Personal AI needs visible boundaries.
                             </h2>
                             <p className="text-lg text-stone-400 leading-relaxed">
-                                We understand that privacy is paramount when it comes to personal companionship.
-                                Nuravya is built on a foundation of enterprise-grade security and ethical AI principles.
+                                Nuravya asks for sensitive context, so the landing page should be plain about privacy, memory, and where the product is still early. No fake certifications, no inflated uptime promises.
                             </p>
                         </motion.div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-7">
                             {features.map((feature, index) => (
                                 <motion.div
-                                    key={index}
-                                    initial={{ opacity: 0, y: 20 }}
+                                    key={feature.title}
+                                    initial={{ opacity: 0, y: 18 }}
                                     whileInView={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                                    transition={{ duration: 0.45, delay: index * 0.08 }}
                                     viewport={{ once: true }}
                                     className="flex gap-4"
                                 >
-                                    <div className="shrink-0 rounded-lg bg-stone-800 p-3 h-fit text-amber-500">
-                                        <feature.icon size={24} />
+                                    <div className="shrink-0 rounded-xl bg-white/5 border border-white/10 p-3 h-fit text-amber-400">
+                                        <feature.icon size={22} />
                                     </div>
                                     <div>
                                         <h3 className="font-semibold text-white mb-2">{feature.title}</h3>
-                                        <p className="text-sm text-stone-400">{feature.description}</p>
+                                        <p className="text-sm text-stone-400 leading-relaxed">{feature.description}</p>
                                     </div>
                                 </motion.div>
                             ))}
@@ -80,30 +71,19 @@ export function Trust() {
                     </div>
 
                     <div className="flex-1 w-full max-w-md relative">
-                        <div className="absolute inset-0 bg-gradient-to-br from-amber-500/20 to-orange-500/20 blur-3xl rounded-full" />
-                        <div className="relative bg-stone-800/50 backdrop-blur-xl border border-stone-700/50 rounded-2xl p-8 overflow-hidden">
-                            <div className="font-mono text-xs text-stone-500 mb-4 flex justify-between">
-                                <span>system_status: active</span>
-                                <span className="text-emerald-500">● online</span>
+                        <div className="relative bg-stone-900 border border-white/10 rounded-2xl p-8 overflow-hidden shadow-2xl">
+                            <div className="font-mono text-xs text-stone-500 mb-5 flex justify-between gap-4">
+                                <span>memory_scope: user_account</span>
+                                <span className="text-emerald-400">online</span>
                             </div>
                             <div className="space-y-4 font-mono text-sm">
-                                <div className="text-emerald-400 typewriter">
-                                    {">"} initializing secure_protocol...
-                                </div>
-                                <div className="text-stone-300 typewriter" style={{ animationDelay: "1s" }}>
-                                    {">"} encrypting_data_stream... [OK]
-                                </div>
-                                <div className="text-stone-300 typewriter" style={{ animationDelay: "2s" }}>
-                                    {">"} connecting_to_neural_core... [OK]
-                                </div>
-                                <div className="text-amber-400 typewriter" style={{ animationDelay: "3s" }}>
-                                    {">"} nuravya_ai_ready
-                                </div>
+                                <div className="text-emerald-400">{">"} auth boundary verified</div>
+                                <div className="text-stone-300">{">"} conversation stored with account scope</div>
+                                <div className="text-stone-300">{">"} memory controls available</div>
+                                <div className="text-amber-400">{">"} companion ready</div>
                             </div>
-
-                            {/* Decorative lock icon */}
                             <div className="absolute -bottom-10 -right-10 text-stone-700/20 rotate-12">
-                                <Lock size={200} />
+                                <Lock size={190} />
                             </div>
                         </div>
                     </div>

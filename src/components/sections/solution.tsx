@@ -1,13 +1,15 @@
 "use client"
 
 import { motion, useInView } from "framer-motion"
+import type React from "react"
 import { useRef } from "react"
 import {
     Mic, Brain, Heart, Zap, Clock, Lock, BarChart3, Sparkles,
     Star, ArrowRight
 } from "lucide-react"
 import Link from "next/link"
-import { FEATURES as FEATURE_CONFIG, PLANS } from "@/lib/site.config"
+import { FEATURES as FEATURE_CONFIG } from "@/lib/site.config"
+import { Button } from "@/components/ui/button"
 
 // ─── Icon map ─────────────────────────────────────────────────────────────────
 
@@ -123,7 +125,7 @@ function AvailabilityDemo() {
 function PrivacyDemo() {
     return (
         <div className="flex flex-col gap-1.5">
-            {["AES-256 encryption", "Zero data selling", "User-owned memory"].map((l, i) => (
+            {["Encrypted transport", "No data selling", "Account-scoped memory"].map((l, i) => (
                 <motion.div key={i} initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.14 }}
                     className="flex items-center gap-2">
                     <div className="w-4 h-4 rounded-full bg-stone-900 flex items-center justify-center flex-shrink-0">
@@ -237,9 +239,9 @@ export function Solution() {
                         <div className="grid grid-cols-2 gap-3 flex-shrink-0">
                             {[
                                 { v: "Voice + Text", l: "Multi-modal" },
-                                { v: "100%", l: "Private" },
+                                { v: "Private", l: "Account scope" },
                                 { v: "24/7", l: "Available" },
-                                { v: "E2E", l: "Encrypted" },
+                                { v: "Consent", l: "Memory controls" },
                             ].map((s, i) => (
                                 <motion.div key={i}
                                     initial={{ opacity: 0, scale: 0.85 }}
@@ -277,16 +279,12 @@ export function Solution() {
                         <p className="text-stone-500 text-sm">Free to start. No credit card needed.</p>
                     </div>
                     <div className="flex gap-3 flex-shrink-0">
-                        <Link href="/chat">
-                            <button className="flex items-center gap-2 px-7 py-3.5 bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-sm rounded-2xl transition-all shadow-md shadow-amber-100 hover:scale-105">
-                                <Mic size={15} /> Start Free
-                            </button>
-                        </Link>
-                        <Link href="/pricing">
-                            <button className="flex items-center gap-2 px-7 py-3.5 border border-stone-200 text-stone-700 hover:bg-stone-50 font-semibold text-sm rounded-2xl transition-all">
-                                View Plans <ArrowRight size={13} />
-                            </button>
-                        </Link>
+                        <Button asChild className="gap-2 rounded-2xl bg-stone-950 px-7 py-3.5 text-sm text-white hover:bg-stone-800">
+                            <Link href="/chat"><Mic size={15} /> Start Free</Link>
+                        </Button>
+                        <Button asChild variant="outline" className="gap-2 rounded-2xl px-7 py-3.5 text-sm">
+                            <Link href="/pricing">View Plans <ArrowRight size={13} /></Link>
+                        </Button>
                     </div>
                 </motion.div>
             </div>

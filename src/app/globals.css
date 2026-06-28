@@ -80,6 +80,33 @@ body {
   font-family: var(--font-sans);
 }
 
+::selection {
+  background: rgba(245, 158, 11, 0.24);
+  color: #1c1917;
+}
+
+:focus-visible {
+  outline: 2px solid rgba(245, 158, 11, 0.55);
+  outline-offset: 3px;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* ─── Safe Area Utilities ────────────────────────────────────────────────────
  *
  * viewportFit=cover (set in layout.tsx) makes the viewport extend behind the

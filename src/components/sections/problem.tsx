@@ -2,122 +2,71 @@
 
 import { Section } from "@/components/ui/section"
 import { Card, CardContent } from "@/components/ui/card"
-import { motion, useInView } from "framer-motion"
-import { Users, HeartCrack, Banknote } from "lucide-react"
-import { useRef } from "react"
+import { motion } from "framer-motion"
+import { Brain, HeartHandshake, Mic, ShieldCheck } from "lucide-react"
 
-const stats = [
+const moments = [
     {
-        target: 1,
-        suffix: "B+",
-        label: "People Seeking Connection",
-        description: "Billions worldwide are seeking a true friend who is always there.",
-        icon: Users,
-        color: "text-amber-600",
-        bg: "bg-amber-100",
+        title: "A thought you do not want to lose",
+        description: "Capture feelings, plans, and small details in a conversation that can carry context forward.",
+        icon: Brain,
+        tone: "bg-amber-50 text-amber-700 border-amber-100",
     },
     {
-        target: 200,
-        suffix: "B+",
-        label: "Companion AI TAM",
-        description: "Annual global spend on mental wellness and everyday companionship.",
-        icon: Banknote,
-        color: "text-emerald-600",
-        bg: "bg-emerald-100",
+        title: "A check-in when the day gets heavy",
+        description: "Talk through what happened, name what you need, and leave with one grounded next step.",
+        icon: HeartHandshake,
+        tone: "bg-rose-50 text-rose-700 border-rose-100",
     },
     {
-        target: 61,
-        suffix: "%",
-        label: "Of Young Adults Want Connection",
-        description: "Gen Z and Millennials desire meaningful, everyday conversations.",
-        icon: HeartCrack,
-        color: "text-rose-600",
-        bg: "bg-rose-100",
+        title: "A voice call when typing feels like work",
+        description: "Switch from text to real-time voice so the product feels present, not like another form to fill.",
+        icon: Mic,
+        tone: "bg-blue-50 text-blue-700 border-blue-100",
+    },
+    {
+        title: "A private space with clear boundaries",
+        description: "Account-scoped conversations, memory controls, and plain-language privacy promises keep trust visible.",
+        icon: ShieldCheck,
+        tone: "bg-emerald-50 text-emerald-700 border-emerald-100",
     },
 ]
 
-function Counter({ from, to, duration = 2 }: { from: number; to: number; duration?: number }) {
-    const nodeRef = useRef<HTMLSpanElement>(null)
-    const inView = useInView(nodeRef, { once: true, margin: "-100px" })
-
-    // Simple counter implementation for brevity, could be more complex with framer-motion useSpring
-    // Using CSS animation or simple JS interval would be lighter, but let's stick to a simple effect
-    // Actually, let's use a text content animation
-
-    return (
-        <span ref={nodeRef} className="tabular-nums">
-            {inView ? <CountUp to={to} duration={duration} /> : from}
-        </span>
-    )
-}
-
-function CountUp({ to, duration }: { to: number; duration: number }) {
-    const [count, setCount] = React.useState(0)
-
-    React.useEffect(() => {
-        let startTime: number
-        let animationFrame: number
-
-        const update = (timestamp: number) => {
-            if (!startTime) startTime = timestamp
-            const progress = Math.min((timestamp - startTime) / (duration * 1000), 1)
-            setCount(Math.floor(progress * to))
-
-            if (progress < 1) {
-                animationFrame = requestAnimationFrame(update)
-            }
-        }
-
-        animationFrame = requestAnimationFrame(update)
-        return () => cancelAnimationFrame(animationFrame)
-    }, [to, duration])
-
-    return <>{count}</>
-}
-
-import * as React from "react"
-
 export function Problem() {
     return (
-        <Section id="problem" className="bg-[#FAFAFA] relative overflow-hidden">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-amber-500/10 blur-[120px] rounded-full pointer-events-none" />
-
-            <div className="text-center max-w-4xl mx-auto mb-16 relative z-10">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 md:px-5 md:py-2 rounded-full bg-amber-500/10 border border-amber-500/20 mt-8 mb-6 shadow-[0_0_20px_rgba(245,158,11,0.15)] backdrop-blur-md max-w-full">
-                    <span className="text-[10px] md:text-xs font-bold text-amber-700 uppercase tracking-widest md:tracking-[0.2em] whitespace-nowrap overflow-hidden text-ellipsis">The Market Opportunity</span>
+        <Section id="problem" className="bg-[#FAFAFA] relative overflow-hidden py-24 md:py-28">
+            <div className="container mx-auto px-4 md:px-6">
+                <div className="max-w-3xl mb-12">
+                    <p className="text-xs font-bold text-amber-700 uppercase tracking-[0.18em] mb-4">Why it exists</p>
+                    <h2 className="text-4xl md:text-5xl font-bold font-heading text-stone-950 tracking-tight mb-5">
+                        Built for the moments ordinary chat apps forget.
+                    </h2>
+                    <p className="text-lg text-stone-600 leading-relaxed">
+                        Nuravya is not a market-size slide and it is not a replacement for care. It is a companion layer for everyday life: remembering context, listening in voice, and helping you return to what matters.
+                    </p>
                 </div>
-                <h2 className="text-4xl md:text-6xl font-bold font-heading mb-6 tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-stone-900 via-stone-800 to-stone-500">
-                    The Need for a True, Everyday Friend
-                </h2>
-                <p className="text-lg md:text-xl text-stone-600">
-                    While AI assistants manage tasks and mental health apps focus on crises, the world is missing a true, everyday companion. Nuravya is tapping into a massive, underserved market for genuine friendship—someone to celebrate wins, brainstorm ideas, and just hang out with.
-                </p>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
-                {stats.map((stat, index) => (
-                    <motion.div
-                        key={index}
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: index * 0.2 }}
-                        viewport={{ once: true, margin: "-50px" }}
-                    >
-                        <Card className="h-full border border-stone-200/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_40px_rgba(245,158,11,0.12)] transition-all duration-500 bg-white/60 backdrop-blur-xl hover:-translate-y-1 relative group overflow-hidden rounded-3xl">
-                            <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                            <CardContent className="pt-10 pb-8 px-6 flex flex-col items-center text-center relative z-10">
-                                <div className={`p-4 rounded-full ${stat.bg} ${stat.color} mb-6`}>
-                                    <stat.icon size={32} />
-                                </div>
-                                <div className="text-5xl border-b border-stone-100 pb-4 w-full md:text-6xl font-bold font-heading text-stone-900 mb-4 tracking-tighter">
-                                    <Counter from={0} to={stat.target} />{stat.suffix}
-                                </div>
-                                <h3 className="text-xl font-semibold text-stone-800 mb-2">{stat.label}</h3>
-                                <p className="text-stone-600">{stat.description}</p>
-                            </CardContent>
-                        </Card>
-                    </motion.div>
-                ))}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {moments.map((moment, index) => (
+                        <motion.div
+                            key={moment.title}
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.45, delay: index * 0.06 }}
+                            viewport={{ once: true, margin: "-40px" }}
+                        >
+                            <Card className="h-full rounded-xl bg-white border-stone-200/80 shadow-sm">
+                                <CardContent className="p-6">
+                                    <div className={`mb-5 inline-flex h-11 w-11 items-center justify-center rounded-xl border ${moment.tone}`}>
+                                        <moment.icon size={21} />
+                                    </div>
+                                    <h3 className="text-lg font-semibold text-stone-950 mb-2 leading-snug">{moment.title}</h3>
+                                    <p className="text-sm text-stone-600 leading-relaxed">{moment.description}</p>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
+                    ))}
+                </div>
             </div>
         </Section>
     )

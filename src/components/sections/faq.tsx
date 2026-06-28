@@ -7,24 +7,24 @@ import { ChevronDown } from "lucide-react"
 
 const faqs = [
     {
-        question: "Is my data secure?",
-        answer: "Absolutely. We use enterprise-grade encryption for all data storage and transmission. Your conversations are private and never used to train public AI models without your explicit consent.",
+        question: "Is Nuravya a therapy app?",
+        answer: "No. Nuravya is an AI companion for conversation, reflection, and everyday support. It is not a substitute for professional mental health care or emergency help.",
     },
     {
         question: "How does Nuravya remember conversations?",
-        answer: "Nuravya uses a sophisticated memory architecture that stores key details, preferences, and stories from your conversations in a secure, private database unique to you.",
+        answer: "Nuravya stores account-scoped conversation context and uses it to make future chats feel less repetitive. Memory controls should remain visible so users can review or delete saved context.",
     },
     {
-        question: "Can I use my own voice or a family member's voice?",
-        answer: "Currently, Nuravya offers a selection of warm, natural AI voices. We are exploring voice cloning technology for future updates with strict ethical guidelines.",
+        question: "Is my data private?",
+        answer: "Conversations are protected in transit and scoped to your signed-in account. Nuravya should avoid selling personal conversations or using them for public model training without explicit consent.",
     },
     {
         question: "What devices does Nuravya work on?",
-        answer: "Nuravya is accessible via any modern web browser on desktop, tablet, and mobile devices. A dedicated mobile app is coming in Q3 2026.",
+        answer: "Nuravya works in modern web browsers and the project includes Android support through Capacitor. iOS support can be added later when the product is ready for that release path.",
     },
     {
-        question: "When will Nuravya launch?",
-        answer: "We are targeting a full public launch in Q2 2026. Join the waitlist to get early access and help shape the product during our beta phase.",
+        question: "What can I try today?",
+        answer: "You can start with text chat, explore the companion experience, and use voice features when your plan and environment support them.",
     },
 ]
 
@@ -34,22 +34,23 @@ export function FAQ() {
     return (
         <Section id="faq" className="bg-stone-50 py-24">
             <div className="max-w-3xl mx-auto container px-4">
-                <h2 className="text-3xl md:text-4xl font-bold font-heading text-stone-900 text-center mb-12">
+                <h2 className="text-3xl md:text-4xl font-bold font-heading text-stone-950 text-center mb-12">
                     Frequently Asked Questions
                 </h2>
 
                 <div className="space-y-4">
                     {faqs.map((faq, index) => (
-                        <div key={index} className="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm">
+                        <div key={faq.question} className="bg-white rounded-2xl border border-stone-100 overflow-hidden shadow-sm">
                             <button
                                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                                className="w-full text-left p-6 flex justify-between items-center text-stone-900 font-medium hover:bg-stone-50 transition-colors focus:outline-none"
+                                className="w-full text-left p-6 flex justify-between items-center gap-4 text-stone-950 font-medium hover:bg-stone-50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/30"
+                                aria-expanded={openIndex === index}
                             >
-                                <span className="text-lg">{faq.question}</span>
+                                <span className="text-base md:text-lg">{faq.question}</span>
                                 <motion.div
                                     animate={{ rotate: openIndex === index ? 180 : 0 }}
                                     transition={{ duration: 0.2 }}
-                                    className="text-stone-400"
+                                    className="text-stone-400 shrink-0"
                                 >
                                     <ChevronDown size={20} />
                                 </motion.div>

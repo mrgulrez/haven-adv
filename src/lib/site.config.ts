@@ -1,17 +1,12 @@
 /**
- * site.config.ts — Single source of truth for all Nuravya website content.
- *
- * IMPORTANT: All claims here must be honest and verifiable.
- * We are in pre-launch / early access phase. No beta stats have been collected.
- * Messaging should reflect genuine product capabilities, not projected metrics.
+ * site.config.ts - Single source of truth for Nuravya website content.
+ * Keep public claims honest and verifiable for the current early-access product.
  */
-
-// ─── Company & Brand ─────────────────────────────────────────────────────────
 
 export const BRAND = {
     name: "Nuravya",
-    tagline: "An AI that truly knows you",
-    description: "Nuravya is an AI companion that truly knows you — voice-first, memory-powered, and warm enough to feel like a friend who never forgets.",
+    tagline: "A private companion that grows with you",
+    description: "Nuravya is a voice-first AI companion for reflection, planning, and everyday conversation - with account-scoped memory and clear privacy boundaries.",
     email: {
         hello: "hello@nuravya.com",
         support: "support@nuravya.com",
@@ -22,21 +17,15 @@ export const BRAND = {
         instagram: "https://instagram.com/nuravya_ai",
         linkedin: "https://linkedin.com/company/nuravya",
     },
-    launchPhase: "Early Access" as const,   // "Early Access" | "Beta" | "GA"
+    launchPhase: "Early Access" as const,
 } as const
 
-// ─── Product Stats (only honest, verifiable claims) ──────────────────────────
-// NOTE: Do NOT add user-count or retention stats until real data is collected.
-
 export const PRODUCT_STATS = [
-    { value: "<1s", label: "Voice response time" },
-    { value: "24/7", label: "Always available" },
-    { value: "100%", label: "Private & encrypted" },
-    { value: "E2E", label: "Encrypted memory" },
+    { value: "Voice", label: "Talk or type" },
+    { value: "Memory", label: "Account-scoped context" },
+    { value: "Private", label: "No public-feed sharing" },
+    { value: "Daily", label: "Check-ins and goals" },
 ] as const
-
-// ─── Pricing Plans ────────────────────────────────────────────────────────────
-// These must exactly match the backend plan IDs: "free" | "core" | "pro"
 
 export const PLANS = [
     {
@@ -47,11 +36,11 @@ export const PLANS = [
         period: "/mo",
         badge: null,
         highlight: false,
-        description: "Start exploring. No credit card required.",
+        description: "Start exploring the companion experience. No credit card required.",
         features: [
-            "Unlimited text conversations",
+            "Text conversations",
             "30-day conversation memory",
-            "1 AI voice (default)",
+            "Default companion persona",
             "Basic emotional check-ins",
         ],
         limits: {
@@ -69,15 +58,14 @@ export const PLANS = [
         period: "/mo",
         badge: "Most Popular",
         highlight: true,
-        description: "Deeper connection. Real continuity. For users who want Nuravya to truly grow with them.",
+        description: "For users who want voice conversations and deeper continuity.",
         features: [
             "Everything in Free",
-            "300 High-Fidelity Voice Minutes",
-            "Sub-500ms Real-Time Response",
-            "Natural Interruption Capability",
-            "Full Access to 6+ Premium AI Voices",
-            "Infinite Long-Term Memory",
-            "Emotional Insights Dashboard",
+            "300 voice minutes per month",
+            "Real-time voice calling where supported",
+            "Expanded companion voices",
+            "Longer memory retention",
+            "Mood and conversation insights",
         ],
         limits: {
             voiceMinutes: 300,
@@ -94,15 +82,14 @@ export const PLANS = [
         period: "/mo",
         badge: "Power Users",
         highlight: false,
-        description: "The ultimate emotionally intelligent companion for deep personalization.",
+        description: "For people who want more voice time, more personas, and early feature access.",
         features: [
             "Everything in Core",
-            "700 Ultra-Premium Voice Minutes",
-            "Professional Voice Cloning",
-            "Advanced Emotional Prosody",
-            "Multiple Companion Personalities",
-            "Priority Response Speed",
-            "Early Access to New Models",
+            "700 voice minutes per month",
+            "Multiple companion personalities",
+            "Priority access to new voice and memory features",
+            "Advanced personalization controls",
+            "Early access to product experiments",
         ],
         limits: {
             voiceMinutes: 700,
@@ -111,9 +98,7 @@ export const PLANS = [
         },
         cta: { label: "Start Pro", href: "/chat?plan=pro" },
     },
-];
-
-// ─── Core Features ────────────────────────────────────────────────────────────
+]
 
 export const FEATURES = [
     {
@@ -121,118 +106,111 @@ export const FEATURES = [
         icon: "Mic",
         badge: "Core",
         badgeColor: "amber",
-        title: "Voice-First Conversation",
-        description: "Speak naturally at any pace. Nuravya responds with ultra-realistic voice synthesis — warm, unhurried, and genuinely attentive.",
-        stat: { value: "300+ min", label: "Voice included" },
+        title: "Voice-first conversation",
+        description: "Move naturally between text and voice when a spoken conversation feels easier than typing.",
+        stat: { value: "300 min", label: "Core voice time" },
     },
     {
         id: "memory",
         icon: "Brain",
-        badge: "Smart",
+        badge: "Memory",
         badgeColor: "purple",
-        title: "Emotional Memory Engine",
-        description: "Every conversation is remembered. Nuravya recalls your stories, mood patterns, and important dates — building real continuity over time.",
-        stat: { value: "Persistent", label: "Cross-session memory" },
+        title: "Context that carries forward",
+        description: "Nuravya can remember useful details from prior conversations so you do not have to restart every time.",
+        stat: { value: "Scoped", label: "Per account" },
     },
     {
         id: "personas",
         icon: "Sparkles",
-        badge: "Unique",
+        badge: "Personal",
         badgeColor: "rose",
-        title: "Custom Personas & Characters",
-        description: "Create companions with their own backstory, voice, and personality. From a stoic mentor to a playful friend — Nuravya adapts completely.",
-        stat: { value: "Multiple", label: "Custom characters" },
+        title: "Custom companion styles",
+        description: "Create a companion tone that fits the job: gentle reflection, focused coaching, or a more playful everyday voice.",
+        stat: { value: "5", label: "Pro personas" },
     },
     {
         id: "insights",
         icon: "BarChart3",
-        badge: "Core",
+        badge: "Reflection",
         badgeColor: "blue",
-        title: "Emotional Insights Dashboard",
-        description: "Nuravya surfaces patterns in your mood and conversations — giving you a gentle mirror for your inner world.",
-        stat: { value: "Weekly", label: "Mood reports" },
+        title: "Mood and conversation insights",
+        description: "Review patterns across check-ins and conversations without turning the product into a clinical dashboard.",
+        stat: { value: "Weekly", label: "Useful summaries" },
     },
     {
         id: "always",
         icon: "Clock",
-        badge: "Always",
+        badge: "Daily",
         badgeColor: "emerald",
-        title: "24/7 Availability",
-        description: "3 AM anxious thoughts or 6 AM morning check-ins — Nuravya is always awake, always present, never tired.",
-        stat: { value: "24/7", label: "No downtime" },
+        title: "Available when you need a check-in",
+        description: "Use Nuravya for quick morning plans, late-night thoughts, or a short reset between tasks.",
+        stat: { value: "24/7", label: "Access" },
     },
     {
         id: "private",
         icon: "Lock",
-        badge: "Secure",
+        badge: "Trust",
         badgeColor: "stone",
-        title: "Privacy by Design",
-        description: "End-to-end encrypted conversations, zero third-party data sharing, and user-scoped AI memory. Your data is yours — always.",
-        stat: { value: "E2E", label: "Encrypted" },
+        title: "Privacy boundaries users can understand",
+        description: "Conversation data is scoped to your account, protected in transit, and designed around inspectable memory controls.",
+        stat: { value: "Private", label: "By design" },
     },
 ] as const
-
-// ─── Trust & Security ─────────────────────────────────────────────────────────
 
 export const TRUST_POINTS = [
     {
         icon: "Cpu",
-        title: "Nuravya AI Engine",
-        description: "Powered by our proprietary, enterprise-grade AI for natural, safe, and nuanced conversation.",
+        title: "Memory-aware AI",
+        description: "Designed around conversation context, voice state, and safety boundaries for more natural continuity.",
     },
     {
         icon: "ShieldCheck",
         title: "Privacy First",
-        description: "We never sell or share your conversations. Your data is encrypted at rest and in transit.",
+        description: "We do not sell personal conversations, and sensitive product claims stay plain and verifiable.",
     },
     {
         icon: "Lock",
         title: "User-Owned Memory",
-        description: "Your conversation history belongs to you. Export or delete it at any time.",
+        description: "Conversation history should stay inspectable, exportable, and deletable as the product matures.",
     },
     {
         icon: "Database",
-        title: "Secure Cloud",
-        description: "Built on enterprise infrastructure with 99.9% uptime SLA and real-time monitoring.",
+        title: "Secure Cloud Foundation",
+        description: "Built with authenticated APIs, user-scoped data boundaries, encrypted transport, and service monitoring.",
     },
 ] as const
-
-// ─── FAQ ──────────────────────────────────────────────────────────────────────
 
 export const FAQ_ITEMS = [
     {
         q: "Is Nuravya a therapy app?",
-        a: "No. Nuravya is an AI companion designed for everyday conversation, emotional support, and connection. It is not a substitute for professional mental health care. If you're in crisis, please reach out to a licensed therapist or a crisis helpline.",
+        a: "No. Nuravya is an AI companion designed for everyday conversation, emotional support, and reflection. It is not a substitute for professional mental health care.",
     },
     {
         q: "Is my data private?",
-        a: "Yes. All conversations are encrypted end-to-end. We don't sell your data, share it with third parties, or use it to train models without explicit consent.",
+        a: "Conversations are scoped to your account and protected in transit. We do not sell personal conversations, and memory controls should let you inspect or delete stored context.",
     },
     {
         q: "Can Nuravya remember things between sessions?",
-        a: "Yes. Nuravya maintains a persistent memory of your conversations, important dates, and shared experiences — so every session builds continuity rather than starting from scratch.",
+        a: "Yes. Nuravya can maintain useful context from prior conversations so future sessions feel more continuous.",
     },
     {
         q: "What are voice minutes?",
-        a: "Voice minutes count the duration of real-time voice calls. Free users get text-only access. Core users get 300 minutes/month. Pro users get 700 minutes/month.",
+        a: "Voice minutes count the duration of real-time voice calls. Free users can start with text, Core includes 300 minutes per month, and Pro includes 700 minutes per month.",
     },
     {
         q: "Can I cancel at any time?",
-        a: "Yes, no lock-in. You can cancel or downgrade at any time from your account settings. Your memory is retained even on the Free plan for 30 days after downgrade.",
+        a: "Yes. Plans should stay flexible with no lock-in.",
     },
     {
         q: "Does Nuravya work on Android?",
-        a: "Yes. Nuravya is available as a web app and as an Android app. iOS support is planned for a future release.",
+        a: "Yes. Nuravya is built for the web and Android support is included through the mobile app shell.",
     },
 ] as const
-
-// ─── Early Access Messaging ───────────────────────────────────────────────────
-// Used on Hero, Waitlist, and social sections.
 
 export const EARLY_ACCESS = {
     badge: "Now in Early Access",
     headline: "Be among the first to experience Nuravya",
-    subline: "We're rolling out access gradually to ensure every user gets a personal, high-quality experience.",
+    subline: "We are rolling out access gradually so every user gets a stable, personal experience.",
     cta: {
         primary: { label: "Start for Free", href: "/chat" },
         secondary: { label: "See how it works", href: "#features" },
