@@ -37,6 +37,7 @@ export function CallInterface({ onEndCall, onNotice }: { onEndCall: (durationSec
     const tracks = useTracks([Track.Source.Microphone, Track.Source.ScreenShareAudio]);
 
     const agentParticipant = participants.find(p => p.identity !== localParticipant?.identity);
+    const hasAgent = Boolean(agentParticipant);
     const remoteAudioTrack = tracks.find(t => t.participant.identity === agentParticipant?.identity && t.source === Track.Source.Microphone);
 
     const { toggle: toggleMic, enabled: isMicEnabled } = useTrackToggle({
@@ -48,6 +49,11 @@ export function CallInterface({ onEndCall, onNotice }: { onEndCall: (durationSec
     const isConnected = connectionState === ConnectionState.Connected;
 
     const [callDuration, setCallDuration] = useState(0);
+    const [agentWaitSeconds, setAgentWaitSeconds] = useState(0);
+    const endCallRef = useRef(onEndCall);
+    const noticeRef = useRef(onNotice);
+    endCallRef.current = onEndCall;
+    noticeRef.current = onNotice;
     
     // ─── Native Audio Routing (Speaker / Earpiece / Bluetooth) ───
     const room = useRoomContext();
@@ -131,10 +137,34 @@ export function CallInterface({ onEndCall, onNotice }: { onEndCall: (durationSec
     }, []);
 
     useEffect(() => {
-        if (!isConnected) return;
+        if (!isConnected || !hasAgent) return;
         const interval = setInterval(() => setCallDuration(d => d + 1), 1000);
         return () => clearInterval(interval);
-    }, [isConnected]);
+    }, [isConnected, hasAgent]);
+
+    useEffect(() => {
+        if (!isConnected || hasAgent) {
+            setAgentWaitSeconds(0);
+            return;
+        }
+
+        const waitInterval = window.setInterval(
+            () => setAgentWaitSeconds(seconds => seconds + 1),
+            1000,
+        );
+        const joinTimeout = window.setTimeout(() => {
+            endCallRef.current();
+            noticeRef.current({
+                title: "Voice agent unavailable",
+                message: "Nuravya couldn't join the call in time. The call has ended and no voice time was counted. Please try again shortly.",
+            });
+        }, 25_000);
+
+        return () => {
+            window.clearInterval(waitInterval);
+            window.clearTimeout(joinTimeout);
+        };
+    }, [isConnected, hasAgent]);
 
     useEffect(() => {
         if (!isRecording) return;
@@ -363,7 +393,7 @@ export function CallInterface({ onEndCall, onNotice }: { onEndCall: (durationSec
                             )}
                         </motion.span>
                         <span className="text-stone-400 text-xs font-medium">
-                            {(!agentParticipant && participants.length <= 1) ? "Agent joining..." :
+                            {(!agentParticipant && participants.length <= 1) ? (agentWaitSeconds >= 10 ? "Still waking the voice agent..." : "Agent joining...") :
                                 assistantState === "listening" ? "Listening..." :
                                     assistantState === "thinking" ? "Thinking..." :
                                         assistantState === "speaking" ? "Speaking..." : "Connected"}
