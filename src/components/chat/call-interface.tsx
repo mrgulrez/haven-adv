@@ -156,7 +156,7 @@ export function CallInterface({ onEndCall, onNotice }: { onEndCall: (durationSec
             endCallRef.current();
             noticeRef.current({
                 title: "Voice agent unavailable",
-                message: "Nuravya couldn't join the call in time. The call has ended and no voice time was counted. Please try again shortly.",
+                message: "Nuravya couldn't join the call in time, so the call ended before the conversation began. Please try again shortly.",
             });
         }, 25_000);
 
