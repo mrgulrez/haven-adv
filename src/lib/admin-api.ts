@@ -1,4 +1,4 @@
-import { apiGet, apiPost, apiFetch } from "./api";
+import { apiGet, apiFetch } from "./api";
 
 export interface AdminStats {
     total_users: number;

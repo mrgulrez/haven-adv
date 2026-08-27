@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Mail, MapPin, MessageSquare } from "lucide-react";
 import { StatusModal } from "@/components/ui/success-modal";
 import { useState } from "react";
+import { PageHero } from "@/components/ui/page-hero";
 
 export default function ContactPage() {
   const [modalConfig, setModalConfig] = useState<{
@@ -22,14 +23,14 @@ export default function ContactPage() {
 
   return (
     <main className="min-h-screen bg-[#FFFBEB] flex flex-col font-sans">
-      <div className="flex-grow pb-24 px-4 md:px-6 flex flex-col items-center">
+      <PageHero
+        eyebrow="Contact"
+        title={<>Let&apos;s build a more <span className="text-[#F2811D]">human future.</span></>}
+        description="Questions, partnership ideas, product feedback, or press—send a note and it will reach the team directly."
+      />
+      <div className="flex-grow py-20 px-4 md:px-6 flex flex-col items-center">
         <div className="container mx-auto max-w-5xl">
-          <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-6xl font-bold font-heading text-stone-900 mb-6">Get in touch</h1>
-            <p className="text-xl text-stone-600 max-w-2xl mx-auto">Have a question? We would love to hear from you. We read every single message.</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-12 bg-white rounded-3xl overflow-hidden shadow-xl border border-stone-100 max-w-5xl w-full">
+          <div className="grid md:grid-cols-2 gap-12 glass-panel hairline-glow rounded-[2rem] overflow-hidden max-w-5xl w-full">
             {/* Contact Form */}
             <div className="p-8 md:p-12">
               <h2 className="text-2xl font-bold font-heading text-stone-900 mb-6">Send a message</h2>
@@ -44,6 +45,7 @@ export default function ContactPage() {
                     lastName: formData.get('last-name'),
                     email: formData.get('email'),
                     message: formData.get('message'),
+                    website: formData.get('website'),
                   };
 
                   const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement;
@@ -90,6 +92,10 @@ export default function ContactPage() {
                   }
                 }}
               >
+                <div className="absolute -left-[9999px]" aria-hidden="true">
+                  <label htmlFor="contact-website">Website</label>
+                  <input id="contact-website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+                </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label htmlFor="first-name" className="text-sm font-medium text-stone-700">First name</label>
@@ -114,7 +120,7 @@ export default function ContactPage() {
                     required
                   />
                 </div>
-                <Button type="submit" size="lg" className="w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold shadow-md">
+                <Button type="submit" size="lg" className="w-full font-semibold shadow-md">
                   Send Message
                 </Button>
               </form>

@@ -1,34 +1,32 @@
 import { Footer } from "@/components/layout/footer";
-import { ShieldAlert, Lock, Server, EyeOff } from "lucide-react";
+import { Lock, Server, EyeOff } from "lucide-react";
+import { PageHero } from "@/components/ui/page-hero";
 
 export default function SecurityPage() {
   return (
     <main className="min-h-screen bg-[#FFFBEB] flex flex-col font-sans">
-      <div className="flex-grow pb-24 px-4 md:px-6">
+      <PageHero
+        eyebrow="Security"
+        title={<>Trust should be <span className="text-[#F2811D]">visible.</span></>}
+        description="Nuravya handles deeply personal context. Our security model starts with authenticated ownership, encrypted content, explicit memory controls, and honest claims about what is—and is not—verified."
+      />
+      <div className="flex-grow py-20 px-4 md:px-6">
         <div className="container mx-auto max-w-5xl">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-emerald-100 mb-6">
-              <ShieldAlert className="h-10 w-10 text-emerald-600" />
-            </div>
-            <h1 className="text-4xl md:text-5xl font-bold font-heading text-stone-900 mb-6">Enterprise-Grade Security for Personal Data</h1>
-            <p className="text-xl text-stone-600 max-w-2xl mx-auto">Your thoughts, feelings, and memories are sacred. Here is how we protect them.</p>
-          </div>
-
           <div className="grid md:grid-cols-3 gap-8 mb-16">
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100 text-center">
               <Lock className="w-8 h-8 text-stone-900 mx-auto mb-4" />
-              <h3 className="text-lg font-bold mb-2">Encryption at Rest & Transit</h3>
-              <p className="text-stone-600 text-sm">All data is encrypted using AES-256 at rest and TLS 1.3 in transit.</p>
+              <h3 className="text-lg font-bold mb-2">Encrypted conversations</h3>
+              <p className="text-stone-600 text-sm">Conversation content is encrypted before database storage and production traffic is served over secure transport.</p>
             </div>
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100 text-center">
               <EyeOff className="w-8 h-8 text-stone-900 mx-auto mb-4" />
-              <h3 className="text-lg font-bold mb-2">Zero-Knowledge Memory</h3>
-              <p className="text-stone-600 text-sm">Our engineers cannot view your personalized memory graph contexts.</p>
+              <h3 className="text-lg font-bold mb-2">Account-scoped memory</h3>
+              <p className="text-stone-600 text-sm">Authenticated ownership checks keep memory, characters, and conversation history scoped to the signed-in account.</p>
             </div>
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-stone-100 text-center">
               <Server className="w-8 h-8 text-stone-900 mx-auto mb-4" />
-              <h3 className="text-lg font-bold mb-2">SOC2 Type II (Pending)</h3>
-              <p className="text-stone-600 text-sm">We are actively pursuing strict independent security audits.</p>
+              <h3 className="text-lg font-bold mb-2">Transparent maturity</h3>
+              <p className="text-stone-600 text-sm">We do not claim certifications we have not earned. Independent audits and formal controls remain roadmap work.</p>
             </div>
           </div>
 

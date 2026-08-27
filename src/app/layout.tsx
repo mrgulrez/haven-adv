@@ -18,9 +18,9 @@ export const viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Nuravya AI - Your Warm AI Companion",
-  description: "Meet your true everyday companion. Nuravya AI is a voice friend that remembers, cares, and hangs out. Built for genuine connection and privacy.",
-  keywords: ["AI companion", "everyday friend", "voice AI", "true companion", "daily check-ins", "virtual companion", "AI friendship"],
+  title: "Nuravya AI — A Calmer Place to Think and Feel Heard",
+  description: "A voice-first AI companion for reflection, planning, and everyday conversation, with account-scoped memory and clear privacy boundaries.",
+  keywords: ["AI companion", "voice AI", "reflection", "planning", "daily check-ins", "private AI", "AI memory"],
   authors: [{ name: "Gulrez Alam" }],
   creator: "Gulrez Alam",
   publisher: "Nuravya AI",
@@ -30,8 +30,8 @@ export const metadata: Metadata = {
     telephone: false,
   },
   openGraph: {
-    title: "Nuravya AI - Your Warm AI Companion",
-    description: "Never feel alone again with Nuravya AI. A voice companion that remembers, cares, and reminds.",
+    title: "Nuravya AI — A Calmer Place to Think and Feel Heard",
+    description: "Reflection, planning, and everyday conversation with account-scoped memory and clear privacy boundaries.",
     url: "https://nuravya.com",
     siteName: "Nuravya AI",
     images: [
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
         url: "https://nuravya.com/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Nuravya AI - Comfort and connection in every conversation",
+        alt: "Nuravya AI voice-first companion",
       },
     ],
     locale: "en_US",
@@ -47,8 +47,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Nuravya AI - Your Warm AI Companion",
-    description: "Never feel alone again with Nuravya AI.",
+    title: "Nuravya AI — A Calmer Place to Think and Feel Heard",
+    description: "A voice-first AI companion for reflection, planning, and everyday conversation.",
     creator: "@nuravyaai",
     images: ["https://nuravya.com/og-image.png"],
   },
@@ -82,7 +82,7 @@ export default function RootLayout({
         className={cn(
           inter.variable,
           outfit.variable,
-          "font-sans antialiased bg-[#FFFBEB] text-stone-800 relative"
+          "font-sans antialiased bg-[#F7F1DC] text-[#0E0D0C] relative"
         )}
       >
         <AuthProvider>

@@ -1,5 +1,17 @@
-import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
+import { z } from 'zod';
+import {
+    enforcePublicFormLimit,
+    escapeHtml,
+    noStoreJson,
+} from '@/lib/server/public-form-security';
+
+const waitlistSchema = z.object({
+    name: z.string().trim().max(120).optional().default(''),
+    email: z.string().trim().email().max(254),
+    source: z.string().trim().max(80).optional().default('Website'),
+    website: z.string().max(0).optional(),
+}).strict();
 
 // ── SMTP transport (GoDaddy / company email) ──────────────────────────────
 function createTransporter() {
@@ -22,20 +34,28 @@ const FROM = process.env.SMTP_FROM || 'Nuravya AI <hello@nuravya.com>';
 const ADMIN_TO = process.env.SMTP_ADMIN_TO || process.env.SMTP_USER || 'gulrez@nuravya.com';
 
 export async function POST(request: Request) {
-    try {
-        const { name, email, source } = await request.json();
+    const limited = enforcePublicFormLimit(request, 'waitlist');
+    if (limited) return limited;
 
-        if (!email) {
-            return NextResponse.json({ error: 'Email is required' }, { status: 400 });
+    try {
+        const parsed = waitlistSchema.safeParse(await request.json());
+        if (!parsed.success) {
+            return noStoreJson({ error: 'Please enter a valid email address.' }, { status: 400 });
         }
+
+        const { name, email, source, website } = parsed.data;
+        if (website) return noStoreJson({ success: true, message: 'Successfully joined waitlist' });
 
         const transporter = createTransporter();
 
-        // If SMTP isn't configured, still return success so the UI doesn't break
         if (!transporter) {
-            console.warn('[waitlist] SMTP not configured — skipping email send');
-            return NextResponse.json({ success: true, message: 'Successfully joined waitlist' });
+            console.error('[waitlist] SMTP is not configured');
+            return noStoreJson({ error: 'Waitlist signup is temporarily unavailable.' }, { status: 503 });
         }
+
+        const safeName = escapeHtml(name || 'N/A');
+        const safeEmail = escapeHtml(email);
+        const safeSource = escapeHtml(source || 'Website');
 
         // Admin notification
         await transporter.sendMail({
@@ -45,9 +65,9 @@ export async function POST(request: Request) {
             html: `
                 <div style="font-family: sans-serif; color: #292524; max-width: 600px; margin: 0 auto;">
                     <h2 style="color: #F59E0B;">New Waitlist Sign-up 🎉</h2>
-                    <p><strong>Name:</strong> ${name || 'N/A'}</p>
-                    <p><strong>Email:</strong> ${email}</p>
-                    <p><strong>Source:</strong> ${source || 'Website'}</p>
+                    <p><strong>Name:</strong> ${safeName}</p>
+                    <p><strong>Email:</strong> ${safeEmail}</p>
+                    <p><strong>Source:</strong> ${safeSource}</p>
                     <p><strong>Date:</strong> ${new Date().toLocaleString()}</p>
                 </div>
             `,
@@ -62,7 +82,7 @@ export async function POST(request: Request) {
                 html: `
                     <div style="font-family: sans-serif; color: #292524; max-width: 600px; margin: 0 auto;">
                         <h1 style="color: #F59E0B;">Welcome to Nuravya AI 👋</h1>
-                        <p>Hi ${name ? name.split(' ')[0] : 'there'},</p>
+                        <p>Hi ${name ? escapeHtml(name.split(' ')[0]) : 'there'},</p>
                         <p>Thanks for joining the waitlist! You're among the first to experience the future of compassionate AI companionship.</p>
                         <p>We'll keep you updated on our launch and exclusive early-bird perks.</p>
                         <br/>
@@ -77,9 +97,9 @@ export async function POST(request: Request) {
             console.error('Auto-reply failed (non-fatal):', err);
         }
 
-        return NextResponse.json({ success: true, message: 'Successfully joined waitlist' });
+        return noStoreJson({ success: true, message: 'Successfully joined waitlist' });
     } catch (error) {
         console.error('Waitlist API Error:', error);
-        return NextResponse.json({ error: 'Failed to process request' }, { status: 500 });
+        return noStoreJson({ error: 'Failed to process request' }, { status: 500 });
     }
 }

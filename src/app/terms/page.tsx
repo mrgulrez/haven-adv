@@ -1,5 +1,6 @@
 import { Footer } from "@/components/layout/footer";
 import { Metadata } from "next";
+import { PageHero } from "@/components/ui/page-hero";
 
 export const metadata: Metadata = {
   title: "Terms of Service | Nuravya AI",
@@ -9,10 +10,10 @@ export const metadata: Metadata = {
 export default function TermsOfService() {
   return (
     <main className="min-h-screen bg-[#FFFBEB] flex flex-col font-sans">
-      <div className="flex-grow pb-24 px-4 md:px-6">
-        <div className="container mx-auto max-w-4xl bg-white border border-amber-100 rounded-3xl p-8 md:p-12 shadow-xl">
-          <h1 className="text-4xl md:text-5xl font-bold font-heading text-stone-900 mb-6">Terms of Service</h1>
-          <p className="text-stone-500 mb-12">Last updated: February 2026</p>
+      <PageHero eyebrow="Legal" title={<>Clear terms for a <span className="text-[#F2811D]">personal product.</span></>} description="The rules, responsibilities, billing behavior, and important limitations that apply when you use Nuravya." />
+      <div className="flex-grow py-20 px-4 md:px-6">
+        <div className="container mx-auto max-w-4xl glass-panel hairline-glow rounded-[2rem] p-8 md:p-12">
+          <p className="text-stone-500 mb-12">Last updated: August 27, 2026</p>
 
           <div className="prose prose-stone max-w-none text-stone-700 space-y-8">
             <section>
@@ -53,9 +54,9 @@ export default function TermsOfService() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-stone-900 mb-4">5. Payment and Subscriptions (Future Services)</h2>
+              <h2 className="text-2xl font-semibold text-stone-900 mb-4">5. Payment and Subscriptions</h2>
               <p>
-                While certain features of Nuravya AI may be offered for free during early access phases, we reserve the right to introduce premium subscription tiers for advanced capabilities (e.g., expanded memory, faster response times, or custom voice profiles). All fees are exclusive of applicable taxes, and subscriptions automatically renew unless canceled prior to the billing cycle.
+                Nuravya offers free and paid tiers. Paid subscriptions renew according to the billing period shown at checkout unless canceled. A cancellation scheduled for the end of a billing cycle preserves paid access until the displayed period end. Prices, limits, and applicable taxes are shown before purchase.
               </p>
             </section>
 
@@ -69,7 +70,7 @@ export default function TermsOfService() {
             <section>
               <h2 className="text-2xl font-semibold text-stone-900 mb-4">7. Intellectual Property</h2>
               <p>
-                The Nuravya AI platform, including its original content, features, AI models, and functionality, are owned by Nuravya AI Inc. and are protected by international copyright, trademark, patent, trade secret, and other intellectual property laws. You retain ownership of the direct textual or voice inputs you provide to the companion.
+                The Nuravya AI platform, including its original software, design, content, and functionality, is owned by Nuravya AI or its licensors and is protected by applicable intellectual-property laws. You retain rights in the original inputs you provide, subject to the permissions needed to operate the Service.
               </p>
             </section>
 

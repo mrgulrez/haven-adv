@@ -1,7 +1,7 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { Search, MoreVertical, Edit2 } from "lucide-react"
+import { useCallback, useEffect, useState } from "react"
+import { Search, Edit2 } from "lucide-react"
 import { AdminUser, fetchAdminUsers, updateUserPlan } from "@/lib/admin-api"
 
 export default function AdminUsers() {
@@ -14,7 +14,7 @@ export default function AdminUsers() {
     const [editingPlan, setEditingPlan] = useState<string | null>(null) // user ID
     const [newPlan, setNewPlan] = useState<"free" | "core" | "pro">("free")
 
-    const loadUsers = async () => {
+    const loadUsers = useCallback(async () => {
         setLoading(true)
         try {
             const data = await fetchAdminUsers(page, search)
@@ -25,11 +25,11 @@ export default function AdminUsers() {
         } finally {
             setLoading(false)
         }
-    }
+    }, [page, search])
 
     useEffect(() => {
         loadUsers()
-    }, [page]) // reload when page changes
+    }, [loadUsers]) // reload when page or active search changes
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault()

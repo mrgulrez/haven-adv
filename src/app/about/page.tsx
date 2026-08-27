@@ -4,12 +4,13 @@ import { Footer } from "@/components/layout/footer";
 import { motion } from "framer-motion";
 import { Heart, Brain, Shield, Users } from "lucide-react";
 import Image from "next/image";
+import { PageHero } from "@/components/ui/page-hero";
 
 export default function AboutUs() {
   const values = [
     {
       title: "True Friendship",
-      description: "We build AI that listens to understand, not just to respond. Compassion is hardcoded into our architecture.",
+      description: "We build conversations that make room for reflection instead of optimizing only for speed or engagement.",
       icon: <Heart className="h-8 w-8 text-rose-500" />
     },
     {
@@ -19,7 +20,7 @@ export default function AboutUs() {
     },
     {
       title: "Unwavering Privacy",
-      description: "Your conversations are Sacred. We employ zero-knowledge architectures wherever possible to ensure your data remains yours alone.",
+      description: "Personal context requires authenticated ownership, encryption, clear controls, and claims that match the system we actually operate.",
       icon: <Shield className="h-8 w-8 text-emerald-500" />
     },
     {
@@ -31,45 +32,11 @@ export default function AboutUs() {
 
   return (
     <main className="min-h-screen bg-[#FFFBEB] flex flex-col font-sans overflow-hidden">
-      {/* Hero Section */}
-      <section className="relative pb-24 px-4 md:px-6 flex flex-col items-center justify-center text-center">
-        <div className="absolute inset-0 w-full h-full -z-0">
-          <motion.div
-            animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.4, 0.3] }}
-            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] bg-amber-200/50 rounded-full blur-[100px]"
-          />
-        </div>
-
-        <div className="relative z-10 max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/60 border border-amber-200 backdrop-blur-sm shadow-sm mb-6"
-          >
-            <span className="text-sm font-semibold text-amber-700 uppercase tracking-wide">Our Mission</span>
-          </motion.div>
-
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-5xl md:text-7xl font-bold font-heading tracking-tight text-stone-900 mb-6 leading-tight"
-          >
-            Your true companion, <br className="hidden md:inline" /> every single day.
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-xl text-stone-600 max-w-2xl mx-auto leading-relaxed"
-          >
-            We started Nuravya AI because we realized that while technology has made us more connected than ever, it has paradoxically made us feel more isolated.
-          </motion.p>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Our mission"
+        title={<>Technology that makes space to <span className="text-[#F2811D]">feel heard.</span></>}
+        description="Nuravya explores a different role for AI: not another productivity layer, but a calm companion for reflection, continuity, and everyday conversation."
+      />
 
       {/* The Story Section */}
       <section className="py-20 px-4 md:px-6 bg-white z-10 relative">
@@ -181,11 +148,8 @@ export default function AboutUs() {
           <p className="text-lg md:text-xl text-stone-400 mb-10 max-w-2xl mx-auto">
             Nuravya AI is currently an independent project by Gulrez Alam, built with the belief that technology should feel useful, respectful, and emotionally aware.
           </p>
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="inline-block"
-          >
-            <a href="mailto:hello@nuravya.com" className="inline-flex items-center justify-center h-14 px-8 rounded-full bg-amber-500 hover:bg-amber-600 text-white font-semibold text-lg transition-colors shadow-lg">
+          <motion.div className="inline-block">
+            <a href="mailto:hello@nuravya.com" className="inline-flex items-center justify-center overflow-hidden h-14 px-8 rounded-[0.8rem] bg-white bg-[length:0%_100%] bg-no-repeat [background-image:linear-gradient(#F2811D,#F2811D)] text-stone-950 font-semibold text-lg shadow-lg transition-[background-size,color] duration-300 hover:bg-[length:100%_100%] hover:text-white">
               Get in Touch
             </a>
           </motion.div>

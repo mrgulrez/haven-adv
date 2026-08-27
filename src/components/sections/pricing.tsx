@@ -5,10 +5,11 @@ import { Check, Sparkles, ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { PLANS } from "@/lib/site.config"
+import { Button } from "@/components/ui/button"
 
 export function Pricing() {
     return (
-        <Section className="bg-[#FFFBEB]" id="pricing">
+        <Section className="bg-[#F7F1DC]" id="pricing">
             <div className="max-w-5xl mx-auto text-center">
                 {/* Header */}
                 <motion.div
@@ -38,9 +39,9 @@ export function Pricing() {
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5, delay: i * 0.1 }}
                             viewport={{ once: true }}
-                            className={`relative rounded-3xl p-7 text-left flex flex-col ${plan.highlight
-                                    ? "bg-stone-950 text-white border-2 border-amber-500 shadow-2xl shadow-amber-100"
-                                    : "bg-white border border-stone-100 shadow-sm"
+                            className={`relative rounded-3xl p-7 text-left flex flex-col justify-between h-full ${plan.highlight
+                                    ? "glass-dark border-2 border-amber-500 shadow-2xl"
+                                    : "surface-solid"
                                 }`}
                         >
                             {plan.badge && (
@@ -50,38 +51,40 @@ export function Pricing() {
                                 </div>
                             )}
 
-                            <div className="mb-5">
-                                <h3 className={`font-bold text-xl mb-1 ${plan.highlight ? "text-white" : "text-stone-900"}`}>
-                                    {plan.name}
-                                </h3>
-                                <p className={`text-xs mb-4 ${plan.highlight ? "text-stone-400" : "text-stone-500"}`}>
-                                    {plan.description}
-                                </p>
-                                <div className={`text-4xl font-black font-heading ${plan.highlight ? "text-amber-400" : "text-stone-900"}`}>
-                                    {plan.priceLabel}
-                                    <span className={`text-sm font-normal ml-1 ${plan.highlight ? "text-stone-400" : "text-stone-500"}`}>
-                                        {plan.period}
-                                    </span>
+                            <div>
+                                <div className="mb-5">
+                                    <h3 className={`font-bold text-xl mb-1 ${plan.highlight ? "text-white" : "text-stone-900"}`}>
+                                        {plan.name}
+                                    </h3>
+                                    <p className={`text-xs mb-4 ${plan.highlight ? "text-stone-400" : "text-stone-500"}`}>
+                                        {plan.description}
+                                    </p>
+                                    <div className={`text-4xl font-black font-heading ${plan.highlight ? "text-amber-400" : "text-stone-900"}`}>
+                                        {plan.priceLabel}
+                                        <span className={`text-sm font-normal ml-1 ${plan.highlight ? "text-stone-400" : "text-stone-500"}`}>
+                                            {plan.period}
+                                        </span>
+                                    </div>
                                 </div>
+
+                                <ul className="space-y-2.5 mb-8">
+                                    {plan.features.map((f, j) => (
+                                        <li key={j} className={`flex items-start gap-2.5 text-sm ${plan.highlight ? "text-stone-300" : "text-stone-600"}`}>
+                                            <Check size={15} className={`flex-shrink-0 mt-0.5 ${plan.highlight ? "text-amber-400" : "text-emerald-500"}`} />
+                                            {f}
+                                        </li>
+                                    ))}
+                                </ul>
                             </div>
 
-                            <ul className="space-y-2.5 flex-1 mb-8">
-                                {plan.features.map((f, j) => (
-                                    <li key={j} className={`flex items-start gap-2.5 text-sm ${plan.highlight ? "text-stone-300" : "text-stone-600"}`}>
-                                        <Check size={15} className={`flex-shrink-0 mt-0.5 ${plan.highlight ? "text-amber-400" : "text-emerald-500"}`} />
-                                        {f}
-                                    </li>
-                                ))}
-                            </ul>
-
-                            <Link href={plan.cta.href}>
-                                <button className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl font-bold text-sm transition-all hover:scale-[1.02] ${plan.highlight
-                                        ? "bg-amber-500 hover:bg-amber-400 text-stone-950"
-                                        : "bg-stone-100 hover:bg-stone-200 text-stone-800"
-                                    }`}>
-                                    {plan.cta.label} <ArrowRight size={14} />
-                                </button>
-                            </Link>
+                            <Button
+                                asChild
+                                className={plan.highlight ? "w-full bg-amber-500 text-stone-950" : "w-full"}
+                            >
+                                <Link href={plan.cta.href}>
+                                    <span>{plan.cta.label}</span> <ArrowRight size={14} />
+                                </Link>
+                            </Button>
                         </motion.div>
                     ))}
                 </div>

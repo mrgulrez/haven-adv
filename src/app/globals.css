@@ -5,28 +5,23 @@
   --color-foreground: var(--foreground);
 
   /* Custom Colors */
-  --color-primary: #F59E0B;
-  /* amber-500 */
+  --color-primary: #F2811D;
   --color-primary-foreground: #FFFFFF;
 
-  --color-secondary: #292524;
-  /* stone-800 */
+  --color-secondary: #0E0D0C;
   --color-secondary-foreground: #FFFFFF;
 
   --color-accent: #86EFAC;
   /* green-300 */
   --color-accent-foreground: #000000;
 
-  --color-muted: #F5F5F4;
-  /* stone-100 */
-  --color-muted-foreground: #78716C;
-  /* stone-500 */
+  --color-muted: #F5F5F3;
+  --color-muted-foreground: #6B6B68;
 
   --color-card: #FFFFFF;
-  --color-card-foreground: #292524;
+  --color-card-foreground: #0E0D0C;
 
-  --color-border: #E7E5E4;
-  /* stone-200 */
+  --color-border: #E8E3D3;
 
   /* Fonts */
   --font-sans: var(--font-inter);
@@ -36,7 +31,7 @@
   --animate-text-gradient: text-gradient 1.5s linear infinite;
   --animate-background-shine: background-shine 2s linear infinite;
   --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  --animate-float: float 3s ease-in-out infinite;
+  --animate-float: float 4s ease-in-out infinite;
 
   @keyframes text-gradient {
     to {
@@ -55,45 +50,164 @@
   }
 
   @keyframes float {
-
-    0%,
-    100% {
+    0%, 100% {
       transform: translateY(0);
     }
-
     50% {
-      transform: translateY(-10px);
+      transform: translateY(-8px);
     }
   }
 }
 
 :root {
-  --background: #FFFBEB;
-  /* Cream */
-  --foreground: #292524;
-  /* Stone 800 */
+  --background: #F7F1DC;
+  --foreground: #0E0D0C;
+  --canvas: #F7F1DC;
+  --canvas-soft: #FFFBF0;
+  --ink: #11100F;
+  --ink-soft: #57534E;
+  --brand: #F2811D;
+  --brand-bright: #FF9A3C;
+  --line: rgba(120, 113, 108, 0.18);
+  --glass: rgba(255, 255, 255, 0.68);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --shadow-soft: 0 24px 80px -36px rgba(28, 25, 23, 0.28);
+  --shadow-lift: 0 32px 90px -40px rgba(28, 25, 23, 0.38);
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--canvas);
 }
 
 body {
-  background-color: var(--background);
+  background:
+    radial-gradient(circle at 88% 4%, rgba(255, 179, 92, 0.16), transparent 28rem),
+    var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+h1, h2, h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+.site-container {
+  width: min(100% - 2rem, 76rem);
+  margin-inline: auto;
+}
+
+.section-frame {
+  border-block: 1px solid rgba(120, 113, 108, 0.12);
+}
+
+.ambient-grid {
+  background-image:
+    linear-gradient(rgba(120, 113, 108, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120, 113, 108, 0.055) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: linear-gradient(to bottom, transparent, black 12%, black 88%, transparent);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #A64B0A;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 ::selection {
-  background: rgba(245, 158, 11, 0.24);
+  background: rgba(242, 129, 29, 0.24);
   color: #1c1917;
 }
 
+/* ─── Phase 1: Standardized Surface Utilities & Glass Specification ─── */
+
+.surface-solid {
+  background-color: #FFFFFF;
+  border: 1px solid #E8E3D3;
+  box-shadow: 0 4px 20px -2px rgba(14, 13, 12, 0.04);
+}
+
+.glass-warm {
+  background: rgba(255, 255, 255, 0.68);
+  backdrop-filter: blur(18px) saturate(125%);
+  -webkit-backdrop-filter: blur(18px) saturate(125%);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  box-shadow: 0 20px 60px rgba(14, 13, 12, 0.08);
+}
+
+.glass-panel {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.82), rgba(255, 251, 240, 0.56));
+  border: 1px solid rgba(255, 255, 255, 0.78);
+  box-shadow: var(--shadow-soft), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(24px) saturate(135%);
+  -webkit-backdrop-filter: blur(24px) saturate(135%);
+}
+
+.hairline-glow {
+  position: relative;
+}
+
+.hairline-glow::before {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(255,255,255,.95), rgba(242,129,29,.28), rgba(255,255,255,.35));
+  content: "";
+  pointer-events: none;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .glass-warm {
+    background: rgba(255, 251, 240, 0.96);
+  }
+}
+
+.glass-dark {
+  background: rgba(14, 13, 12, 0.88);
+  backdrop-filter: blur(18px) saturate(125%);
+  -webkit-backdrop-filter: blur(18px) saturate(125%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
+  color: #FFFFFF;
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .glass-dark {
+    background: #0E0D0C;
+  }
+}
+
+/* ─── Accessibility Focus Ring & Reduced Motion Controls ─── */
+
 :focus-visible {
-  outline: 2px solid rgba(245, 158, 11, 0.55);
+  outline: 2px solid #F2811D;
   outline-offset: 3px;
+  border-radius: 6px;
 }
 
 input:focus-visible,
 textarea:focus-visible,
 select:focus-visible {
   outline: none;
+  border-color: #F2811D;
+  box-shadow: 0 0 0 3px rgba(242, 129, 29, 0.2);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -107,39 +221,12 @@ select:focus-visible {
   }
 }
 
-/* ─── Safe Area Utilities ────────────────────────────────────────────────────
- *
- * viewportFit=cover (set in layout.tsx) makes the viewport extend behind the
- * system status bar and home indicator on Android/iOS WebViews.
- * These utilities add CSS env() inset padding so content never hides behind
- * a notch, status bar, or home indicator.
- *
- * USAGE GUIDE — copy-paste onto any new page/component:
- *
- *   pt-safe               → header/section that starts at the very top edge
- *   pb-safe               → footer/nav that sits at the very bottom edge
- *   p-safe                → full-screen container that needs all four sides
- *   status-bar-overlay    → already in RootLayout (light cream pages)
- *   status-bar-overlay-dark → add to dark-themed pages (admin, call screen)
- *
- * Never hard-code pixel values for header height — always use these classes.
- * ─────────────────────────────────────────────────────────────────────────── */
-
-/* Top inset — push content below status bar / notch */
-@utility pt-safe {
-  padding-top: env(safe-area-inset-top, 0px);
-}
-
-/* Bottom inset — push content above home indicator */
-@utility pb-safe {
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-}
-
-/* Left / right insets for landscape edge cases */
+/* ─── Safe Area Utilities ─── */
+@utility pt-safe { padding-top: env(safe-area-inset-top, 0px); }
+@utility pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
 @utility pl-safe { padding-left:  env(safe-area-inset-left,   0px); }
 @utility pr-safe { padding-right: env(safe-area-inset-right,  0px); }
 
-/* All-sides safe padding — use on full-screen layout roots */
 @utility p-safe {
   padding-top:    env(safe-area-inset-top,    0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -147,26 +234,13 @@ select:focus-visible {
   padding-right:  env(safe-area-inset-right,  0px);
 }
 
-/* Margin variants — for elements that use margin instead of padding */
 @utility mt-safe { margin-top:    env(safe-area-inset-top,    0px); }
 @utility mb-safe { margin-bottom: env(safe-area-inset-bottom, 0px); }
 
-/* Legacy alias — prefer pb-safe on new components */
 @utility bottom-nav-bar {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-/* ─── Status Bar Overlays ────────────────────────────────────────────────────
- * Frosted-glass strips that fill the OS status bar area at the top.
- * Sit above ALL other content via z-index: 9999 and pointer-events: none
- * so they never intercept taps.
- *
- * Light variant is already rendered in RootLayout for all pages.
- * Add the dark variant manually on dark-themed pages that have their own
- * full-screen layout (admin panel, live call screen, etc.).
- * ─────────────────────────────────────────────────────────────────────────── */
-
-/* Light variant — default (cream background pages) */
 .status-bar-overlay {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -178,7 +252,6 @@ select:focus-visible {
   pointer-events: none;
 }
 
-/* Dark variant — admin panel, call screen, other dark-themed full-screen pages */
 .status-bar-overlay-dark {
   position: fixed;
   top: 0; left: 0; right: 0;

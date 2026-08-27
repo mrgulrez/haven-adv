@@ -3,10 +3,9 @@
 import { useEffect, useState } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
-import { ShieldAlert, Users, LayoutDashboard, Settings } from "lucide-react"
+import { ShieldAlert, Users, LayoutDashboard } from "lucide-react"
 
 import { auth } from "@/lib/firebase"
-import { apiGet } from "@/lib/api"
 import { fetchAdminStats } from "@/lib/admin-api"
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

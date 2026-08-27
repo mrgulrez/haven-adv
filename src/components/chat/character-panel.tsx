@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Plus, Trash2, Zap, Shield, User, ChevronRight, Sparkles } from "lucide-react";
+import { X, Plus, Trash2, Zap, User, Sparkles } from "lucide-react";
 import { apiGet, apiPost, apiFetch } from "@/lib/api";
 
 export type Character = {
@@ -58,33 +58,31 @@ export function CharacterPanel({
         is_uncapped: false,
     });
 
-    useEffect(() => {
-        if (isOpen) {
-            fetchCharacters();
-            fetchVoices();
-        }
-    }, [isOpen]);
-
-    const fetchCharacters = async () => {
+    const fetchCharacters = useCallback(async () => {
         try {
             const data = await apiGet<Character[]>("/api/characters");
             setCharacters(data);
         } catch (e) {
             console.warn("Could not fetch characters", e);
         }
-    };
+    }, []);
 
-    const fetchVoices = async () => {
+    const fetchVoices = useCallback(async () => {
         try {
             const data = await apiGet<any[]>("/api/voice-settings/voices/presets");
             setVoices(data);
-            if (data.length > 0 && !form.voice_id) {
-                setForm(f => ({ ...f, voice_id: data[0].voice_id }));
-            }
+            if (data.length > 0) setForm(f => f.voice_id ? f : ({ ...f, voice_id: data[0].voice_id }));
         } catch (e) {
             console.warn("Could not fetch voices", e);
         }
-    };
+    }, []);
+
+    useEffect(() => {
+        if (isOpen) {
+            void fetchCharacters();
+            void fetchVoices();
+        }
+    }, [isOpen, fetchCharacters, fetchVoices]);
 
     const handleCreate = async () => {
         if (!form.name.trim() || !form.system_prompt.trim()) return;
@@ -197,7 +195,7 @@ export function CharacterPanel({
                             {!showCreate ? (
                                 <button
                                     onClick={() => setShowCreate(true)}
-                                    className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold text-sm shadow-md shadow-amber-200 hover:shadow-amber-300 hover:scale-[1.01] transition-all"
+                                    className="w-full overflow-hidden flex items-center justify-center gap-2 py-3 rounded-[0.8rem] bg-stone-950 bg-[length:0%_100%] bg-no-repeat [background-image:linear-gradient(#F2811D,#F2811D)] text-white font-semibold text-sm shadow-md transition-[background-size] duration-300 hover:bg-[length:100%_100%]"
                                 >
                                     <Plus size={16} />
                                     Create Custom Character

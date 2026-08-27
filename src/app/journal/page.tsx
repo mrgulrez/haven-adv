@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ChevronLeft, Calendar, BookOpen, Sparkles, Filter } from "lucide-react";
+import { ChevronLeft, Calendar, BookOpen, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { apiGet } from "@/lib/api";
 import { format } from "date-fns";

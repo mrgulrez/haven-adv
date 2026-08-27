@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { BRAND } from "@/lib/site.config";
-import { Shield, Lock, ArrowRight, Loader2 } from "lucide-react";
+import { Shield, ArrowRight, Loader2 } from "lucide-react";
 
 export default function ReviewerLoginPage() {
     const router = useRouter();
@@ -12,28 +12,29 @@ export default function ReviewerLoginPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
-    // These credentials must match what is in the backend config.py
-    const REVIEWER_EMAIL = "reviewer@nuravya.com";
-    const REVIEWER_PASSWORD = "NuravyaReview2026!";
-    const BYPASS_TOKEN = "nuravya_static_bypass_token_8k2m9n4p";
-
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         setError("");
 
-        // Simulate a small delay for realism
-        await new Promise(r => setTimeout(r, 800));
-
-        if (email.toLowerCase() === REVIEWER_EMAIL && password === REVIEWER_PASSWORD) {
-            // Store the static bypass token
-            localStorage.setItem("BYPASS_TOKEN", BYPASS_TOKEN);
-            
-            // Redirect to chat/dashboard
+        try {
+            const apiBase = process.env.NEXT_PUBLIC_API_URL || "https://backend.enord.in";
+            const response = await fetch(`${apiBase}/api/users/reviewer-session`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+            });
+            if (!response.ok) {
+                setError("Invalid credentials. Please refer to the documentation provided in the Play Console.");
+                return;
+            }
+            const data: { token: string } = await response.json();
+            sessionStorage.setItem("REVIEWER_SESSION", data.token);
             router.push("/chat");
             router.refresh();
-        } else {
-            setError("Invalid credentials. Please refer to the documentation provided in the Play Console.");
+        } catch {
+            setError("Reviewer access is temporarily unavailable. Please try again.");
+        } finally {
             setLoading(false);
         }
     };

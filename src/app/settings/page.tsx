@@ -5,17 +5,17 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Footer } from "@/components/layout/footer";
 import { useAuth } from "@/components/auth/auth-provider";
 import { useRouter, useSearchParams } from "next/navigation";
-import { apiGet, apiPost } from "@/lib/api";
-import { Button } from "@/components/ui/button";
+import { apiDelete, apiGet, apiPost } from "@/lib/api";
 import {
   Mic, Lock, Volume2, Check, Loader2, Award, PartyPopper,
   User, Bell, Shield, Settings, Camera, Edit3, Save,
-  Smartphone, Mail, LogOut, Trash2, CheckCircle2, AlertTriangle,
-  ChevronRight, Info, Crown, ExternalLink, Globe, RefreshCw
+  Mail, CheckCircle2, Info, Crown, ExternalLink, Globe
 } from "lucide-react";
 import { VoiceCloner } from "@/components/settings/voice-cloner";
+import { NotificationSettingsPanel } from "@/components/settings/notification-settings-panel";
+import { SecuritySettingsPanel } from "@/components/settings/security-settings-panel";
 import Image from "next/image";
-import { PLANS, BRAND } from "@/lib/site.config";
+import { PLANS } from "@/lib/site.config";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -84,15 +84,8 @@ function SettingsContent() {
     weekly_insights: false,
     chat_reminders: true,
   });
-  const [notifLoading, setNotifLoading] = useState(false);
   const [savingNotifs, setSavingNotifs] = useState(false);
   const [notifSaved, setNotifSaved] = useState(false);
-  const [testingEmail, setTestingEmail] = useState(false);
-  const [testEmailSent, setTestEmailSent] = useState(false);
-
-  // Security state
-  const [deletingAccount, setDeletingAccount] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState("");
 
   const userPlan = nuravyaUser?.plan || "free";
   const hasCore = userPlan === "core" || userPlan === "pro";
@@ -106,7 +99,6 @@ function SettingsContent() {
   // Load notification preferences from real API
   useEffect(() => {
     if (!user) return;
-    setNotifLoading(true);
     apiGet<{
       email_digests: boolean;
       milestone_alerts: boolean;
@@ -119,8 +111,7 @@ function SettingsContent() {
         weekly_insights: data.weekly_insights,
         chat_reminders: data.chat_reminders,
       }))
-      .catch(() => {/* keep defaults */ })
-      .finally(() => setNotifLoading(false));
+      .catch(() => {/* keep defaults */ });
   }, [user]);
 
   useEffect(() => {
@@ -211,16 +202,6 @@ function SettingsContent() {
     finally { setSavingNotifs(false); }
   };
 
-  const handleTestEmail = async () => {
-    setTestingEmail(true);
-    try {
-      await apiPost("/api/notifications/test-email", {});
-      setTestEmailSent(true);
-      setTimeout(() => setTestEmailSent(false), 5000);
-    } catch { /* silent */ }
-    finally { setTestingEmail(false); }
-  };
-
   if (authLoading || !user) {
     return (
       <div className="min-h-screen bg-[#FFFBEB] flex items-center justify-center">
@@ -263,7 +244,9 @@ function SettingsContent() {
                     <div key={tab.id}>
                       {i > 0 && <div className="h-px bg-stone-50 mx-3" />}
                       <button
+                        type="button"
                         onClick={() => setActiveTab(tab.id)}
+                        aria-current={isActive ? "page" : undefined}
                         className={`w-full flex items-center gap-3 px-4 py-3.5 text-left transition-all ${isActive
                           ? "bg-amber-50 text-amber-700"
                           : "text-stone-600 hover:bg-stone-50 hover:text-stone-900"
@@ -575,220 +558,25 @@ function SettingsContent() {
                     </div>
                   )}
 
-                  {/* ─── NOTIFICATIONS TAB ─── */}
                   {activeTab === "notifications" && (
-                    <div className="space-y-5">
-                      <div className="bg-white rounded-3xl border border-stone-100 shadow-sm p-6">
-                        <h2 className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-5">Email Preferences</h2>
-                        <div className="space-y-2">
-                          {[
-                            {
-                              key: "email_digests" as const,
-                              label: "Weekly Email Digest",
-                              sub: "A summary of your conversations and emotional insights",
-                              icon: Mail,
-                            },
-                            {
-                              key: "milestone_alerts" as const,
-                              label: "Milestone Achievements",
-                              sub: "Get notified when you reach a new milestone",
-                              icon: Award,
-                            },
-                            {
-                              key: "weekly_insights" as const,
-                              label: "Insights Report",
-                              sub: "Your mood trends and top conversation themes",
-                              icon: RefreshCw,
-                            },
-                            {
-                              key: "chat_reminders" as const,
-                              label: "Chat Reminders",
-                              sub: "Remind me to check in with Nuravya daily",
-                              icon: Bell,
-                            },
-                          ].map(item => (
-                            <div key={item.key} className="flex items-center justify-between px-4 py-4 rounded-2xl hover:bg-stone-50 transition-colors">
-                              <div className="flex items-center gap-3">
-                                <div className="p-2.5 rounded-xl bg-stone-100">
-                                  <item.icon size={16} className="text-stone-500" />
-                                </div>
-                                <div>
-                                  <p className="text-sm font-semibold text-stone-900">{item.label}</p>
-                                  <p className="text-xs text-stone-400">{item.sub}</p>
-                                </div>
-                              </div>
-                              {/* Toggle */}
-                              <button
-                                onClick={() => setNotifSettings(prev => ({ ...prev, [item.key]: !prev[item.key] }))}
-                                className={`relative w-11 h-6 rounded-full transition-colors duration-200 flex-shrink-0 ml-4 ${notifSettings[item.key] ? "bg-amber-500" : "bg-stone-200"}`}
-                              >
-                                <span className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-all duration-200 ${notifSettings[item.key] ? "left-5" : "left-0.5"}`} />
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-
-                        <div className="mt-6 pt-5 border-t border-stone-50 flex items-center justify-between">
-                          {notifSaved && (
-                            <p className="flex items-center gap-1.5 text-xs text-emerald-600">
-                              <CheckCircle2 size={13} /> Preferences saved
-                            </p>
-                          )}
-                          <div className="ml-auto">
-                            <Button
-                              onClick={handleSaveNotifs}
-                              disabled={savingNotifs}
-                              className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold rounded-xl px-5"
-                            >
-                              {savingNotifs ? <Loader2 size={14} className="animate-spin mr-2" /> : <Save size={14} className="mr-2" />}
-                              Save Preferences
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="bg-amber-50 border border-amber-100 rounded-3xl p-5 flex items-start gap-4">
-                        <Info size={18} className="text-amber-500 mt-0.5 flex-shrink-0" />
-                        <p className="text-sm text-amber-800 leading-relaxed">
-                          Email notifications use your registered Google email address.
-                          We never share your data with third parties.
-                        </p>
-                      </div>
-                    </div>
+                    <NotificationSettingsPanel
+                      settings={notifSettings}
+                      saving={savingNotifs}
+                      saved={notifSaved}
+                      onChange={setNotifSettings}
+                      onSave={handleSaveNotifs}
+                    />
                   )}
 
-                  {/* ─── SECURITY TAB ─── */}
                   {activeTab === "security" && (
-                    <div className="space-y-5">
-                      {/* Auth method */}
-                      <div className="bg-white rounded-3xl border border-stone-100 shadow-sm p-6">
-                        <h2 className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-5">Authentication</h2>
-                        <div className="flex items-center gap-4 p-4 bg-stone-50 rounded-2xl border border-stone-100 mb-5">
-                          <div className="w-12 h-12 rounded-2xl bg-white border border-stone-200 flex items-center justify-center shadow-sm">
-                            {/* Google G icon */}
-                            <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none">
-                              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
-                              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
-                              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
-                              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
-                            </svg>
-                          </div>
-                          <div>
-                            <p className="text-sm font-bold text-stone-900">Google Sign-In</p>
-                            <p className="text-xs text-stone-500">{user.email}</p>
-                            <div className="flex items-center gap-1.5 mt-1">
-                              <CheckCircle2 size={12} className="text-emerald-500" />
-                              <span className="text-[11px] font-semibold text-emerald-600">Active Session</span>
-                            </div>
-                          </div>
-                          <div className="ml-auto text-right">
-                            <p className="text-[10px] text-stone-400">Secured by</p>
-                            <p className="text-xs font-bold text-stone-700">Firebase Auth</p>
-                          </div>
-                        </div>
-
-                        {/* Security items */}
-                        <div className="space-y-2">
-                          {[
-                            { icon: Shield, label: "End-to-End Encryption", sub: "All conversations are encrypted at rest", status: "Active", color: "text-emerald-600 bg-emerald-50 border-emerald-100" },
-                            { icon: Lock, label: "Secure Token Auth", sub: "Session tokens auto-expire every 24h", status: "Active", color: "text-emerald-600 bg-emerald-50 border-emerald-100" },
-                            { icon: Smartphone, label: "Pinecone AI Memory Encryption", sub: "Vector memory is user-scoped & private", status: "Active", color: "text-emerald-600 bg-emerald-50 border-emerald-100" },
-                          ].map(item => (
-                            <div key={item.label} className={`flex items-center gap-3 p-4 rounded-2xl border ${item.color}`}>
-                              <item.icon size={16} />
-                              <div>
-                                <p className="text-sm font-semibold">{item.label}</p>
-                                <p className="text-xs opacity-70">{item.sub}</p>
-                              </div>
-                              <span className="ml-auto text-[10px] font-bold uppercase tracking-widest opacity-80">{item.status}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Sign out all devices */}
-                      <div className="bg-white rounded-3xl border border-stone-100 shadow-sm p-6">
-                        <h2 className="text-[10px] font-bold text-stone-400 uppercase tracking-widest mb-4">Session Management</h2>
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="text-sm font-semibold text-stone-900">Sign Out of This Device</p>
-                            <p className="text-xs text-stone-500 mt-0.5">Your data remains safe. Sign back in anytime.</p>
-                          </div>
-                          <button
-                            onClick={logout}
-                            className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-stone-200 text-stone-600 hover:text-red-500 hover:border-red-200 hover:bg-red-50 transition-all text-sm font-semibold"
-                          >
-                            <LogOut size={15} />
-                            Sign Out
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Danger zone */}
-                      <div className="bg-white rounded-3xl border border-red-100 shadow-sm p-6">
-                        <h2 className="text-[10px] font-bold text-red-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                          <AlertTriangle size={13} />
-                          Danger Zone
-                        </h2>
-                        {!deletingAccount ? (
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <p className="text-sm font-semibold text-stone-900">Delete Account</p>
-                              <p className="text-xs text-stone-500 mt-0.5">Permanently removes all your data. This cannot be undone.</p>
-                            </div>
-                            <button
-                              onClick={() => setDeletingAccount(true)}
-                              className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-red-200 text-red-500 hover:bg-red-50 transition-all text-sm font-semibold"
-                            >
-                              <Trash2 size={15} />
-                              Delete
-                            </button>
-                          </div>
-                        ) : (
-                          <div className="space-y-3">
-                            <div className="p-4 bg-red-50 rounded-2xl border border-red-100 flex items-start gap-3">
-                              <AlertTriangle size={16} className="text-red-500 mt-0.5 flex-shrink-0" />
-                              <p className="text-sm text-red-700">
-                                This will permanently delete your account and all associated data including conversations, memories, and settings. <strong>This cannot be undone.</strong>
-                              </p>
-                            </div>
-                            <p className="text-xs text-stone-500">Type <strong>DELETE</strong> to confirm:</p>
-                            <div className="flex gap-2">
-                              <input
-                                className="flex-1 border border-red-300 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-red-300/30 text-red-700 font-mono"
-                                placeholder="DELETE"
-                                value={confirmDelete}
-                                onChange={e => setConfirmDelete(e.target.value)}
-                              />
-                              <button
-                                disabled={confirmDelete !== "DELETE"}
-                                className="px-4 py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-xl text-sm font-bold disabled:opacity-40 transition-all"
-                                onClick={async () => {
-                                  try {
-                                    await apiPost("/api/users/delete", {});
-                                    logout();
-                                  } catch { /* Contact support */ }
-                                }}
-                              >
-                                Confirm Delete
-                              </button>
-                              <button onClick={() => { setDeletingAccount(false); setConfirmDelete(""); }} className="px-4 py-2.5 rounded-xl text-stone-500 hover:bg-stone-50 text-sm font-semibold transition-all">
-                                Cancel
-                              </button>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Data policy note */}
-                      <div className="bg-stone-50 border border-stone-100 rounded-3xl p-5 flex items-start gap-3">
-                        <Shield size={16} className="text-stone-400 mt-0.5 flex-shrink-0" />
-                        <p className="text-xs text-stone-500 leading-relaxed">
-                          Your privacy matters. All conversations are encrypted, never sold, and never used to train AI models without your explicit consent.
-                          Read our <a href="/privacy" className="text-amber-600 hover:underline font-medium">Privacy Policy</a>.
-                        </p>
-                      </div>
-                    </div>
+                    <SecuritySettingsPanel
+                      email={user.email}
+                      onLogout={logout}
+                      onDeleteAccount={async () => {
+                        await apiDelete("/api/users/me");
+                        await logout();
+                      }}
+                    />
                   )}
 
                 </motion.div>

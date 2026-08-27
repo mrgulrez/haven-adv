@@ -8,7 +8,6 @@ import {
     User,
     signInWithCredential,
     GoogleAuthProvider,
-    getAuth,
 } from "firebase/auth";
 import { auth, googleProvider } from "@/lib/firebase";
 import { Capacitor } from '@capacitor/core';
@@ -38,10 +37,6 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-// Web ID from the frontend (.env.example NEXT_PUBLIC_FIREBASE_APP_ID or standard GCP Web Client ID)
-// Capacitor Firebase Auth needs the Web Client ID to generate the idToken on native devices.
-const defaultWebClientId = "275083657175-dk7qgflo9nmdstr8j9sv58sffmjh85pc.apps.googleusercontent.com";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
@@ -160,6 +155,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 // Intercept window.open to force perfect centering of the Google Auth popup
                 const originalOpen = window.open;
                 window.open = function (url?: string | URL, target?: string, features?: string) {
+                    void features;
                     const width = 500;
                     const height = 600;
 

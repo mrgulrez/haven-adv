@@ -10,13 +10,12 @@ import {
     CheckCircle2, 
     Clock, 
     Trash2,
-    MessageSquare,
-    TrendingUp,
     Zap
 } from "lucide-react";
 import Link from "next/link";
 import { apiGet, apiPost, apiPut, apiDelete } from "@/lib/api";
-import { format, isAfter, isBefore, addDays } from "date-fns";
+import { format } from "date-fns";
+import { Button } from "@/components/ui/button";
 
 interface Goal {
     id: string;
@@ -108,12 +107,15 @@ export default function GoalsPage() {
                         </Link>
                         <h1 className="text-xl font-heading font-bold tracking-tight">Active Goals</h1>
                     </div>
-                    <button 
+                    <Button
+                        type="button"
+                        size="icon"
+                        aria-label="Create a new goal"
                         onClick={() => setShowNewGoal(true)}
-                        className="bg-amber-500 hover:bg-amber-600 text-white p-2 rounded-full shadow-lg shadow-amber-200 transition-all hover:scale-105 active:scale-95"
+                        className="bg-amber-500 text-stone-950 shadow-lg shadow-amber-200"
                     >
                         <Plus size={20} />
-                    </button>
+                    </Button>
                 </div>
             </header>
 

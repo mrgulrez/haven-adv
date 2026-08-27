@@ -7,24 +7,6 @@ import { MessageSquareQuote } from "lucide-react"
 
 const STORIES = [
     {
-        title: "Morning reset",
-        prompt: "I slept better, but I still feel behind.",
-        response: "Let us choose one priority and one thing you can leave for later.",
-        avatar: "bg-amber-200",
-    },
-    {
-        title: "Memory follow-up",
-        prompt: "Do you remember the interview I mentioned?",
-        response: "Yes. You were worried about the portfolio review. Want to rehearse the opening answer?",
-        avatar: "bg-blue-200",
-    },
-    {
-        title: "Voice reflection",
-        prompt: "I do not want advice yet. I just need to say it out loud.",
-        response: "I am here. Take your time, and I will help you sort it after.",
-        avatar: "bg-emerald-200",
-    },
-    {
         title: "Focus coaching",
         prompt: "I keep jumping between tasks.",
         response: "Pick the smallest next action. I will hold the rest of the list for you.",
@@ -36,11 +18,23 @@ const STORIES = [
         response: "Good. Ten minutes, one task, no perfection. Start with the draft title.",
         avatar: "bg-purple-200",
     },
+    {
+        title: "Morning reset",
+        prompt: "I slept better, but I still feel behind.",
+        response: "Let us choose one grounding thing you can leave for later.",
+        avatar: "bg-amber-200",
+    },
+    {
+        title: "Memory follow-up",
+        prompt: "Do you remember the interview I mentioned?",
+        response: "Yes. You were worried about the portfolio review. Want to rehearse the opening answer?",
+        avatar: "bg-blue-200",
+    },
 ]
 
 export function Testimonials() {
     return (
-        <Section id="testimonials" className="bg-[#FAFAFA] overflow-hidden py-24 relative">
+        <Section id="testimonials" className="bg-[#F5F5F3] overflow-hidden py-24 relative">
             <div className="mb-16 text-center max-w-3xl mx-auto px-4 relative z-10">
                 <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white border border-stone-200 shadow-sm mb-6 cursor-default">
                     <MessageSquareQuote size={14} className="text-amber-500" />

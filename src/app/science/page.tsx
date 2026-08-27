@@ -1,43 +1,17 @@
 "use client";
 
 import { Footer } from "@/components/layout/footer";
-import { motion } from "framer-motion";
 import { BookOpen, Stethoscope, LineChart, Brain } from "lucide-react";
+import { PageHero } from "@/components/ui/page-hero";
 
 export default function SciencePage() {
   return (
     <main className="min-h-screen bg-[#FFFBEB] flex flex-col font-sans overflow-hidden">
-      {/* Hero Section */}
-      <section className="relative pb-24 px-4 md:px-6 flex flex-col items-center justify-center text-center">
-        <div className="relative z-10 max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/60 border border-emerald-200 backdrop-blur-sm shadow-sm mb-6"
-          >
-            <span className="text-sm font-semibold text-emerald-700 uppercase tracking-wide">Clinical Foundation</span>
-          </motion.div>
-
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-5xl md:text-7xl font-bold font-heading tracking-tight text-stone-900 mb-6 leading-tight"
-          >
-            The Science of <br className="hidden md:inline" /> Connection.
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-xl text-stone-600 max-w-2xl mx-auto leading-relaxed"
-          >
-            Nuravya isn't just a language model. It's a therapeutic system built on decades of peer-reviewed clinical psychology and cognitive behavioral principles.
-          </motion.p>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Approach"
+        title={<>Designed around the science of <span className="text-[#F2811D]">better conversations.</span></>}
+        description="Nuravya draws product inspiration from established work on reflection, behavior change, and supportive communication. It is an AI companion—not a clinical device, therapist, or substitute for care."
+      />
 
       {/* Methodology Section */}
       <section className="py-20 px-4 md:px-6 bg-white z-10 relative">
@@ -49,7 +23,7 @@ export default function SciencePage() {
                   <Brain className="text-emerald-500" /> Cognitive Architecture
                 </h3>
                 <p className="text-stone-600 leading-relaxed">
-                  Our proprietary emotion engine layers advanced psychological frameworks (CBT, DBT) over generative AI, allowing Nuravya to guide conversations toward healthy processing rather than just endless rumination.
+                  The conversation system uses structured prompts, memory, and reflection patterns to encourage clear next steps and reduce repetitive interactions. These product choices are not clinical treatment claims.
                 </p>
               </div>
               <div>

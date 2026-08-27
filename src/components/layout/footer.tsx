@@ -46,13 +46,14 @@ export function Footer() {
     const handleSubscribe = async (e: React.FormEvent) => {
         e.preventDefault()
         if (!email) return
+        const website = new FormData(e.currentTarget as HTMLFormElement).get("website")
         setSubmitting(true)
         try {
             // Plain fetch with relative URL → hits Next.js API route, not FastAPI
             const res = await fetch("/api/waitlist", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, source: "Footer Newsletter" }),
+                body: JSON.stringify({ email, source: "Footer Newsletter", website }),
             })
             if (res.ok) {
                 setModal({ isOpen: true, title: "You're on the list!", message: "Thanks for subscribing! We'll keep you updated.", variant: "success" })
@@ -87,8 +88,10 @@ export function Footer() {
                             <p className="text-stone-500 text-sm mt-2">Get early access to authentic AI companionship.</p>
                         </div>
                         <form onSubmit={handleSubscribe} className="flex gap-2">
+                            <input name="website" type="text" tabIndex={-1} autoComplete="off" className="absolute -left-[9999px]" aria-hidden="true" />
                             <input
                                 type="email"
+                                aria-label="Email address for early access updates"
                                 placeholder="your@email.com"
                                 value={email}
                                 onChange={e => setEmail(e.target.value)}
@@ -98,7 +101,8 @@ export function Footer() {
                             <Button
                                 type="submit"
                                 disabled={submitting}
-                                className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold rounded-xl px-5 flex items-center gap-2 flex-shrink-0 transition-all"
+                                variant="white"
+                                className="font-bold px-5 flex items-center gap-2 flex-shrink-0"
                             >
                                 {submitting ? "…" : <><span>Join</span><ArrowRight size={14} /></>}
                             </Button>
@@ -113,13 +117,13 @@ export function Footer() {
 
                     {/* Brand */}
                     <div className="col-span-2 md:col-span-2">
-                        <Link href="/" className="inline-flex items-center gap-3 mb-6 group">
+                        <Link href="/" className="inline-flex min-h-11 items-center gap-3 mb-6 group">
                             <Image
                                 src="/images/NuravyaLogo.svg"
                                 alt="Nuravya AI Logo"
                                 width={36}
                                 height={36}
-                                className="group-hover:scale-110 transition-transform duration-500"
+                                className="transition-opacity duration-300 group-hover:opacity-80"
                             />
                             <div className="flex flex-col">
                                 <span className="text-xl font-bold font-heading text-white tracking-tight leading-none group-hover:text-amber-400 transition-colors">
@@ -141,7 +145,7 @@ export function Footer() {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     aria-label={s.label}
-                                    className="w-9 h-9 rounded-xl bg-stone-900 border border-stone-800 hover:bg-amber-500/15 hover:border-amber-500/30 hover:text-amber-400 flex items-center justify-center transition-all"
+                                    className="flex h-11 w-11 items-center justify-center rounded-xl border border-stone-800 bg-stone-900 transition-all hover:border-amber-500/30 hover:bg-amber-500/15 hover:text-amber-400 md:h-9 md:w-9"
                                 >
                                     <s.icon size={15} />
                                 </Link>
@@ -158,7 +162,7 @@ export function Footer() {
                                     <li key={link.href}>
                                         <Link
                                             href={link.href}
-                                            className="text-sm text-stone-400 hover:text-amber-400 transition-colors duration-150"
+                                            className="inline-flex min-h-11 items-center text-sm text-stone-400 transition-colors duration-150 hover:text-amber-400 md:min-h-0"
                                         >
                                             {link.label}
                                         </Link>
@@ -182,8 +186,8 @@ export function Footer() {
                         <span>for human connection</span>
                     </div>
                     <div className="flex gap-5 text-xs">
-                        <Link href="/privacy" className="text-stone-500 hover:text-amber-400 transition-colors">Privacy</Link>
-                        <Link href="/terms" className="text-stone-500 hover:text-amber-400 transition-colors">Terms</Link>
+                        <Link href="/privacy" className="inline-flex min-h-11 items-center text-stone-500 hover:text-amber-400 transition-colors md:min-h-0">Privacy</Link>
+                        <Link href="/terms" className="inline-flex min-h-11 items-center text-stone-500 hover:text-amber-400 transition-colors md:min-h-0">Terms</Link>
                     </div>
                 </div>
             </div>

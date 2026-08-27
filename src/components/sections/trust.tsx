@@ -71,7 +71,7 @@ export function Trust() {
                     </div>
 
                     <div className="flex-1 w-full max-w-md relative">
-                        <div className="relative bg-stone-900 border border-white/10 rounded-2xl p-8 overflow-hidden shadow-2xl">
+                        <div className="relative glass-dark rounded-2xl p-8 overflow-hidden shadow-2xl">
                             <div className="font-mono text-xs text-stone-500 mb-5 flex justify-between gap-4">
                                 <span>memory_scope: user_account</span>
                                 <span className="text-emerald-400">online</span>

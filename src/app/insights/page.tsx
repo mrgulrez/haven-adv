@@ -12,9 +12,7 @@ import {
   Bell,
   Loader2,
   Lock,
-  ChevronRight,
   Calendar,
-  BarChart3,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -126,7 +124,7 @@ export default function InsightsPage() {
               Unlock emotion detection, weekly insight reports, and proactive check-ins with Nuravya Core or Pro.
             </p>
             <Link href="/pricing">
-              <Button className="bg-amber-500 hover:bg-amber-600 text-white">View Plans</Button>
+              <Button>View Plans</Button>
             </Link>
           </div>
         </div>
@@ -202,7 +200,7 @@ export default function InsightsPage() {
               <h3 className="text-lg font-bold text-stone-900 mb-2">No insights yet</h3>
               <p className="text-stone-500 mb-4">Keep chatting with Nuravya to build emotional data for your first weekly report.</p>
               <Link href="/chat">
-                <Button className="bg-amber-500 hover:bg-amber-600 text-white">Chat Now</Button>
+                <Button>Chat Now</Button>
               </Link>
             </div>
           ) : (

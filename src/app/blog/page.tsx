@@ -2,22 +2,18 @@
 import { Footer } from "@/components/layout/footer";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { PageHero } from "@/components/ui/page-hero";
 
 export default function BlogPage() {
   return (
     <main className="min-h-screen bg-[#FFFBEB] flex flex-col font-sans">
-      <div className="flex-grow pb-24 px-4 md:px-6">
+      <PageHero
+        eyebrow="Field notes"
+        title={<>Building AI that earns <span className="text-[#F2811D]">closeness.</span></>}
+        description="Product decisions, engineering lessons, research notes, and honest updates from the work behind Nuravya."
+      />
+      <div className="flex-grow py-20 px-4 md:px-6">
         <div className="container mx-auto max-w-6xl">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
-            <div>
-              <h1 className="text-4xl md:text-6xl font-bold font-heading text-stone-900 mb-4">Engineering True Friendship</h1>
-              <p className="text-xl text-stone-600 max-w-2xl">Thoughts, updates, and research from the team building Nuravya.</p>
-            </div>
-            <div className="bg-amber-100 text-amber-800 px-4 py-2 rounded-full text-sm font-semibold tracking-wide w-fit">
-              Subscribe for Updates
-            </div>
-          </div>
-
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Featured Post */}
             <Link href="/blog" className="md:col-span-2 lg:col-span-3 group relative rounded-3xl overflow-hidden bg-white shadow-sm border border-stone-100 flex flex-col md:flex-row hover:shadow-xl transition-shadow duration-300">

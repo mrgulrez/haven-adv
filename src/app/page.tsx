@@ -11,7 +11,7 @@ import { FAQ } from "@/components/sections/faq";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#FFFBEB] flex flex-col font-sans">
+    <main className="min-h-screen bg-[#F7F1DC] flex flex-col font-sans">
       <Hero />
       <Problem />
       <Solution />

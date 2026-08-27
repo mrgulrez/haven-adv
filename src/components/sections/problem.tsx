@@ -34,7 +34,7 @@ const moments = [
 
 export function Problem() {
     return (
-        <Section id="problem" className="bg-[#FAFAFA] relative overflow-hidden py-24 md:py-28">
+        <Section id="problem" className="bg-[#F5F5F3] relative overflow-hidden py-24 md:py-28">
             <div className="container mx-auto px-4 md:px-6">
                 <div className="max-w-3xl mb-12">
                     <p className="text-xs font-bold text-amber-700 uppercase tracking-[0.18em] mb-4">Why it exists</p>

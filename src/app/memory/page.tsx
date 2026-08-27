@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Footer } from "@/components/layout/footer";
 import { useAuth } from "@/components/auth/auth-provider";
 import { useRouter } from "next/navigation";
-import { apiGet, apiPost, apiFetch } from "@/lib/api";
+import { apiGet, apiFetch } from "@/lib/api";
 import {
   Brain,
   MessageSquare,
@@ -15,8 +15,6 @@ import {
   Shield,
   BarChart3,
   Loader2,
-  ArrowLeft,
-  AlertTriangle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -45,7 +43,7 @@ interface MessageItem {
 }
 
 export default function MemoryPage() {
-  const { user, nuravyaUser, loading: authLoading } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const [stats, setStats] = useState<MemoryStats | null>(null);
   const [conversations, setConversations] = useState<ConversationItem[]>([]);
@@ -138,7 +136,6 @@ export default function MemoryPage() {
     );
   }
 
-  const isPaid = nuravyaUser?.plan === "core" || nuravyaUser?.plan === "pro";
 
   return (
     <main className="min-h-screen bg-[#FFFBEB] flex flex-col font-sans">
@@ -216,7 +213,7 @@ export default function MemoryPage() {
               <h3 className="text-lg font-bold text-stone-900 mb-2">No memories yet</h3>
               <p className="text-stone-500 mb-6">Start a conversation with Nuravya to build your memory.</p>
               <Link href="/chat">
-                <Button className="bg-amber-500 hover:bg-amber-600 text-white">Start Chatting</Button>
+                <Button>Start Chatting</Button>
               </Link>
             </div>
           ) : (

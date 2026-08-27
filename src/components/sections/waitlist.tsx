@@ -14,6 +14,7 @@ import { StatusModal } from "@/components/ui/success-modal"
 const schema = z.object({
     name: z.string().min(2, "Name must be at least 2 characters"),
     email: z.string().email("Please enter a valid email address"),
+    website: z.string().max(0).optional(),
 })
 
 type FormData = z.infer<typeof schema>
@@ -21,7 +22,6 @@ type FormData = z.infer<typeof schema>
 export function Waitlist() {
     const [isSubmitted, setIsSubmitted] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
-    const [position, setPosition] = useState(234)
     const [submittedEmail, setSubmittedEmail] = useState("")
     const [modalConfig, setModalConfig] = useState<{
         isOpen: boolean;
@@ -53,7 +53,6 @@ export function Waitlist() {
             if (response.ok) {
                 setSubmittedEmail(data.email)
                 setIsSubmitted(true)
-                setPosition(prev => prev + 1)
             } else {
                 throw new Error('Failed to join waitlist')
             }
@@ -95,8 +94,12 @@ export function Waitlist() {
                                 Join the waitlist to get early access and exclusive pricing.
                             </p>
 
-                            <div className="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 shadow-xl">
+                            <div className="glass-dark p-8 rounded-3xl shadow-xl">
                                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                                    <div className="absolute -left-[9999px]" aria-hidden="true">
+                                        <label htmlFor="waitlist-website">Website</label>
+                                        <input id="waitlist-website" type="text" tabIndex={-1} autoComplete="off" {...register("website")} />
+                                    </div>
                                     <div className="space-y-2 text-left">
                                         <label htmlFor="name" className="text-sm font-medium ml-1">Full Name</label>
                                         <Input
@@ -123,7 +126,8 @@ export function Waitlist() {
                                     <Button
                                         type="submit"
                                         size="lg"
-                                        className="w-full bg-white text-orange-600 hover:bg-stone-100 hover:text-orange-700 shadow-lg font-bold text-lg h-12"
+                                        variant="white"
+                                        className="w-full font-bold text-lg h-12"
                                         disabled={isLoading}
                                     >
                                         {isLoading ? <Loader2 className="animate-spin" /> : "Join Waitlist"}

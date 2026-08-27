@@ -12,9 +12,9 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://backend.enord.in";
 async function getAuthToken(): Promise<string | null> {
     const user = auth.currentUser;
     if (!user) {
-        // Check for reviewer backdoor token
+        // Play reviewers receive an expiring, server-issued session token.
         if (typeof window !== "undefined") {
-            return localStorage.getItem("BYPASS_TOKEN");
+            return sessionStorage.getItem("REVIEWER_SESSION");
         }
         return null;
     }

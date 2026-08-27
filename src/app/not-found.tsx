@@ -27,13 +27,13 @@ export default function NotFound() {
 
                     <div className="space-y-4">
                         <Link href="/" className="block">
-                            <Button className="w-full bg-stone-900 hover:bg-stone-800 text-white h-12 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-stone-200">
+                            <Button className="w-full h-12 flex items-center justify-center gap-2 shadow-lg shadow-stone-200">
                                 <Home size={18} />
                                 Back to Home
                             </Button>
                         </Link>
                         <Link href="/contact" className="block">
-                            <Button variant="ghost" className="w-full text-stone-400 hover:text-stone-900 hover:bg-stone-100 h-12 rounded-2xl">
+                            <Button variant="outline" className="w-full h-12">
                                 Contact Support
                             </Button>
                         </Link>

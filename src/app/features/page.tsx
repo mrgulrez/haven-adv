@@ -2,8 +2,9 @@
 
 import { Footer } from "@/components/layout/footer";
 import { Mic, Brain, Shield, Heart, Sparkles, Zap, Lock, BarChart3, Clock } from "lucide-react";
-import { FEATURES, BRAND } from "@/lib/site.config";
+import { FEATURES } from "@/lib/site.config";
 import { motion } from "framer-motion";
+import { PageHero } from "@/components/ui/page-hero";
 
 const ICON_MAP: Record<string, any> = {
   Mic: Mic,
@@ -19,35 +20,13 @@ const ICON_MAP: Record<string, any> = {
 export default function FeaturesPage() {
   return (
     <main className="min-h-screen bg-[#FFFBEB] flex flex-col font-sans">
-      <div className="flex-grow pb-24 px-4 md:px-6">
+      <PageHero
+        eyebrow="Capabilities"
+        title={<>Less like a chatbot. <span className="text-[#F2811D]">More like continuity.</span></>}
+        description={<>Voice, consent-based memory, reflection, and companion styles work together so every conversation can begin with context—not a blank screen.</>}
+      />
+      <div className="flex-grow py-20 px-4 md:px-6">
         <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-20">
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-100 border border-amber-200 shadow-sm mb-6"
-            >
-              <Zap size={14} className="text-amber-600" />
-              <span className="text-xs font-bold text-amber-800 uppercase tracking-widest">Capabilities</span>
-            </motion.div>
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-5xl md:text-7xl font-bold font-heading text-stone-900 mb-6 tracking-tight"
-            >
-              Built for deep <br /> human connection.
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-xl text-stone-600 max-w-2xl mx-auto font-light leading-relaxed"
-            >
-              Discover the specialized emotional architecture that makes {BRAND.name} more than just another AI chat app.
-            </motion.p>
-          </div>
-
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
             {FEATURES.map((feature, i) => {
               const Icon = ICON_MAP[feature.icon] || Zap;

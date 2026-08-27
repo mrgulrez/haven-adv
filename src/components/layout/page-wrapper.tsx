@@ -5,12 +5,12 @@ import { cn } from "@/lib/utils";
 
 export function PageWrapper({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
-    const isChatOrAdmin = pathname?.startsWith('/chat') || pathname?.startsWith('/admin');
+    const isFullBleed = pathname === '/' || pathname?.startsWith('/chat') || pathname?.startsWith('/admin');
 
     return (
         <div className={cn(
             "flex-grow flex flex-col min-h-screen",
-            !isChatOrAdmin && "pt-safe pt-[80px] md:pt-[128px]"
+            !isFullBleed && "pt-safe pt-[72px] md:pt-[80px]"
         )}>
             {children}
         </div>

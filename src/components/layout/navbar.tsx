@@ -29,8 +29,15 @@ export function Navbar() {
                 setUserMenuOpen(false)
             }
         }
+        const handleKey = (e: KeyboardEvent) => {
+            if (e.key === "Escape") setUserMenuOpen(false)
+        }
         document.addEventListener("mousedown", handleClick)
-        return () => document.removeEventListener("mousedown", handleClick)
+        document.addEventListener("keydown", handleKey)
+        return () => {
+            document.removeEventListener("mousedown", handleClick)
+            document.removeEventListener("keydown", handleKey)
+        }
     }, [])
 
     if (pathname?.startsWith('/chat') || pathname?.startsWith('/admin')) {
@@ -53,13 +60,13 @@ export function Navbar() {
     return (
         <header
             className={cn(
-                "hidden md:block fixed top-0 left-0 right-0 z-50 transition-all duration-500",
+                "hidden md:block fixed top-0 left-0 right-0 z-50 border-b transition-[background-color,border-color,box-shadow] duration-300",
                 isScrolled
-                    ? "bg-[#FFFBEB]/90 backdrop-blur-xl border-b border-stone-900/5 shadow-sm py-3"
-                    : "bg-transparent py-5"
+                    ? "border-stone-200/70 bg-[#fffaf0]/82 shadow-[0_12px_40px_-28px_rgba(28,25,23,.35)] backdrop-blur-xl"
+                    : "border-transparent bg-transparent"
             )}
         >
-            <div className="container mx-auto px-6 flex items-center justify-between">
+            <div className="container mx-auto flex h-20 items-center justify-between px-6">
                 <Link href="/" className="flex items-center gap-3 group">
                     <div className="relative">
                         <Image
@@ -67,24 +74,19 @@ export function Navbar() {
                             alt="Nuravya AI Logo"
                             width={38}
                             height={38}
-                            className="transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 group-hover:drop-shadow-[0_0_15px_rgba(245,158,11,0.3)]"
+                            className="transition-opacity duration-300 group-hover:opacity-80"
                             priority
                         />
-                        {/* Shimmer effect on hover */}
-                        <div className="absolute inset-0 bg-gradient-to-tr from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 opacity-0 group-hover:opacity-100" />
                     </div>
                     <div className="flex flex-col">
                         <span className="text-2xl font-bold font-heading text-stone-900 tracking-tight leading-none group-hover:text-amber-600 transition-colors duration-300">
-                            Nuravya <span className="text-amber-500 font-extrabold">AI</span>
-                        </span>
-                        <span className="text-[10px] font-bold text-stone-400 uppercase tracking-[0.2em] leading-none mt-1 opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 h-0 group-hover:h-auto overflow-hidden">
-                            True Friendship
+                            Nuravya <span className="text-[#F2811D] font-extrabold">AI</span>
                         </span>
                     </div>
                 </Link>
 
                 {/* Nav links */}
-                <nav className="flex items-center gap-1">
+                    <nav aria-label="Primary navigation" className="flex items-center gap-1">
                     {navLinks.map((link) => {
                         const isActive = pathname === link.href
                         return (
@@ -92,11 +94,12 @@ export function Navbar() {
                                 key={link.href}
                                 href={link.href}
                                 className={cn(
-                                    "flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200",
+                                    "relative flex items-center gap-1.5 px-4 py-2 text-sm font-medium transition-colors duration-200 after:absolute after:inset-x-4 after:-bottom-[1.3rem] after:h-0.5 after:origin-left after:bg-[#F2811D] after:transition-transform after:duration-300",
                                     isActive
-                                        ? "bg-amber-50 text-amber-700 font-semibold"
-                                        : "text-stone-600 hover:text-stone-900 hover:bg-stone-100/70"
+                                        ? "text-stone-950 font-semibold after:scale-x-100"
+                                        : "text-stone-600 hover:text-stone-950 after:scale-x-0 hover:after:scale-x-100"
                                 )}
+                                aria-current={isActive ? "page" : undefined}
                             >
                                 {"icon" in link && link.icon && (
                                     <link.icon size={15} className={isActive ? "text-amber-500" : "text-stone-400"} />
@@ -111,7 +114,7 @@ export function Navbar() {
                 {/* Right side */}
                 <div className="flex items-center gap-3">
                     {user ? (
-                        <div className="flex items-center gap-2" ref={menuRef}>
+                        <div className="relative flex items-center gap-2" ref={menuRef}>
                             {nuravyaUser?.is_admin && (
                                 <Link
                                     href="/admin"
@@ -124,6 +127,9 @@ export function Navbar() {
                             {/* User avatar dropdown */}
                             <button
                                 onClick={() => setUserMenuOpen(!userMenuOpen)}
+                                aria-expanded={userMenuOpen}
+                                aria-haspopup="menu"
+                                aria-label="Open account menu"
                                 className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-xl bg-white border border-stone-200 hover:border-amber-300 hover:bg-amber-50/50 transition-all shadow-sm group"
                             >
                                 <div className="w-7 h-7 rounded-lg overflow-hidden bg-stone-100 flex-shrink-0">
@@ -156,7 +162,8 @@ export function Navbar() {
                                         animate={{ opacity: 1, y: 0, scale: 1 }}
                                         exit={{ opacity: 0, y: -8, scale: 0.96 }}
                                         transition={{ duration: 0.15 }}
-                                        className="absolute top-full right-0 mt-2 w-56 bg-white rounded-2xl border border-stone-100 shadow-xl overflow-hidden z-50"
+                                        role="menu"
+                                        className="absolute top-full right-0 mt-3 w-56 glass-panel hairline-glow rounded-2xl overflow-hidden z-50"
                                     >
                                         <div className="p-3 border-b border-stone-50">
                                             <p className="text-xs font-bold text-stone-900 truncate">{user.displayName}</p>
@@ -195,11 +202,11 @@ export function Navbar() {
                         </div>
                     ) : (
                         <div className="flex items-center gap-2">
-                            <Button variant="ghost" size="sm" className="rounded-xl text-stone-600 hover:text-stone-900" onClick={loginWithGoogle}>
+                            <Button variant="ghost" size="sm" className="text-stone-600" onClick={loginWithGoogle}>
                                 Log In
                             </Button>
                             <Link href="/#waitlist">
-                                <Button size="sm" className="rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-semibold px-4">
+                                <Button size="sm" className="font-semibold px-4">
                                     Get Early Access
                                 </Button>
                             </Link>

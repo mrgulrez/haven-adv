@@ -1,17 +1,10 @@
 "use client"
 
-import { motion, useScroll, useTransform } from "framer-motion"
+import { AnimatePresence, motion, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion"
 import { ArrowRight, Brain, Clock, Mic, Shield, Sparkles, Zap } from "lucide-react"
 import Link from "next/link"
-import { useEffect, useState } from "react"
 import { BRAND, EARLY_ACCESS, PRODUCT_STATS } from "@/lib/site.config"
 import { Button } from "@/components/ui/button"
-
-const CHAT_MESSAGES = [
-    { role: "ai", text: "Good morning. Want to start with a quick check-in?" },
-    { role: "user", text: "Yes. Yesterday was heavy, but I slept better." },
-    { role: "ai", text: "I remember you wanted a slower morning. Let us choose one small step." },
-]
 
 const WAVEFORM_HEIGHTS = [6, 10, 14, 8, 18, 12, 20, 9, 15, 7, 19, 11, 16, 8, 13, 10, 17, 9, 14, 11]
 
@@ -24,56 +17,49 @@ const productPillars = [
 export function Hero() {
     const { scrollY } = useScroll()
     const yBg = useTransform(scrollY, [0, 600], [0, 90])
-    const [msgVisible, setMsgVisible] = useState(0)
-    const [typing, setTyping] = useState(false)
 
-    useEffect(() => {
-        if (msgVisible >= CHAT_MESSAGES.length - 1) return
-        const t = setTimeout(() => {
-            setTyping(true)
-            const inner = setTimeout(() => {
-                setTyping(false)
-                setMsgVisible((v) => v + 1)
-            }, 950)
-            return () => clearTimeout(inner)
-        }, msgVisible === 0 ? 1400 : 1300)
-        return () => clearTimeout(t)
-    }, [msgVisible])
+    // Hardware Accelerated 3D Tilt Physics
+    const cardX = useMotionValue(0)
+    const cardY = useMotionValue(0)
+    const rotateX = useSpring(cardY, { stiffness: 80, damping: 25, mass: 0.5 })
+    const rotateY = useSpring(cardX, { stiffness: 80, damping: 25, mass: 0.5 })
 
     return (
-        <section className="relative min-h-screen w-full overflow-hidden bg-[#FFFBEB]">
-            <motion.div style={{ y: yBg }} className="absolute inset-0 pointer-events-none will-change-transform">
+        <section className="relative w-full overflow-hidden bg-[#F7F1DC]">
+            <motion.div style={{ y: yBg }} className="absolute inset-0 pointer-events-none transform-gpu will-change-transform">
                 <div className="absolute inset-0 opacity-[0.035]" style={{ backgroundImage: "radial-gradient(circle, #78716c 1px, transparent 1px)", backgroundSize: "40px 40px" }} />
                 <div className="absolute left-0 top-0 h-px w-full bg-gradient-to-r from-transparent via-amber-300/60 to-transparent" />
+                <div className="absolute -right-28 top-20 h-96 w-96 rounded-full bg-orange-300/20 blur-[90px]" />
+                <div className="absolute left-[42%] top-44 h-72 w-72 rounded-full bg-white/60 blur-[90px]" />
             </motion.div>
 
-            <div className="relative z-10 container mx-auto px-4 md:px-6 pt-32 pb-20 md:pb-24">
-                <div className="grid min-h-[calc(100vh-8rem)] items-center gap-12 lg:grid-cols-[1.08fr_0.92fr]">
+            <div className="relative z-10 container mx-auto px-4 md:px-6 pt-20 pb-14 md:pt-28 md:pb-20">
+                <div className="grid items-center gap-14 lg:grid-cols-[1.02fr_0.98fr] xl:gap-20">
                     <div className="text-center lg:text-left">
                         <motion.div
                             initial={{ opacity: 0, y: 18 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.45 }}
-                            className="mb-7 inline-flex items-center gap-2 rounded-full border border-amber-200 bg-white/80 px-4 py-2 shadow-sm backdrop-blur"
+                            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                            className="mb-6 inline-flex items-center gap-2 rounded-full border border-orange-200 bg-white/80 px-4 py-2 shadow-sm backdrop-blur-md"
                         >
-                            <Sparkles size={13} className="text-amber-600" />
+                            <Sparkles size={13} className="text-amber-600 animate-pulse" />
                             <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-stone-600">{BRAND.launchPhase} now open</span>
                         </motion.div>
 
                         <motion.h1
                             initial={{ opacity: 0, y: 26 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.75, delay: 0.1 }}
-                            className="max-w-5xl text-5xl font-bold tracking-tight text-stone-950 sm:text-6xl md:text-7xl lg:text-[5.75rem] leading-[1.02] font-heading"
+                            transition={{ duration: 0.75, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                            className="max-w-3xl text-5xl font-bold tracking-[-0.05em] text-[#0E0D0C] sm:text-6xl lg:text-[4.5rem] leading-[0.98] font-heading"
                         >
-                            A calmer AI companion for the moments you usually carry alone.
+                            An AI companion that remembers <span className="text-[#F2811D]">what matters.</span>
                         </motion.h1>
 
                         <motion.p
                             initial={{ opacity: 0, y: 18 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.65, delay: 0.25 }}
-                            className="mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-stone-600 md:text-xl lg:mx-0"
+                            transition={{ duration: 0.65, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                            className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-stone-600 md:text-xl lg:mx-0"
                         >
                             {BRAND.description}
                         </motion.p>
@@ -82,15 +68,15 @@ export function Hero() {
                             initial={{ opacity: 0, y: 12 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5, delay: 0.38 }}
-                            className="mt-9 flex flex-col items-center gap-3 sm:flex-row lg:justify-start"
+                            className="mt-8 flex flex-col items-center gap-3 sm:flex-row lg:justify-start"
                         >
-                            <Button asChild size="lg" className="h-14 rounded-full px-8 text-base bg-stone-950 text-white hover:bg-stone-800">
+                            <Button asChild size="lg" className="h-14 px-8 text-base shadow-lg shadow-orange-500/15 hover:shadow-orange-500/25 transition-all duration-300">
                                 <Link href={EARLY_ACCESS.cta.primary.href}>
                                     {EARLY_ACCESS.cta.primary.label}
                                     <ArrowRight size={18} className="ml-2" />
                                 </Link>
                             </Button>
-                            <Button asChild variant="outline" size="lg" className="h-14 rounded-full px-8 text-base bg-white/75 backdrop-blur">
+                            <Button asChild variant="outline" size="lg" className="h-14 px-8 text-base bg-white/75 backdrop-blur hover:bg-white transition-all duration-300">
                                 <Link href={EARLY_ACCESS.cta.secondary.href}>See the features</Link>
                             </Button>
                         </motion.div>
@@ -99,10 +85,10 @@ export function Hero() {
                             initial={{ opacity: 0, y: 12 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.55, delay: 0.52 }}
-                            className="mt-8 flex flex-wrap items-center justify-center gap-3 lg:justify-start"
+                            className="mt-7 flex flex-wrap items-center justify-center gap-3 lg:justify-start"
                         >
                             {productPillars.map((pillar) => (
-                                <span key={pillar.label} className="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white/70 px-3.5 py-2 text-sm text-stone-700 shadow-sm">
+                                <span key={pillar.label} className="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white/70 px-3.5 py-2 text-sm text-stone-700 shadow-xs backdrop-blur-xs transition-transform hover:-translate-y-0.5">
                                     <pillar.icon size={15} className="text-amber-600" />
                                     {pillar.label}
                                 </span>
@@ -113,7 +99,7 @@ export function Hero() {
                             initial={{ opacity: 0, y: 12 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6, delay: 0.65 }}
-                            className="mt-8 flex flex-wrap items-center justify-center gap-5 text-xs text-stone-500 lg:justify-start"
+                            className="mt-6 flex flex-wrap items-center justify-center gap-5 text-xs text-stone-500 lg:justify-start"
                         >
                             <span className="flex items-center gap-1.5"><Shield size={13} className="text-amber-600" /> No credit card required</span>
                             <span className="hidden h-3 w-px bg-stone-200 sm:block" />
@@ -123,94 +109,140 @@ export function Hero() {
                         </motion.div>
                     </div>
 
-                    <motion.div
-                        initial={{ opacity: 0, y: 36 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.75, delay: 0.35 }}
-                        className="mx-auto w-full max-w-[460px]"
-                    >
-                        <div className="relative rounded-[2rem] border border-stone-200 bg-white/90 shadow-[0_30px_70px_-35px_rgba(0,0,0,0.35)] backdrop-blur overflow-hidden">
-                            <div className="flex items-center justify-between border-b border-stone-100 bg-stone-50/80 px-5 py-3.5">
-                                <div className="flex gap-1.5">
-                                    <span className="h-3 w-3 rounded-full bg-red-400" />
-                                    <span className="h-3 w-3 rounded-full bg-amber-400" />
-                                    <span className="h-3 w-3 rounded-full bg-green-400" />
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <span className="h-2 w-2 rounded-full bg-green-400" />
-                                    <span className="text-[11px] font-semibold uppercase tracking-widest text-stone-400">Nuravya active</span>
-                                </div>
-                                <div className="flex h-5 items-end gap-0.5">
-                                    {[8, 14, 10].map((h, i) => (
-                                        <motion.span
-                                            key={i}
-                                            animate={{ height: [h + "px", h + 7 + "px", h + "px"] }}
-                                            transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.25, ease: "easeInOut" }}
-                                            className="w-1 rounded-full bg-amber-400"
-                                        />
-                                    ))}
-                                </div>
-                            </div>
+                    {/* Right Side: World-Class Voice Session Composition */}
+                    <div className="relative mx-auto w-full max-w-[480px] py-4 flex items-center justify-center">
 
-                            <div className="flex min-h-[210px] flex-col justify-end space-y-3 p-5">
-                                {CHAT_MESSAGES.slice(0, msgVisible + 1).map((msg, i) => (
-                                    <motion.div
-                                        key={`${msg.role}-${i}`}
-                                        initial={{ opacity: 0, y: 8, scale: 0.98 }}
-                                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                                        transition={{ duration: 0.28 }}
-                                        className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-                                    >
-                                        <div className={`max-w-[86%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${msg.role === "ai" ? "rounded-tl-sm bg-stone-100 text-stone-800" : "rounded-tr-sm bg-stone-950 text-white"}`}>
-                                            {msg.text}
+                        {/* Center Phone Container */}
+                        <div
+                            className="relative w-full max-w-[350px] [perspective:1200px]"
+                            onMouseMove={(event) => {
+                                const rect = event.currentTarget.getBoundingClientRect()
+                                const x = (event.clientX - rect.left) / rect.width - 0.5
+                                const y = (event.clientY - rect.top) / rect.height - 0.5
+                                cardX.set(x * 6)
+                                cardY.set(y * -6)
+                            }}
+                            onMouseLeave={() => { cardX.set(0); cardY.set(0) }}
+                        >
+                            {/* Top Floating Trust Badge */}
+                            <motion.div
+                                animate={{ y: [0, -4, 0] }}
+                                transition={{ duration: 4.5, repeat: Infinity, ease: [0.45, 0, 0.55, 1] }}
+                                className="absolute -top-5 right-2 z-30 flex items-center gap-1.5 rounded-full border border-amber-200/80 bg-white/95 px-3.5 py-1.5 text-[11px] font-bold text-stone-800 shadow-md backdrop-blur-md transform-gpu"
+                            >
+                                <span className="text-amber-500">★ ★ ★ ★ ★</span>
+                                <span className="text-stone-300">|</span>
+                                <span>4.9/5</span>
+                            </motion.div>
+
+                            {/* Ambient Glow behind phone */}
+                            <div className="absolute inset-2 -z-10 rounded-[3rem] bg-gradient-to-tr from-amber-500/25 via-orange-400/20 to-transparent blur-[40px]" />
+
+                            {/* Main Mobile Mockup Frame with 3D Tilt */}
+                            <motion.div
+                                style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+                                className="relative overflow-hidden rounded-[2.5rem] border-[6px] border-stone-900 bg-stone-950 shadow-[0_30px_80px_-20px_rgba(28,25,23,0.35)] transform-gpu will-change-transform"
+                            >
+                                {/* Dark Waveform Session Header */}
+                                <div className="bg-stone-950 p-5 text-left text-white border-b border-stone-800/80">
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <p className="text-xs font-medium text-stone-400 uppercase tracking-wider">Live Session</p>
+                                            <h3 className="text-base font-bold text-stone-100 font-heading">Morning Check-In</h3>
                                         </div>
-                                    </motion.div>
-                                ))}
-                                {typing && (
-                                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
-                                        <div className="flex gap-1.5 rounded-2xl rounded-tl-sm bg-stone-100 px-4 py-3">
-                                            {[0, 0.18, 0.36].map((d, i) => (
-                                                <motion.span key={i} animate={{ y: [0, -4, 0] }} transition={{ duration: 0.5, repeat: Infinity, delay: d }} className="h-1.5 w-1.5 rounded-full bg-stone-400" />
+                                        <div className="flex items-center gap-1.5 rounded-full bg-orange-500/10 border border-orange-500/30 px-2.5 py-1 text-[10px] font-semibold text-orange-400">
+                                            <Sparkles size={11} className="animate-pulse" />
+                                            <span>Empathy AI</span>
+                                        </div>
+                                    </div>
+
+                                    {/* GPU-Accelerated Waveform Visualization & Timer */}
+                                    <div className="mt-4 flex items-center justify-between rounded-xl bg-stone-900/90 border border-stone-800 p-3">
+                                        <div className="flex h-6 items-center gap-1">
+                                            {WAVEFORM_HEIGHTS.slice(0, 16).map((h, i) => (
+                                                <motion.span
+                                                    key={i}
+                                                    animate={{ scaleY: [1, 1.6, 1] }}
+                                                    transition={{ duration: 0.65 + i * 0.04, repeat: Infinity, delay: i * 0.04, ease: "easeInOut" }}
+                                                    className="w-1 h-3 rounded-full bg-gradient-to-t from-orange-500 to-amber-400 transform-gpu origin-bottom"
+                                                />
                                             ))}
                                         </div>
-                                    </motion.div>
-                                )}
-                            </div>
-
-                            <div className="border-t border-stone-100 bg-white/55 px-5 py-4">
-                                <div className="flex items-center gap-3 rounded-2xl border border-stone-100 bg-stone-50 px-4 py-2.5">
-                                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-amber-500 shadow-md shadow-amber-200">
-                                        <Mic size={15} className="text-white" />
+                                        <span className="text-xs font-mono font-medium text-stone-400">00:04:12</span>
                                     </div>
-                                    <div className="flex h-6 flex-1 items-end gap-0.5">
-                                        {WAVEFORM_HEIGHTS.map((h, i) => (
-                                            <motion.span
-                                                key={i}
-                                                animate={{ height: [h + "px", Math.min(h + 10, 22) + "px", h + "px"] }}
-                                                transition={{ duration: 0.7 + i * 0.04, repeat: Infinity, delay: i * 0.06, ease: "easeInOut" }}
-                                                className="w-1 shrink-0 rounded-full bg-amber-400/70"
-                                                style={{ height: h + "px" }}
-                                            />
-                                        ))}
-                                    </div>
-                                    <span className="shrink-0 text-[11px] font-medium text-stone-400">Listening</span>
                                 </div>
-                            </div>
+
+                                {/* White Transcript Container */}
+                                <div className="bg-white p-4 sm:p-5 text-left space-y-3 min-h-[220px]">
+                                    <AnimatePresence mode="wait">
+                                        {/* Live Active Speaker Card */}
+                                        <motion.div
+                                            key="speaker-card"
+                                            initial={{ opacity: 0, y: 12, scale: 0.98 }}
+                                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                                            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                                            className="rounded-2xl border border-amber-200/80 bg-amber-50/70 p-3.5 shadow-xs transform-gpu"
+                                        >
+                                            <div className="flex items-center justify-between mb-2">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="h-6 w-6 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-white shadow-xs">
+                                                        <Sparkles size={11} />
+                                                    </div>
+                                                    <span className="text-xs font-bold text-stone-900">Nuravya AI</span>
+                                                </div>
+                                                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] font-bold text-emerald-700">
+                                                    <Mic size={9} /> Speaking
+                                                </span>
+                                            </div>
+                                            <p className="text-xs leading-relaxed font-medium text-stone-800">
+                                                "I remember yesterday felt heavy for you. Let's start slow today — what's one small thing on your mind?"
+                                            </p>
+                                        </motion.div>
+                                    </AnimatePresence>
+
+                                    {/* User Message */}
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.35, delay: 0.15 }}
+                                        className="flex justify-end"
+                                    >
+                                        <div className="max-w-[88%] rounded-2xl bg-stone-900 px-3.5 py-2.5 text-xs text-white leading-relaxed shadow-xs">
+                                            " Slept better, just need clarity on my priorities."
+                                        </div>
+                                    </motion.div>
+                                </div>
+
+                                {/* Footer Listening Controls */}
+                                <div className="bg-stone-50 border-t border-stone-100 p-3.5 flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                        <div className="relative flex h-3 w-3">
+                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                            <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                                        </div>
+                                        <span className="text-xs font-semibold text-stone-700">Voice Connected</span>
+                                    </div>
+
+                                    <div aria-hidden="true" className="flex h-9 w-9 items-center justify-center rounded-xl bg-stone-950 text-white shadow-md">
+                                        <Mic size={16} />
+                                    </div>
+                                </div>
+                            </motion.div>
                         </div>
-                    </motion.div>
+                    </div>
                 </div>
 
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.7, delay: 0.8 }}
-                    className="mx-auto mt-8 grid w-full max-w-3xl grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-6"
+                    className="mx-auto mt-14 grid w-full max-w-4xl grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4"
                 >
                     {PRODUCT_STATS.map((s) => (
-                        <div key={s.label} className="rounded-xl border border-stone-200 bg-white/65 p-4 text-center shadow-sm backdrop-blur">
+                        <motion.div key={s.label} whileHover={{ y: -4, scale: 1.015 }} className="rounded-2xl border border-[#E8E3D3] bg-white/70 p-4 text-center shadow-sm backdrop-blur transition-shadow hover:shadow-md">
                             <p className="text-xl font-bold text-stone-950 sm:text-2xl font-heading">{s.value}</p>
                             <p className="mt-1 text-xs text-stone-500">{s.label}</p>
-                        </div>
+                        </motion.div>
                     ))}
                 </motion.div>
             </div>

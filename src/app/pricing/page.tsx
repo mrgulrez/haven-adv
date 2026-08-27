@@ -1,7 +1,7 @@
 "use client";
 
 import { Footer } from "@/components/layout/footer";
-import { Check, X, Loader2, Sparkles, ArrowRight } from "lucide-react";
+import { Check, Loader2, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/auth/auth-provider";
 import { useRouter } from "next/navigation";
@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import { apiPost } from "@/lib/api";
 import { PLANS, BRAND } from "@/lib/site.config";
 import { motion } from "framer-motion";
+import { PageHero } from "@/components/ui/page-hero";
 
 // Load Razorpay Checkout.js
 declare global {
@@ -21,7 +22,6 @@ export default function PricingPage() {
   const { user, nuravyaUser, loginWithGoogle, refreshProfile } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState<string | null>(null);
-  const [razorpayLoaded, setRazorpayLoaded] = useState(false);
 
   // Load Razorpay script
   useEffect(() => {
@@ -29,10 +29,7 @@ export default function PricingPage() {
       const script = document.createElement("script");
       script.src = "https://checkout.razorpay.com/v1/checkout.js";
       script.async = true;
-      script.onload = () => setRazorpayLoaded(true);
       document.body.appendChild(script);
-    } else {
-      setRazorpayLoaded(true);
     }
   }, []);
 
@@ -124,44 +121,18 @@ export default function PricingPage() {
 
   return (
     <main className="min-h-screen bg-[#FFFBEB] flex flex-col font-sans">
-      <div className="flex-grow pb-24 px-4 md:px-6">
+      <PageHero
+        eyebrow="Simple pricing"
+        title={<>Start with trust. <span className="text-[#F2811D]">Grow with depth.</span></>}
+        description="Use text chat for free. Upgrade when richer memory, real-time voice, and more companion styles become valuable to you."
+      />
+      <div className="flex-grow py-20 px-4 md:px-6">
         <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-100 border border-amber-200 shadow-sm mb-6"
-            >
-              <Sparkles size={14} className="text-amber-600" />
-              <span className="text-xs font-bold text-amber-800 uppercase tracking-widest">{BRAND.tagline}</span>
-            </motion.div>
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-5xl md:text-7xl font-bold font-heading text-stone-900 mb-6 tracking-tight"
-            >
-              Everyone deserves to<br />feel heard.
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-xl text-stone-500 max-w-2xl mx-auto font-light leading-relaxed"
-            >
-              Whether you are exploring or seeking a deeply personalized companion experience, there is a plan designed for you.
-            </motion.p>
-          </div>
-
           <div className="grid md:grid-cols-3 gap-8 mb-20">
             {PLANS.map((plan, i) => {
               const isCurrent = currentPlan === plan.id;
               const isPro = plan.id === "pro";
-              const isCore = plan.id === "core";
               const isFree = plan.id === "free";
-
-              const isHigher = (currentPlan === "free" && (isCore || isPro)) || (currentPlan === "core" && isPro);
-              const isLower = (currentPlan === "pro" && (isCore || isFree)) || (currentPlan === "core" && isFree);
 
               return (
                 <motion.div
@@ -213,7 +184,7 @@ export default function PricingPage() {
                   </ul>
 
                   <Button
-                    className={`w-full h-14 rounded-2xl font-bold text-base transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] ${isCurrent
+                    className={`w-full h-14 font-bold text-base ${isCurrent
                         ? "bg-stone-100 text-stone-400 cursor-default"
                         : isPro
                           ? "bg-white text-stone-900 hover:bg-stone-100"
@@ -249,7 +220,7 @@ export default function PricingPage() {
           <div className="max-w-3xl mx-auto bg-white/50 backdrop-blur-xl rounded-[2.5rem] p-10 md:p-14 border border-stone-100 text-center">
             <h2 className="text-3xl font-bold font-heading text-stone-900 mb-4">Enterprise & Volume</h2>
             <p className="text-stone-500 mb-8 font-light">Looking for Nuravya for your team, organization, or specialized use case? We offer custom API access and volume licensing.</p>
-            <Button variant="outline" className="h-14 px-10 rounded-2xl border-stone-200 hover:bg-stone-50 font-bold" onClick={() => router.push("/contact")}>
+            <Button variant="outline" className="h-14 px-10 border-stone-200 font-bold" onClick={() => router.push("/contact")}>
               Contact Sales
             </Button>
           </div>

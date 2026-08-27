@@ -4,8 +4,7 @@ import { motion, useInView } from "framer-motion"
 import type React from "react"
 import { useRef } from "react"
 import {
-    Mic, Brain, Heart, Zap, Clock, Lock, BarChart3, Sparkles,
-    Star, ArrowRight
+    Mic, Brain, Clock, Lock, BarChart3, Sparkles, ArrowRight
 } from "lucide-react"
 import Link from "next/link"
 import { FEATURES as FEATURE_CONFIG } from "@/lib/site.config"
@@ -170,7 +169,7 @@ function FeatureCard({ feature, index }: { feature: typeof FEATURE_CONFIG[number
             <div className="relative z-10">
                 {/* Top row */}
                 <div className="flex items-start justify-between mb-4">
-                    <div className={`p-3.5 rounded-2xl ${c.bg} ${c.text} group-hover:scale-110 transition-transform duration-300`}>
+                    <div className={`p-3.5 rounded-2xl ${c.bg} ${c.text} transition-colors duration-300`}>
                         <Icon size={20} strokeWidth={2} />
                     </div>
                     <div className="flex flex-col items-end gap-2">
@@ -279,10 +278,10 @@ export function Solution() {
                         <p className="text-stone-500 text-sm">Free to start. No credit card needed.</p>
                     </div>
                     <div className="flex gap-3 flex-shrink-0">
-                        <Button asChild className="gap-2 rounded-2xl bg-stone-950 px-7 py-3.5 text-sm text-white hover:bg-stone-800">
+                        <Button asChild className="gap-2 px-7 py-3.5 text-sm">
                             <Link href="/chat"><Mic size={15} /> Start Free</Link>
                         </Button>
-                        <Button asChild variant="outline" className="gap-2 rounded-2xl px-7 py-3.5 text-sm">
+                        <Button asChild variant="outline" className="gap-2 px-7 py-3.5 text-sm">
                             <Link href="/pricing">View Plans <ArrowRight size={13} /></Link>
                         </Button>
                     </div>
