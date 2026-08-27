@@ -10,27 +10,81 @@ import { apiPost } from "@/lib/api";
 import { PLANS, BRAND } from "@/lib/site.config";
 import { motion } from "framer-motion";
 import { PageHero } from "@/components/ui/page-hero";
+import { StatusModal } from "@/components/ui/success-modal";
 
-// Load Razorpay Checkout.js
+type RazorpayResponse = {
+  razorpay_payment_id: string;
+  razorpay_subscription_id: string;
+  razorpay_signature: string;
+};
+
+type RazorpayInstance = {
+  open: () => void;
+  on: (event: "payment.failed", handler: () => void) => void;
+};
+
 declare global {
   interface Window {
-    Razorpay: any;
+    Razorpay?: new (options: Record<string, unknown>) => RazorpayInstance;
   }
+}
+
+let razorpayLoader: Promise<void> | null = null;
+
+function loadRazorpay(): Promise<void> {
+  if (window.Razorpay) return Promise.resolve();
+  if (razorpayLoader) return razorpayLoader;
+
+  razorpayLoader = new Promise((resolve, reject) => {
+    const existing = document.querySelector<HTMLScriptElement>(
+      'script[src="https://checkout.razorpay.com/v1/checkout.js"]'
+    );
+    const script = existing ?? document.createElement("script");
+
+    script.addEventListener("load", () => resolve(), { once: true });
+    script.addEventListener("error", () => {
+      script.remove();
+      razorpayLoader = null;
+      reject(new Error("Payment gateway could not be loaded"));
+    }, { once: true });
+
+    if (!existing) {
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  });
+
+  return razorpayLoader;
+}
+
+function paymentErrorMessage(error: unknown): string {
+  const message = error instanceof Error ? error.message : "";
+  if (message.includes("503")) {
+    return "This plan is temporarily unavailable. Please try again shortly.";
+  }
+  if (message.includes("401")) {
+    return "Your sign-in session expired. Please sign in again and retry.";
+  }
+  if (message.includes("gateway could not be loaded")) {
+    return "The secure payment window could not load. Check your connection and try again.";
+  }
+  return "We couldn't start the secure checkout. No payment was taken—please try again.";
 }
 
 export default function PricingPage() {
   const { user, nuravyaUser, loginWithGoogle, refreshProfile } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState<string | null>(null);
+  const [notice, setNotice] = useState<{
+    title: string;
+    message: string;
+    variant: "success" | "error";
+  } | null>(null);
 
   // Load Razorpay script
   useEffect(() => {
-    if (typeof window !== "undefined" && !window.Razorpay) {
-      const script = document.createElement("script");
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
-      script.async = true;
-      document.body.appendChild(script);
-    }
+    void loadRazorpay().catch(() => undefined);
   }, []);
 
   const handleSubscribe = async (plan: string) => {
@@ -43,9 +97,18 @@ export default function PricingPage() {
     if (!user) {
       try {
         await loginWithGoogle();
-        // After login, we don't automatically trigger payment to avoid popup blockers
-        // but we let them click again or redirect to chat with plan param
-      } catch {
+        setNotice({
+          title: "You're signed in",
+          message: "Select Subscribe Now once more to open the secure checkout.",
+          variant: "success",
+        });
+      } catch (error) {
+        console.error("Sign-in before checkout failed:", error);
+        setNotice({
+          title: "Sign-in didn't complete",
+          message: "Please finish signing in, then select your plan again.",
+          variant: "error",
+        });
         return;
       }
       return;
@@ -54,6 +117,8 @@ export default function PricingPage() {
     setLoading(plan);
 
     try {
+      await loadRazorpay();
+
       // Create subscription via backend
       const data = await apiPost<{
         subscription_id: string;
@@ -64,10 +129,7 @@ export default function PricingPage() {
         name: string;
       }>("/api/payments/create-subscription", { plan });
 
-      if (!window.Razorpay) {
-        alert("Payment gateway not loaded. Please refresh.");
-        return;
-      }
+      if (!window.Razorpay) throw new Error("Payment gateway could not be loaded");
 
       // Open Razorpay Checkout
       const options = {
@@ -76,7 +138,7 @@ export default function PricingPage() {
         name: BRAND.name,
         description: data.name,
         image: "/icon.png",
-        handler: async function (response: any) {
+        handler: async function (response: RazorpayResponse) {
           // Verify payment on backend
           try {
             const result = await apiPost<{ status: string; plan: string; message: string }>(
@@ -94,6 +156,11 @@ export default function PricingPage() {
             }
           } catch (err) {
             console.error("Payment verification failed:", err);
+            setNotice({
+              title: "Payment needs verification",
+              message: "Your payment response could not be verified yet. Please contact support before retrying.",
+              variant: "error",
+            });
           }
         },
         prefill: {
@@ -109,9 +176,22 @@ export default function PricingPage() {
       };
 
       const rzp = new window.Razorpay(options);
+      rzp.on("payment.failed", () => {
+        setLoading(null);
+        setNotice({
+          title: "Payment wasn't completed",
+          message: "No subscription was activated. You can safely retry when you're ready.",
+          variant: "error",
+        });
+      });
       rzp.open();
     } catch (err) {
       console.error("Subscription creation failed:", err);
+      setNotice({
+        title: "Checkout unavailable",
+        message: paymentErrorMessage(err),
+        variant: "error",
+      });
     } finally {
       setLoading(null);
     }
@@ -227,6 +307,13 @@ export default function PricingPage() {
         </div>
       </div>
       <Footer />
+      <StatusModal
+        isOpen={notice !== null}
+        onClose={() => setNotice(null)}
+        title={notice?.title ?? ""}
+        message={notice?.message ?? ""}
+        variant={notice?.variant}
+      />
     </main>
   );
 }
